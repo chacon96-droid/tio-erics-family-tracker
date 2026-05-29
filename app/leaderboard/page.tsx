@@ -20,7 +20,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
     <AppShell>
       <div className="grid gap-6">
         <section>
-          <p className="text-xs font-black uppercase text-clay">Ranked by approved attention</p>
+          <p className="text-xs font-black uppercase text-clay">Evidence-based favoritism</p>
           <h2 className="text-3xl font-black">Leaderboard</h2>
         </section>
         <nav className="flex flex-wrap gap-2">
