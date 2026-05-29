@@ -1,10 +1,10 @@
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
-import { requireUser } from "@/lib/auth";
+import { requireApprovedUser } from "@/lib/auth";
 import { getInteractions } from "@/lib/data";
 
 export default async function SubmissionsPage() {
-  await requireUser();
+  await requireApprovedUser();
   const interactions = await getInteractions();
 
   return (
