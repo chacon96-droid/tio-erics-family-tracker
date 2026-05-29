@@ -3,11 +3,11 @@ import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
 import { StatCard } from "@/components/StatCard";
-import { getProfile, requireUser } from "@/lib/auth";
+import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPerson, getPersonInteractions, getScores } from "@/lib/data";
 
 export default async function PersonPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireUser();
+  await requireApprovedUser();
   const { id } = await params;
   const [person, interactions, scores, profile] = await Promise.all([
     getPerson(id),
