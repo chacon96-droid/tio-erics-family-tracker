@@ -1,10 +1,10 @@
 import { AppShell } from "@/components/AppShell";
 import { InteractionForm } from "@/components/InteractionForm";
-import { requireUser } from "@/lib/auth";
+import { requireApprovedUser } from "@/lib/auth";
 import { getPeople } from "@/lib/data";
 
 export default async function NewInteractionPage() {
-  await requireUser();
+  await requireApprovedUser();
   const people = await getPeople();
 
   return (
