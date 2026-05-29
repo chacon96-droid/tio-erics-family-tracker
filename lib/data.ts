@@ -86,7 +86,7 @@ export async function getPendingInteractions() {
   return data || [];
 }
 
-export async function getAppSettings() {
+export async function getAppSettings(): Promise<Record<string, unknown>> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("app_settings").select("*");
   if (error) throw error;
