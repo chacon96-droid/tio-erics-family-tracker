@@ -1,4 +1,4 @@
-export type AppRole = "admin" | "family";
+export type AppRole = "admin" | "family" | "pending";
 export type InteractionType =
   | "call"
   | "missed_call_returned"
