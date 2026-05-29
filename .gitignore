@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+data/checkins.jsonl
+outputs/
+node_modules/
+.next/
+.vercel/
+.env
+.env.local
+.env*.local
