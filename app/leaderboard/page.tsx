@@ -2,13 +2,13 @@ import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { InheritanceSimulator } from "@/components/InheritanceSimulator";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
-import { requireUser } from "@/lib/auth";
+import { requireApprovedUser } from "@/lib/auth";
 import { getAppSettings, getLeaderboard } from "@/lib/data";
 import { periods } from "@/lib/periods";
 import type { ScorePeriod } from "@/lib/types";
 
 export default async function LeaderboardPage({ searchParams }: { searchParams?: Promise<{ period?: ScorePeriod }> }) {
-  await requireUser();
+  await requireApprovedUser();
   const params = await searchParams;
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "all_time";
   const [rows, settings] = await Promise.all([
