@@ -1,18 +1,43 @@
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
-import { setInteractionStatus } from "@/lib/actions";
+import { approveFamilyMember, setInteractionStatus } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
-import { getPendingInteractions } from "@/lib/data";
+import { getPendingInteractions, getPendingPeople } from "@/lib/data";
 
 export default async function ApprovalsPage() {
   await requireAdmin();
-  const pending = await getPendingInteractions();
+  const [pending, pendingPeople] = await Promise.all([getPendingInteractions(), getPendingPeople()]);
 
   return (
     <AppShell>
       <section>
         <p className="text-xs font-black uppercase text-clay">Admin queue, court is in session</p>
         <h2 className="mb-4 text-3xl font-black">Approvals</h2>
+        <div className="mb-6 grid gap-3">
+          <h3 className="text-xl font-black">Roster requests</h3>
+          {pendingPeople.length ? (
+            pendingPeople.map((person) => (
+              <article key={person.id} className="rounded-app border border-line bg-white p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-black">{person.name}</p>
+                    <p className="text-sm font-semibold text-muted">
+                      {person.relationship} · {person.email || "No email, bold"} · {person.phone || "No phone"}
+                    </p>
+                  </div>
+                  <form action={approveFamilyMember}>
+                    <input type="hidden" name="person_id" value={person.id} />
+                    <input type="hidden" name="user_id" value={person.user_id || ""} />
+                    <button className="rounded-app bg-ink px-3 py-2 text-sm font-black text-white">Approve roster spot</button>
+                  </form>
+                </div>
+              </article>
+            ))
+          ) : (
+            <EmptyState title="No roster requests." body="No one is begging for points at the moment. Growth opportunity." />
+          )}
+        </div>
+        <h3 className="mb-3 text-xl font-black">Activity claims</h3>
         {pending.length ? (
           <div className="grid gap-3">
             {pending.map((item: any) => (
