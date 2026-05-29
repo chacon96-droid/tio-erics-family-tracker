@@ -14,6 +14,13 @@ export async function requireUser() {
   return user;
 }
 
+export async function requireApprovedUser() {
+  const user = await requireUser();
+  const profile = await getProfile();
+  if (profile?.role === "pending") redirect("/pending");
+  return user;
+}
+
 export async function getProfile(): Promise<Profile | null> {
   const user = await getSessionUser();
   if (!user) return null;
