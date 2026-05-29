@@ -86,6 +86,18 @@ export async function getPendingInteractions() {
   return data || [];
 }
 
+export async function getPendingPeople() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("people")
+    .select("*")
+    .eq("active", false)
+    .not("user_id", "is", null)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data || []) as Person[];
+}
+
 export async function getAppSettings(): Promise<Record<string, unknown>> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("app_settings").select("*");
