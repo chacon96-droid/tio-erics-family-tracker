@@ -121,13 +121,13 @@ export function calculateScores(
 
 export function topCategory(score?: Score) {
   if (!score) return "No approved activity yet";
-  const entries = [
+  const entries: Array<[string, number]> = [
     ["Calls", score.call_score],
     ["Texts", score.text_score],
     ["Initiative", score.initiative_score],
     ["Time together", score.time_together_score],
     ["Reliability", score.reliability_score],
     ["Bonus", score.bonus_score]
-  ] as const;
+  ];
   return entries.sort((a, b) => b[1] - a[1])[0]?.[0] || "No approved activity yet";
 }
