@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EmptyState } from "@/components/EmptyState";
 import type { PersonWithScore } from "@/lib/types";
 
 export function LeaderboardTable({ rows }: { rows: PersonWithScore[] }) {
@@ -6,9 +7,10 @@ export function LeaderboardTable({ rows }: { rows: PersonWithScore[] }) {
 
   if (!rows.length) {
     return (
-      <div className="rounded-app border border-dashed border-line bg-white/70 p-6 text-muted">
-        No approved family activity yet. Tragic, honestly.
-      </div>
+      <EmptyState
+        title="No approved family activity yet. Tragic, honestly."
+        body="The leaderboard is ready. The family, apparently, is pacing itself."
+      />
     );
   }
 
@@ -43,7 +45,9 @@ export function LeaderboardTable({ rows }: { rows: PersonWithScore[] }) {
                   />
                 </div>
               </td>
-              <td className="p-3 font-bold">{row.trend === "up" ? "Up" : row.trend === "down" ? "Down" : "Flat"}</td>
+              <td className="p-3 font-bold">
+                {row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting"}
+              </td>
               <td className="p-3 font-semibold text-muted">{row.topCategory}</td>
             </tr>
           ))}
