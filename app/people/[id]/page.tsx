@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
+import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
 import { StatCard } from "@/components/StatCard";
 import { getProfile, requireUser } from "@/lib/auth";
@@ -30,19 +31,23 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
             <StatCard label="Approved interactions" value={interactions.filter((item) => item.status === "approved").length} />
             <StatCard label="Pending" value={interactions.filter((item) => item.status === "pending").length} />
           </div>
-          <div className="rounded-app border border-line bg-white">
-            {interactions.map((item) => (
-              <div key={item.id} className="border-b border-line p-4 last:border-b-0">
-                <div className="flex justify-between gap-4">
-                  <p className="font-black">{item.type.replaceAll("_", " ")}</p>
-                  <span className="text-sm font-bold text-muted">{item.status}</span>
+          {interactions.length ? (
+            <div className="rounded-app border border-line bg-white">
+              {interactions.map((item) => (
+                <div key={item.id} className="border-b border-line p-4 last:border-b-0">
+                  <div className="flex justify-between gap-4">
+                    <p className="font-black">{item.type.replaceAll("_", " ")}</p>
+                    <span className="text-sm font-bold text-muted">{item.status}</span>
+                  </div>
+                  <p className="text-sm font-semibold text-muted">
+                    {new Date(item.started_at).toLocaleString()} · {item.duration_minutes} min · {item.message_count} messages
+                  </p>
                 </div>
-                <p className="text-sm font-semibold text-muted">
-                  {new Date(item.started_at).toLocaleString()} · {item.duration_minutes} min · {item.message_count} messages
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState title="No interactions logged." body="A clean record, which is technically impressive and socially concerning." />
+          )}
         </section>
         {profile?.role === "admin" ? <PersonForm person={person} /> : null}
       </div>
