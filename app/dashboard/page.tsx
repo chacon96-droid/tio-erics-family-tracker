@@ -1,11 +1,11 @@
 import { AppShell } from "@/components/AppShell";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { StatCard } from "@/components/StatCard";
-import { requireUser } from "@/lib/auth";
+import { requireApprovedUser } from "@/lib/auth";
 import { getInteractions, getLeaderboard, getPendingInteractions, getPeople } from "@/lib/data";
 
 export default async function DashboardPage() {
-  await requireUser();
+  await requireApprovedUser();
   const [people, interactions, pending, leaderboard] = await Promise.all([
     getPeople(),
     getInteractions("month"),
