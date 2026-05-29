@@ -1,0 +1,14 @@
+services:
+  - type: web
+    runtime: python
+    name: tio-erics-family-tracker
+    buildCommand: "true"
+    startCommand: "python3 server.py"
+    healthCheckPath: /health
+    envVars:
+      - key: FAMILY_TRACKER_DATA_DIR
+        value: /opt/render/project/src/storage
+    disk:
+      name: family-tracker-data
+      mountPath: /opt/render/project/src/storage
+      sizeGB: 1

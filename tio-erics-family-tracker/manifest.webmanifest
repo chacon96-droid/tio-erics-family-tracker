@@ -1,0 +1,9 @@
+{
+  "name": "Tio Eric's Family Tracker",
+  "short_name": "Tio Eric",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f3ea",
+  "theme_color": "#f7f3ea",
+  "icons": []
+}
