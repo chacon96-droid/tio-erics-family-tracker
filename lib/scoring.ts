@@ -120,7 +120,7 @@ export function calculateScores(
 }
 
 export function topCategory(score?: Score) {
-  if (!score) return "No approved activity yet";
+  if (!score) return "No approved activity. Devastating.";
   const entries: Array<[string, number]> = [
     ["Calls", score.call_score],
     ["Texts", score.text_score],
@@ -129,5 +129,5 @@ export function topCategory(score?: Score) {
     ["Reliability", score.reliability_score],
     ["Bonus", score.bonus_score]
   ];
-  return entries.sort((a, b) => b[1] - a[1])[0]?.[0] || "No approved activity yet";
+  return entries.sort((a, b) => b[1] - a[1])[0]?.[0] || "No approved activity. Devastating.";
 }
