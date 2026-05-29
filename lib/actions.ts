@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { requireAdmin, requireUser } from "@/lib/auth";
+import { requireAdmin, requireApprovedUser } from "@/lib/auth";
 import { getInteractions, getScoringWeights } from "@/lib/data";
 import { periods } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
@@ -19,6 +19,16 @@ const personSchema = z.object({
   phone: z.string().optional().nullable(),
   email: z.string().email().optional().or(z.literal("")).nullable(),
   avatar_url: z.string().url().optional().or(z.literal("")).nullable()
+});
+
+const signupSchema = z.object({
+  name: z.string().min(1),
+  relationship: z.string().min(1),
+  birthday: z.string().optional().nullable(),
+  age_bracket: z.enum(["kid", "teen", "adult", "unknown"]).default("unknown"),
+  phone: z.string().optional().nullable(),
+  email: z.string().email(),
+  password: z.string().min(8)
 });
 
 const interactionSchema = z.object({
@@ -40,7 +50,41 @@ export async function signIn(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  const { data: profile } = await supabase.from("profiles").select("role").maybeSingle();
+  if (profile?.role === "pending") redirect("/pending");
   redirect("/dashboard");
+}
+
+export async function signUp(formData: FormData) {
+  const parsed = signupSchema.parse(Object.fromEntries(formData));
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signUp({
+    email: parsed.email,
+    password: parsed.password,
+    options: {
+      data: {
+        name: parsed.name,
+        signup_role: "pending"
+      }
+    }
+  });
+  if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+
+  const userId = data.user?.id;
+  if (userId) {
+    const { error: personError } = await supabase.rpc("create_pending_person", {
+      target_user_id: userId,
+      person_name: parsed.name,
+      person_relationship: parsed.relationship,
+      person_birthday: parsed.birthday || null,
+      person_age_bracket: parsed.age_bracket,
+      person_phone: parsed.phone || null,
+      person_email: parsed.email
+    });
+    if (personError) redirect(`/signup?error=${encodeURIComponent(personError.message)}`);
+  }
+
+  redirect("/pending");
 }
 
 export async function signOut() {
@@ -74,7 +118,7 @@ export async function savePerson(formData: FormData) {
 }
 
 export async function createInteraction(formData: FormData) {
-  const user = await requireUser();
+  const user = await requireApprovedUser();
   const supabase = await createClient();
   const parsed = interactionSchema.parse(Object.fromEntries(formData));
 
@@ -95,6 +139,21 @@ export async function createInteraction(formData: FormData) {
   if (error) throw error;
   revalidatePath("/submissions");
   redirect(isAdmin ? "/leaderboard" : "/submissions");
+}
+
+export async function approveFamilyMember(formData: FormData) {
+  await requireAdmin();
+  const personId = String(formData.get("person_id"));
+  const userId = String(formData.get("user_id"));
+  const supabase = await createClient();
+  if (userId) {
+    const { error: profileError } = await supabase.from("profiles").update({ role: "family" }).eq("id", userId);
+    if (profileError) throw profileError;
+  }
+  const { error } = await supabase.from("people").update({ active: true }).eq("id", personId);
+  if (error) throw error;
+  revalidatePath("/people");
+  revalidatePath("/admin/approvals");
 }
 
 export async function setInteractionStatus(formData: FormData) {
