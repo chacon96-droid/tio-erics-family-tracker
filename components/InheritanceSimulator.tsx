@@ -2,13 +2,19 @@ import type { PersonWithScore } from "@/lib/types";
 
 export function InheritanceSimulator({ rows }: { rows: PersonWithScore[] }) {
   const total = rows.reduce((sum, row) => sum + (row.score?.total_score || 0), 0);
+  const visibleRows = rows.slice(0, 8);
 
   return (
     <section className="rounded-app border border-line bg-white p-4">
-      <p className="text-xs font-black uppercase text-clay">Non-binding joke mode</p>
+      <p className="text-xs font-black uppercase text-clay">Non-binding favoritism math</p>
       <h2 className="mt-1 text-xl font-black">Projected Inheritance Simulator</h2>
       <div className="mt-4 grid gap-3">
-        {rows.slice(0, 8).map((row) => {
+        {!visibleRows.length ? (
+          <p className="text-sm font-semibold text-muted">
+            No shares to calculate yet. The estate remains emotionally unclaimed.
+          </p>
+        ) : null}
+        {visibleRows.map((row) => {
           const share = total > 0 ? ((row.score?.total_score || 0) / total) * 100 : 0;
           return (
             <div key={row.id}>
@@ -24,7 +30,7 @@ export function InheritanceSimulator({ rows }: { rows: PersonWithScore[] }) {
         })}
       </div>
       <p className="mt-4 text-xs font-semibold text-muted">
-        This is a family bit, not a legal or financial instruction.
+        This is a bit, not a will. Please do not bring a lawyer to Thanksgiving.
       </p>
     </section>
   );
