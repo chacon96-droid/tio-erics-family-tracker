@@ -11,7 +11,10 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
   await requireUser();
   const params = await searchParams;
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "all_time";
-  const [rows, settings] = await Promise.all([getLeaderboard(period), getAppSettings().catch(() => ({}))]);
+  const [rows, settings] = await Promise.all([
+    getLeaderboard(period),
+    getAppSettings().catch((): Record<string, unknown> => ({}))
+  ]);
 
   return (
     <AppShell>
