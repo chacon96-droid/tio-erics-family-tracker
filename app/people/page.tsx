@@ -2,11 +2,11 @@ import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
-import { getProfile, requireUser } from "@/lib/auth";
+import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPeople } from "@/lib/data";
 
 export default async function PeoplePage() {
-  await requireUser();
+  await requireApprovedUser();
   const [people, profile] = await Promise.all([getPeople(), getProfile()]);
   const isAdmin = profile?.role === "admin";
 
