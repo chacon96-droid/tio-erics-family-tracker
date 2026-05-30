@@ -1,7 +1,10 @@
 import { savePerson } from "@/lib/actions";
+import { normalizeRelationship, relationshipOptions } from "@/lib/relationships";
 import type { Person } from "@/lib/types";
 
 export function PersonForm({ person }: { person?: Person | null }) {
+  const selectedRelationship = normalizeRelationship(person?.relationship);
+
   return (
     <form action={savePerson} className="grid gap-3 rounded-app border border-line bg-white p-4">
       {person?.id ? <input type="hidden" name="id" value={person.id} /> : null}
@@ -11,7 +14,19 @@ export function PersonForm({ person }: { person?: Person | null }) {
       </label>
       <label className="grid gap-1 text-sm font-bold text-muted">
         Relationship
-        <input className="rounded-app border border-line px-3 py-2 text-ink" name="relationship" defaultValue={person?.relationship} required />
+        <select className="rounded-app border border-line px-3 py-2 text-ink" name="relationship" defaultValue={selectedRelationship} required>
+          <option value="" disabled>
+            Pick a relationship
+          </option>
+          {relationshipOptions.map((relationship) => (
+            <option key={relationship} value={relationship}>
+              {relationship}
+            </option>
+          ))}
+          {selectedRelationship && !(relationshipOptions as readonly string[]).includes(selectedRelationship) ? (
+            <option value={selectedRelationship}>{selectedRelationship}</option>
+          ) : null}
+        </select>
       </label>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="grid gap-1 text-sm font-bold text-muted">
