@@ -28,6 +28,14 @@ RESEND_API_KEY
 EMAIL_FROM
 ```
 
+For family signup without Supabase's built-in confirmation email/rate limit, also add:
+
+```text
+SUPABASE_SERVICE_ROLE_KEY
+```
+
+That key must stay server-side only. It lets the app create pending family accounts as already email-confirmed, while admin approval still controls who can use the tracker.
+
 ## Supabase
 
 Run the migrations in:
