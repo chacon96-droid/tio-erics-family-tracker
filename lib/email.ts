@@ -1,11 +1,13 @@
 type SignupEmailInput = {
   to: string;
   name: string;
+  relationship: string;
 };
 
 type ApprovalEmailInput = {
   to: string;
   name: string;
+  relationship: string;
 };
 
 type EmailVariant = {
@@ -82,10 +84,75 @@ function chooseVariant(variants: EmailVariant[]) {
   return variants[Math.floor(Math.random() * variants.length)];
 }
 
-function rulesList() {
+function relationshipCopy(relationship: string) {
+  const normalized = relationship.toLowerCase();
+  if (["dad", "mom", "grandparent"].includes(normalized)) {
+    return {
+      leaderboardName: "Eric Family Tracker",
+      fallbackEricName: "Eric",
+      fallbackNudge: "your son",
+      relationshipLine: "Eric has logged you as family senior leadership, which is a very formal way of saying he still wants you to call him.",
+      callLine: "Calls, FaceTimes, and text exchanges with Eric count toward your score.",
+      closingNudge: "Call your son. He built a whole website instead of simply processing his feelings."
+    };
+  }
+  if (["brother", "sister"].includes(normalized)) {
+    return {
+      leaderboardName: "Eric Family Tracker",
+      fallbackEricName: "Eric",
+      fallbackNudge: "your brother",
+      relationshipLine: "Eric has logged you in the sibling division, where love is real and response time is apparently optional.",
+      callLine: "Calls, FaceTimes, and text exchanges with Eric count toward your score.",
+      closingNudge: "Text your brother. A two-word reply still counts as movement."
+    };
+  }
+  if (["son", "daughter"].includes(normalized)) {
+    return {
+      leaderboardName: "Eric Family Tracker",
+      fallbackEricName: "Eric",
+      fallbackNudge: "Eric",
+      relationshipLine: "Eric has logged you in the kid division. The expectations are high, mostly because he controls the spreadsheet.",
+      callLine: "Calls, FaceTimes, and text exchanges with Eric count toward your score.",
+      closingNudge: "Call Eric. He is pretending this is about data. It is not entirely about data."
+    };
+  }
+  if (["niece", "nephew"].includes(normalized)) {
+    return {
+      leaderboardName: "Tio Eric Leaderboard",
+      fallbackEricName: "Tio Eric",
+      fallbackNudge: "your uncle",
+      relationshipLine: "You are officially in the Tio Eric zone, where affection has a dashboard and silence has consequences.",
+      callLine: "Calls, FaceTimes, and text exchanges with Tio Eric count toward your score.",
+      closingNudge: "Call your uncle. Historically, that seems to be where everyone gets cute."
+    };
+  }
+  return {
+    leaderboardName: "Eric Family Tracker",
+    fallbackEricName: "Eric",
+    fallbackNudge: "Eric",
+    relationshipLine: "Eric has logged your relationship correctly, or at least confidently, which is almost the same thing in family software.",
+    callLine: "Calls, FaceTimes, and text exchanges with Eric count toward your score.",
+    closingNudge: "Call Eric. The leaderboard has a long memory and very little shame."
+  };
+}
+
+function contextualText(value: string, relationship: string) {
+  const copy = relationshipCopy(relationship);
+  return value
+    .replaceAll("Tio Eric Leaderboard", copy.leaderboardName)
+    .replaceAll("Tio Eric Headquarters", `${copy.leaderboardName} Headquarters`)
+    .replaceAll("Tio Eric's family leaderboard", "Eric's family leaderboard")
+    .replaceAll("Tio Eric", copy.fallbackEricName)
+    .replaceAll("your uncle", copy.fallbackNudge)
+    .replaceAll("calling your uncle", `calling ${copy.fallbackNudge}`)
+    .replaceAll("call your uncle", `call ${copy.fallbackNudge}`);
+}
+
+function rulesList(relationship: string) {
+  const copy = relationshipCopy(relationship);
   return `
     <ul>
-      <li>Calls, FaceTimes, and text exchanges with Eric count toward your score.</li>
+      <li>${copy.callLine}</li>
       <li>Group chats do not count. A group chat is not effort. It is a hallway with notifications.</li>
       <li>The leaderboard updates when Eric's Mac runs the sync, currently scheduled nightly at 8 PM.</li>
       <li>You can view weekly, monthly, yearly, and all-time standings.</li>
@@ -96,33 +163,46 @@ function rulesList() {
   `;
 }
 
-function shellHtml(name: string, variant: EmailVariant) {
+function shellHtml(name: string, relationship: string, variant: EmailVariant) {
+  const copy = relationshipCopy(relationship);
+  const intro = contextualText(variant.intro, relationship);
+  const warning = contextualText(variant.warning, relationship);
+  const closer = contextualText(variant.closer, relationship);
+  const finalCloser = closer.includes(copy.closingNudge) ? closer : `${closer} ${copy.closingNudge}`;
   return `
     <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
       <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
         <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
-        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">${variant.intro}</h1>
+        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">${intro}</h1>
         <p style="font-size:16px;line-height:1.55;">Hi ${escapeHtml(name)},</p>
-        <p style="font-size:16px;line-height:1.55;">${variant.warning}</p>
-        <p style="font-size:16px;line-height:1.55;"><strong>Kidding. Mostly.</strong> You are now part of the Tio Eric Leaderboard ecosystem.</p>
-        ${rulesList()}
-        <p style="font-size:16px;line-height:1.55;">${variant.closer}</p>
+        <p style="font-size:16px;line-height:1.55;">${copy.relationshipLine}</p>
+        <p style="font-size:16px;line-height:1.55;">${warning}</p>
+        <p style="font-size:16px;line-height:1.55;"><strong>Kidding. Mostly.</strong> You are now part of the ${copy.leaderboardName} ecosystem.</p>
+        ${rulesList(relationship)}
+        <p style="font-size:16px;line-height:1.55;">${finalCloser}</p>
       </div>
     </div>
   `;
 }
 
-function textBody(name: string, variant: EmailVariant) {
-  return `${variant.intro}
+function textBody(name: string, relationship: string, variant: EmailVariant) {
+  const copy = relationshipCopy(relationship);
+  const intro = contextualText(variant.intro, relationship);
+  const warning = contextualText(variant.warning, relationship);
+  const closer = contextualText(variant.closer, relationship);
+  const finalCloser = closer.includes(copy.closingNudge) ? closer : `${closer} ${copy.closingNudge}`;
+  return `${intro}
 
 Hi ${name},
 
-${variant.warning}
+${copy.relationshipLine}
 
-Kidding. Mostly. You are now part of the Tio Eric Leaderboard ecosystem.
+${warning}
+
+Kidding. Mostly. You are now part of the ${copy.leaderboardName} ecosystem.
 
 Rules:
-- Calls, FaceTimes, and text exchanges with Eric count toward your score.
+- ${copy.callLine}
 - Group chats do not count. A group chat is not effort. It is a hallway with notifications.
 - The leaderboard updates when Eric's Mac runs the sync, currently scheduled nightly at 8 PM.
 - You can view weekly, monthly, yearly, and all-time standings.
@@ -130,7 +210,7 @@ Rules:
 - Manual quality time requires Eric's approval, because apparently we have standards now.
 - The projected inheritance percentage is a non-binding joke. Mostly. Do not test the mostly.
 
-${variant.closer}`;
+${finalCloser}`;
 }
 
 function escapeHtml(value: string) {
@@ -165,12 +245,12 @@ async function sendEmail(to: string, subject: string, html: string, text: string
   }
 }
 
-export async function sendSignupWelcomeEmail({ to, name }: SignupEmailInput) {
+export async function sendSignupWelcomeEmail({ to, name, relationship }: SignupEmailInput) {
   const variant = chooseVariant(signupVariants);
-  await sendEmail(to, variant.subject, shellHtml(name, variant), textBody(name, variant));
+  await sendEmail(to, contextualText(variant.subject, relationship), shellHtml(name, relationship, variant), textBody(name, relationship, variant));
 }
 
-export async function sendApprovalEmail({ to, name }: ApprovalEmailInput) {
+export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmailInput) {
   const variant = chooseVariant(approvalVariants);
-  await sendEmail(to, variant.subject, shellHtml(name, variant), textBody(name, variant));
+  await sendEmail(to, contextualText(variant.subject, relationship), shellHtml(name, relationship, variant), textBody(name, relationship, variant));
 }
