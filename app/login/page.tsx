@@ -32,15 +32,15 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
               <input className="rounded-app border border-line px-3 py-2 text-ink" name="password" type="password" required />
             </label>
             <button className="focus-ring mt-4 w-full rounded-app bg-clay px-4 py-3 font-black text-white">Sign in as admin</button>
+            <p className="mt-3 text-center text-sm font-semibold text-muted">
+              Admin password escaped custody?{" "}
+              <Link className="font-black text-ink underline-offset-4 hover:underline" href="/forgot-password">
+                Recover access
+              </Link>
+            </p>
           </form>
         </details>
 
-        <p className="mt-3 text-center text-sm font-semibold text-muted">
-          Password escaped custody?{" "}
-          <Link className="font-black text-ink underline-offset-4 hover:underline" href="/forgot-password">
-            Recover access
-          </Link>
-        </p>
         <p className="mt-4 text-center text-sm font-semibold text-muted">
           New here? <Link className="font-black text-ink underline-offset-4 hover:underline" href="/signup">Join the roster</Link>
         </p>
