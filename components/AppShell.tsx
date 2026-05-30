@@ -12,6 +12,7 @@ const nav = [
 
 const adminNav = [
   ["Approvals", "/admin/approvals"],
+  ["Pending stats", "/admin/pending"],
   ["Weights", "/admin/weights"],
   ["Settings", "/admin/settings"]
 ];
