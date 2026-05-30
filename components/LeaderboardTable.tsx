@@ -60,7 +60,8 @@ export function LeaderboardTable({
                 </div>
               </td>
               <td className="p-3 font-bold">
-                {row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting"}
+                {row.trendLabel ||
+                  (row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting")}
               </td>
               <td className="p-3 font-semibold text-muted">{row.topCategory}</td>
               {canRemovePeople ? (
