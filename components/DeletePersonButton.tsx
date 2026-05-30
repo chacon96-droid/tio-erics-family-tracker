@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
 import { deletePerson } from "@/lib/actions";
 
 type DeletePersonButtonProps = {
@@ -24,9 +25,21 @@ export function DeletePersonButton({ personId, personName }: DeletePersonButtonP
       <p className="mt-1 text-sm font-semibold text-red-900">
         Remove this profile and wipe their leaderboard footprint. For test profiles, this is housekeeping. For real family, this is how Thanksgiving gets weird.
       </p>
-      <button className="mt-3 rounded-app bg-red-700 px-4 py-3 font-black text-white hover:bg-red-800">
-        Remove from roster
-      </button>
+      <DeleteSubmitButton />
     </form>
+  );
+}
+
+function DeleteSubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="mt-3 rounded-app bg-red-700 px-4 py-3 font-black text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-70"
+    >
+      {pending ? "Removing..." : "Remove from roster"}
+    </button>
   );
 }
