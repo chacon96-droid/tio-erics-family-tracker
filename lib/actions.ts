@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin, requireApprovedUser } from "@/lib/auth";
 import { getInteractions, getScoringWeights } from "@/lib/data";
-import { sendApprovalEmail, sendSignupWelcomeEmail, sendTemporaryPasswordEmail } from "@/lib/email";
+import { sendApprovalEmail, sendSignInLinkEmail, sendSignupWelcomeEmail, sendTemporaryPasswordEmail } from "@/lib/email";
 import { periods } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
@@ -100,15 +100,17 @@ async function findAuthUserIdByEmail(email: string) {
 
 async function ensureRosterLogin(email: string) {
   const adminSupabase = createAdminClient();
-  if (!adminSupabase) return;
+  if (!adminSupabase) return null;
 
   const { data: person, error: personError } = await adminSupabase
     .from("people")
-    .select("id,user_id,name,email,active")
+    .select("id,user_id,name,email,relationship,active")
     .ilike("email", email)
+    .order("created_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
   if (personError) throw personError;
-  if (!person) return;
+  if (!person) return null;
 
   let userId = person.user_id || (await findAuthUserIdByEmail(email));
   if (!userId) {
@@ -137,6 +139,8 @@ async function ensureRosterLogin(email: string) {
   if (!person.user_id) {
     await adminSupabase.from("people").update({ user_id: userId }).eq("id", person.id);
   }
+
+  return { ...person, user_id: userId };
 }
 
 export async function signIn(formData: FormData) {
@@ -154,10 +158,46 @@ export async function requestMagicLink(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/login?error=Enter%20your%20email%20first.%20Bold%20strategy,%20but%20the%20internet%20needs%20a%20destination.");
 
+  let rosterPerson: Awaited<ReturnType<typeof ensureRosterLogin>> = null;
   try {
-    await ensureRosterLogin(email);
+    rosterPerson = await ensureRosterLogin(email);
   } catch (loginRepairError) {
     console.error("Could not prepare passwordless login", loginRepairError);
+  }
+
+  if (rosterPerson && !rosterPerson.active) {
+    redirect(`/login?error=${encodeURIComponent("You are on the roster, but still pending Eric approval. Very exclusive. Very municipal.")}`);
+  }
+
+  const adminSupabase = createAdminClient();
+  if (adminSupabase && rosterPerson?.active) {
+    const origin = await getAuthRedirectOrigin();
+    const { data, error } = await adminSupabase.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: {
+        redirectTo: `${origin}/auth/callback?next=/dashboard`
+      }
+    });
+
+    if (!error && data.properties?.action_link) {
+      try {
+        await sendSignInLinkEmail({
+          to: email,
+          name: rosterPerson.name,
+          relationship: rosterPerson.relationship,
+          link: data.properties.action_link
+        });
+        redirect(`/login?message=${encodeURIComponent("Sign-in link sent. Check your email and tap the button like the chosen one.")}`);
+      } catch (emailError) {
+        console.error("Custom magic link email failed", emailError);
+        redirect(`/login?error=${encodeURIComponent("I made the sign-in link, but the email sender fumbled it. Eric has been emotionally notified.")}`);
+      }
+    }
+
+    if (error) {
+      console.error("Admin magic link generation failed", error);
+    }
   }
 
   const origin = await getAuthRedirectOrigin();
@@ -170,9 +210,11 @@ export async function requestMagicLink(formData: FormData) {
     }
   });
   if (error) {
-    const message = error.message.toLowerCase().includes("signups not allowed")
-      ? "That email is not on the roster yet. Join the roster first, then Eric can approve you for the leaderboard."
-      : error.message;
+    const lowered = error.message.toLowerCase();
+    const message =
+      lowered.includes("signups not allowed") || lowered.includes("database error finding user")
+        ? "That email is not ready for sign-in yet. Join the roster first, then Eric can approve you for the leaderboard."
+        : error.message;
     redirect(`/login?error=${encodeURIComponent(message)}`);
   }
 
