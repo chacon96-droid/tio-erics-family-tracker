@@ -131,3 +131,19 @@ export function topCategory(score?: Score) {
   ];
   return entries.sort((a, b) => b[1] - a[1])[0]?.[0] || "No approved activity. Devastating.";
 }
+
+export function scoreMomentumLabel(score?: Score) {
+  const total = score?.total_score || 0;
+  if (total <= 0) return "Currently a rumor";
+  if (total >= 20000) return "Clearly campaigning";
+  if (total >= 10000) return "Making a case";
+  if (total >= 2500) return "Putting in minutes";
+
+  const category = topCategory(score);
+  if (category === "Calls") return "Picking up the phone";
+  if (category === "Texts") return "Typing with intent";
+  if (category === "Time together") return "Clocking quality time";
+  if (category === "Initiative") return "Showing initiative";
+  if (category === "Reliability") return "Returning calls, somehow";
+  return "On the board";
+}
