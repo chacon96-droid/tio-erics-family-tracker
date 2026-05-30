@@ -68,6 +68,58 @@ const interactionSchema = z.object({
   notes: z.string().optional().nullable()
 });
 
+async function findAuthUserIdByEmail(email: string) {
+  const adminSupabase = createAdminClient();
+  if (!adminSupabase) return null;
+
+  const { data, error } = await adminSupabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  if (error) throw error;
+
+  const match = data.users.find((user) => user.email?.toLowerCase() === email.toLowerCase());
+  return match?.id || null;
+}
+
+async function ensureRosterLogin(email: string) {
+  const adminSupabase = createAdminClient();
+  if (!adminSupabase) return;
+
+  const { data: person, error: personError } = await adminSupabase
+    .from("people")
+    .select("id,user_id,name,email,active")
+    .ilike("email", email)
+    .maybeSingle();
+  if (personError) throw personError;
+  if (!person) return;
+
+  let userId = person.user_id || (await findAuthUserIdByEmail(email));
+  if (!userId) {
+    const { data, error } = await adminSupabase.auth.admin.createUser({
+      email,
+      password: randomUUID() + randomUUID(),
+      email_confirm: true,
+      user_metadata: {
+        name: person.name,
+        signup_role: person.active ? "family" : "pending"
+      }
+    });
+    if (error) throw error;
+    userId = data.user?.id || null;
+  }
+
+  if (!userId) return;
+
+  const role = person.active ? "family" : "pending";
+  await adminSupabase.from("profiles").upsert({
+    id: userId,
+    role,
+    display_name: person.name
+  });
+
+  if (!person.user_id) {
+    await adminSupabase.from("people").update({ user_id: userId }).eq("id", person.id);
+  }
+}
+
 export async function signIn(formData: FormData) {
   const email = String(formData.get("email") || "");
   const password = String(formData.get("password") || "");
@@ -82,6 +134,12 @@ export async function signIn(formData: FormData) {
 export async function requestMagicLink(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/login?error=Enter%20your%20email%20first.%20Bold%20strategy,%20but%20the%20internet%20needs%20a%20destination.");
+
+  try {
+    await ensureRosterLogin(email);
+  } catch (loginRepairError) {
+    console.error("Could not prepare passwordless login", loginRepairError);
+  }
 
   const headerStore = await headers();
   const origin = headerStore.get("origin") || "https://calltioeric.com";
@@ -326,12 +384,40 @@ export async function approveFamilyMember(formData: FormData) {
   const personId = String(formData.get("person_id"));
   const userId = String(formData.get("user_id"));
   const supabase = await createClient();
-  const { data: person } = await supabase.from("people").select("name,email,relationship").eq("id", personId).maybeSingle();
-  if (userId) {
-    const { error: profileError } = await supabase.from("profiles").update({ role: "family" }).eq("id", userId);
+  const adminSupabase = createAdminClient();
+  const { data: person } = await supabase.from("people").select("name,email,relationship,user_id").eq("id", personId).maybeSingle();
+  let approvedUserId = userId || person?.user_id || "";
+
+  if (!approvedUserId && person?.email && adminSupabase) {
+    approvedUserId = (await findAuthUserIdByEmail(person.email)) || "";
+    if (!approvedUserId) {
+      const { data: createdUser, error: createUserError } = await adminSupabase.auth.admin.createUser({
+        email: person.email,
+        password: randomUUID() + randomUUID(),
+        email_confirm: true,
+        user_metadata: {
+          name: person.name,
+          signup_role: "family"
+        }
+      });
+      if (createUserError) throw createUserError;
+      approvedUserId = createdUser.user?.id || "";
+    }
+  }
+
+  if (approvedUserId) {
+    const profileClient = adminSupabase || supabase;
+    const { error: profileError } = await profileClient.from("profiles").upsert({
+      id: approvedUserId,
+      role: "family",
+      display_name: person?.name || person?.email || "Family"
+    });
     if (profileError) throw profileError;
   }
-  const { error } = await supabase.from("people").update({ active: true }).eq("id", personId);
+
+  const updatePayload: { active: boolean; user_id?: string } = { active: true };
+  if (approvedUserId) updatePayload.user_id = approvedUserId;
+  const { error } = await supabase.from("people").update(updatePayload).eq("id", personId);
   if (error) throw error;
   if (person?.email) {
     try {
