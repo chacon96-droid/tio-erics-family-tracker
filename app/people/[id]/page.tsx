@@ -9,9 +9,16 @@ import { updateMyProfilePhoto } from "@/lib/actions";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
 
-export default async function PersonPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PersonPage({
+  params,
+  searchParams
+}: {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ removed?: string; error?: string }>;
+}) {
   await requireApprovedUser();
   const { id } = await params;
+  const query = (await searchParams) || {};
   const [person, interactions, yearlyBreakdowns, profile] = await Promise.all([
     getPerson(id),
     getPersonInteractions(id),
@@ -29,6 +36,11 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           <div>
             <p className="text-xs font-black uppercase text-clay">{person.relationship}</p>
             <h2 className="text-3xl font-black">{person.name}</h2>
+            {query.error ? (
+              <div className="mt-4 rounded-app border border-red-200 bg-red-50 p-3 text-sm font-black text-red-800">
+                Could not remove that profile: {query.error}
+              </div>
+            ) : null}
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard label={`${currentYear} score`} value={currentYearBreakdown?.totalScore || 0} />
@@ -107,7 +119,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
         {profile?.role === "admin" ? (
           <section className="grid gap-4">
             <PersonForm person={person} />
-            <DeletePersonButton personId={person.id} personName={person.name} />
+            <DeletePersonButton personId={person.id} personName={person.name} returnTo="/leaderboard" />
           </section>
         ) : profile?.id === person.user_id ? (
           <section>
