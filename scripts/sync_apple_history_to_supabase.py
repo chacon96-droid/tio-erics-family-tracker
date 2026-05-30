@@ -325,7 +325,7 @@ def import_text_exchanges(
         order by message.date asc
     """
 
-    grouped: dict[str, list[tuple[datetime, bool]]] = defaultdict(list)
+    grouped: dict[tuple[str, str], list[tuple[datetime, bool]]] = defaultdict(list)
     try:
         rows = conn.execute(query)
         for row in rows:
@@ -338,7 +338,8 @@ def import_text_exchanges(
             touched_at = apple_time_to_datetime(row["message_date"])
             if not person or not touched_at or (since and touched_at < since):
                 continue
-            grouped[person.id].append((touched_at, bool(row["is_from_me"])))
+            row_status = "approved" if status == "auto" and person.active else "pending" if status == "auto" else status
+            grouped[(person.id, row_status)].append((touched_at, bool(row["is_from_me"])))
     except sqlite3.Error as error:
         print(f"Skipped Messages rows: {error}")
     finally:
@@ -346,15 +347,15 @@ def import_text_exchanges(
 
     imported: list[ImportedInteraction] = []
     gap = timedelta(minutes=gap_minutes)
-    for person_id, messages in grouped.items():
+    for (person_id, row_status), messages in grouped.items():
         session: list[tuple[datetime, bool]] = []
         for item in messages:
             if session and item[0] - session[-1][0] > gap:
-                imported.append(build_text_exchange(person_id, session, status))
+                imported.append(build_text_exchange(person_id, session, row_status))
                 session = []
             session.append(item)
         if session:
-            imported.append(build_text_exchange(person_id, session, status))
+            imported.append(build_text_exchange(person_id, session, row_status))
     return imported
 
 
@@ -461,6 +462,7 @@ def import_calls(
             person = by_handle.get(handle)
             if not person:
                 continue
+            row_status = "approved" if status == "auto" and person.active else "pending" if status == "auto" else status
 
             started_at = apple_time_to_datetime(row_value(row, columns, "ZDATE", "ZSTARTDATE"))
             if not started_at or (since and started_at < since):
@@ -486,7 +488,7 @@ def import_calls(
                     message_count=0,
                     is_group_chat=False,
                     source="import",
-                    status=status,
+                    status=row_status,
                     notes=f"Imported {call_label} metadata from Apple Call History.",
                 )
             )
@@ -708,7 +710,7 @@ def main() -> int:
     parser.add_argument("--messages-db", default=Path.home() / "Library/Messages/chat.db", type=Path)
     parser.add_argument("--calls-db", default=Path.home() / "Library/Application Support/CallHistoryDB/CallHistory.storedata", type=Path)
     parser.add_argument("--since", default=None, help="Only import activity on or after YYYY-MM-DD.")
-    parser.add_argument("--status", choices=["approved", "pending"], default="approved")
+    parser.add_argument("--status", choices=["auto", "approved", "pending"], default="auto")
     parser.add_argument("--skip-contacts", action="store_true", help="Do not ask macOS Contacts for extra phone/email matches.")
     parser.add_argument("--active-only", action="store_true", help="Only match approved/active people. By default pending roster members are included too.")
     parser.add_argument("--message-gap-minutes", default=DEFAULT_MESSAGE_GAP_MINUTES, type=int)
@@ -744,7 +746,7 @@ def main() -> int:
         print(f"Matched {added} extra handles from macOS Contacts.")
 
     if args.diagnose:
-        print(f"Active people in app: {len(people)}")
+        print(f"People in app: {len(people)}")
         print(f"Phone/email handles available for matching: {len(by_handle)}")
         print("Messages diagnosis:")
         print(json.dumps(diagnose_messages(args.messages_db, by_handle, 12), indent=2))
@@ -776,7 +778,7 @@ def main() -> int:
         return 0
 
     client.insert("interactions", new_rows)
-    if args.status == "approved":
+    if args.status in {"approved", "auto"}:
         recalculate_scores(client)
         print("Uploaded interactions and recalculated the leaderboard.")
     else:
