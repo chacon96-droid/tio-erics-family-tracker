@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signUp } from "@/lib/actions";
+import { BrandMark } from "@/components/BrandMark";
 import { relationshipOptions } from "@/lib/relationships";
 
 export default async function SignupPage({ searchParams }: { searchParams?: Promise<{ error?: string }> }) {
@@ -7,9 +8,10 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
 
   return (
     <main className="grid min-h-screen place-items-center bg-paper p-4">
-      <form action={signUp} encType="multipart/form-data" className="w-full max-w-xl rounded-app border border-line bg-white p-5">
-        <p className="text-xs font-black uppercase text-clay">Join the roster</p>
-        <h1 className="mt-1 text-3xl font-black">State your case</h1>
+      <form action={signUp} encType="multipart/form-data" className="w-full max-w-xl rounded-app border border-gold/40 bg-ivory p-5 shadow-brand">
+        <BrandMark />
+        <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-clay">Join the roster</p>
+        <h1 className="mt-1 font-serif text-4xl font-black tracking-tight">State your case</h1>
         <p className="mt-2 text-sm font-semibold text-muted">
           Contact info, relationship, and zero passwords. Civilization advances one tiny form at a time.
         </p>
@@ -59,7 +61,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
             </select>
           </label>
         </div>
-        <button className="focus-ring mt-5 w-full rounded-app bg-ink px-4 py-3 font-black text-white">Request entry</button>
+        <button className="focus-ring mt-5 w-full rounded-app border border-gold bg-ink px-4 py-3 font-black text-gold shadow-brand">Request entry</button>
         <p className="mt-4 text-center text-sm font-semibold text-muted">
           Already on the books? <Link className="font-black text-ink underline-offset-4 hover:underline" href="/login">Sign in</Link>
         </p>
