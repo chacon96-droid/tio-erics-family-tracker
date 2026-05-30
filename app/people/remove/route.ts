@@ -1,10 +1,27 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 
-function redirectWithMessage(request: NextRequest, path: string, key: "removed" | "error", message: string) {
+function wantsJson(request: NextRequest) {
+  return request.headers.get("accept")?.includes("application/json") || request.headers.get("x-requested-with") === "fetch";
+}
+
+function jsonOrRedirect(request: NextRequest, path: string, key: "removed" | "error", message: string) {
   const url = new URL(path, request.url);
   url.searchParams.set(key, message);
+
+  if (wantsJson(request)) {
+    return NextResponse.json({
+      ok: key === "removed",
+      redirectTo: `${url.pathname}${url.search}`,
+      message
+    });
+  }
+
   return NextResponse.redirect(url, { status: 303 });
+}
+
+function redirectWithMessage(request: NextRequest, path: string, key: "removed" | "error", message: string) {
+  return jsonOrRedirect(request, path, key, message);
 }
 
 export async function POST(request: NextRequest) {
@@ -20,6 +37,9 @@ export async function POST(request: NextRequest) {
   const { data: authData } = await sessionSupabase.auth.getUser();
   const user = authData.user;
   if (!user) {
+    if (wantsJson(request)) {
+      return NextResponse.json({ ok: false, redirectTo: "/login", message: "Please sign in again." }, { status: 401 });
+    }
     return NextResponse.redirect(new URL("/login", request.url), { status: 303 });
   }
 
@@ -27,6 +47,9 @@ export async function POST(request: NextRequest) {
   const db = adminSupabase || sessionSupabase;
   const { data: adminProfile } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
   if (adminProfile?.role !== "admin") {
+    if (wantsJson(request)) {
+      return NextResponse.json({ ok: false, redirectTo: "/dashboard", message: "Only Eric can remove people from the roster." }, { status: 403 });
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url), { status: 303 });
   }
 
