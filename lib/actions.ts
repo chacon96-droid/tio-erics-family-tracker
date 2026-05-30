@@ -8,7 +8,7 @@ import { getInteractions, getScoringWeights } from "@/lib/data";
 import { sendApprovalEmail, sendSignupWelcomeEmail } from "@/lib/email";
 import { periods } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import type { ApprovalStatus, InteractionDirection, InteractionSource, InteractionType } from "@/lib/types";
 
 const personSchema = z.object({
@@ -59,21 +59,31 @@ export async function signIn(formData: FormData) {
 export async function signUp(formData: FormData) {
   const parsed = signupSchema.parse(Object.fromEntries(formData));
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
-    email: parsed.email,
-    password: parsed.password,
-    options: {
-      data: {
-        name: parsed.name,
-        signup_role: "pending"
-      }
-    }
-  });
+  const adminSupabase = createAdminClient();
+  const signupMetadata = {
+    name: parsed.name,
+    signup_role: "pending"
+  };
+  const { data, error } = adminSupabase
+    ? await adminSupabase.auth.admin.createUser({
+        email: parsed.email,
+        password: parsed.password,
+        email_confirm: true,
+        user_metadata: signupMetadata
+      })
+    : await supabase.auth.signUp({
+        email: parsed.email,
+        password: parsed.password,
+        options: {
+          data: signupMetadata
+        }
+      });
   if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
 
   const userId = data.user?.id;
   if (userId) {
-    const { error: personError } = await supabase.rpc("create_pending_person", {
+    const databaseClient = adminSupabase || supabase;
+    const { error: personError } = await databaseClient.rpc("create_pending_person", {
       target_user_id: userId,
       person_name: parsed.name,
       person_relationship: parsed.relationship,
