@@ -1,5 +1,6 @@
 import { signIn } from "@/lib/actions";
 import { familyQuickAccess } from "@/lib/family-actions";
+import { BrandMark } from "@/components/BrandMark";
 import Link from "next/link";
 
 export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string; message?: string }> }) {
@@ -7,9 +8,10 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
 
   return (
     <main className="grid min-h-screen place-items-center bg-paper p-4">
-      <div className="w-full max-w-sm rounded-app border border-line bg-white p-5">
-        <p className="text-xs font-black uppercase text-clay">Private access, light interrogation</p>
-        <h1 className="mt-1 text-3xl font-black">Eric Family Tracker</h1>
+      <div className="w-full max-w-sm rounded-app border border-gold/40 bg-ivory p-5 shadow-brand">
+        <BrandMark />
+        <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-clay">Private access, light interrogation</p>
+        <h1 className="mt-1 font-serif text-4xl font-black tracking-tight">Enter the ledger</h1>
         {params?.error ? <p className="mt-3 rounded-app bg-red-50 p-3 text-sm font-bold text-red-700">{params.error}</p> : null}
         {params?.message ? <p className="mt-3 rounded-app bg-green-50 p-3 text-sm font-bold text-green-800">{params.message}</p> : null}
 
@@ -18,7 +20,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
             Email or phone
             <input className="rounded-app border border-line px-3 py-2 text-ink" name="identifier" type="text" autoComplete="email" required />
           </label>
-          <button className="focus-ring mt-5 w-full rounded-app bg-ink px-4 py-3 font-black text-white">Enter the leaderboard</button>
+          <button className="focus-ring mt-5 w-full rounded-app border border-gold bg-ink px-4 py-3 font-black text-gold shadow-brand">Enter the leaderboard</button>
           <p className="mt-3 text-sm font-semibold text-muted">
             Approved family only. No password, no email scavenger hunt. Society advances.
           </p>
@@ -35,7 +37,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
               Password
               <input className="rounded-app border border-line px-3 py-2 text-ink" name="password" type="password" required />
             </label>
-            <button className="focus-ring mt-4 w-full rounded-app bg-clay px-4 py-3 font-black text-white">Sign in as admin</button>
+            <button className="focus-ring mt-4 w-full rounded-app bg-clay px-4 py-3 font-black text-white shadow-sm">Sign in as admin</button>
             <p className="mt-3 text-center text-sm font-semibold text-muted">
               Admin password escaped custody?{" "}
               <Link className="font-black text-ink underline-offset-4 hover:underline" href="/forgot-password">
