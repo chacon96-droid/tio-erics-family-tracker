@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { InheritanceSimulator } from "@/components/InheritanceSimulator";
+import { LeaderboardRaceGraph } from "@/components/LeaderboardRaceGraph";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getAppSettings, getLeaderboard } from "@/lib/data";
@@ -54,6 +55,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             <p className="text-xs font-black uppercase text-clay">Bloodline division</p>
             <h3 className="text-xl font-black">Family leaderboard</h3>
           </div>
+          <LeaderboardRaceGraph rows={familyRows} title="Family photo race" />
           <LeaderboardTable rows={familyRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={familyRows} /> : null}
         </section>
@@ -62,6 +64,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             <p className="text-xs font-black uppercase text-clay">Chosen chaos division</p>
             <h3 className="text-xl font-black">Family friends leaderboard</h3>
           </div>
+          <LeaderboardRaceGraph rows={friendRows} title="Family friends photo race" />
           <LeaderboardTable rows={friendRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={friendRows} /> : null}
         </section>
