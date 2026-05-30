@@ -4,6 +4,8 @@ import { approveFamilyMember, setInteractionStatus } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { getPendingInteractions, getPendingPeople } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function ApprovalsPage() {
   await requireAdmin();
   const [pending, pendingPeople] = await Promise.all([getPendingInteractions(), getPendingPeople()]);
