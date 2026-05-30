@@ -85,24 +85,19 @@ Confirm your email:
 Welcome to the board. Try calling your uncle. Historically, that seems to be where everyone gets cute.
 ```
 
-## Approval Email
+## Approval Emails
 
-Use this later if the app adds transactional approval emails.
-
-Subject:
+The app randomizes approval emails when Eric approves a roster request. The live variants include:
 
 ```text
-Roster approved. The leaderboard sees you now.
+You have been approved for the Tio Eric Leaderboard
+Is that right? You made the leaderboard.
+Your leaderboard era begins now
+You could buy everybody here gelato
+approved. cool ig.
+Roster approved. Shit maaaaannn.
 ```
 
-Body:
+All approval emails still explain the important rules: direct calls, texts, FaceTimes, and approved quality time count; group chats do not count; message contents are not stored; the inheritance percentage is a non-binding joke.
 
-```text
-You have been approved for the Tio Eric Leaderboard.
-
-Calls, FaceTimes, and text exchanges with Eric now count toward your score. The sync is currently scheduled nightly at 8 PM from Eric's Mac.
-
-You can also submit quality time manually for approval if the algorithm fails to appreciate your emotional labor, Fortnite excellence, or actual in-person presence.
-
-The inheritance simulator is a joke. Unless it motivates you to call. Then it is public service.
-```
+Zander's 57-step routine and sock drawer jokes are intentionally site-only for now, not approval email copy.
