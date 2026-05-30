@@ -4,7 +4,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 function redirectWithMessage(request: NextRequest, path: string, key: "removed" | "error", message: string) {
   const url = new URL(path, request.url);
   url.searchParams.set(key, message);
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(url, { status: 303 });
 }
 
 export async function POST(request: NextRequest) {
@@ -20,14 +20,14 @@ export async function POST(request: NextRequest) {
   const { data: authData } = await sessionSupabase.auth.getUser();
   const user = authData.user;
   if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login", request.url), { status: 303 });
   }
 
   const adminSupabase = createAdminClient();
   const db = adminSupabase || sessionSupabase;
   const { data: adminProfile } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
   if (adminProfile?.role !== "admin") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url), { status: 303 });
   }
 
   const { data: person, error: personError } = await db
