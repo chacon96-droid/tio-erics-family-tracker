@@ -8,6 +8,7 @@ import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { updateMyProfilePhoto } from "@/lib/actions";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
+import { badgeHints, profileRoast } from "@/lib/family-lore";
 
 export default async function PersonPage({
   params,
@@ -28,6 +29,7 @@ export default async function PersonPage({
   if (!person) notFound();
   const currentYear = new Date().getFullYear();
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
+  const badges = badgeHints(person);
 
   return (
     <AppShell>
@@ -46,6 +48,16 @@ export default async function PersonPage({
           <div>
             <p className="text-xs font-black uppercase text-clay">{person.relationship}</p>
             <h2 className="text-3xl font-black">{person.name}</h2>
+            <p className="mt-2 max-w-2xl font-semibold text-muted">
+              {profileRoast(person, { total_score: currentYearBreakdown?.totalScore || 0 })}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <span key={badge} className="rounded-full border border-line bg-white px-3 py-1 text-xs font-black text-clay">
+                  {badge}
+                </span>
+              ))}
+            </div>
             {query.error ? (
               <div className="mt-4 rounded-app border border-red-200 bg-red-50 p-3 text-sm font-black text-red-800">
                 Could not remove that profile: {query.error}
