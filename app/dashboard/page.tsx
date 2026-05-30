@@ -8,10 +8,10 @@ export default async function DashboardPage() {
   await requireApprovedUser();
   const [people, interactions, pendingInteractions, pendingPeople, leaderboard] = await Promise.all([
     getPeople(),
-    getInteractions("month"),
+    getInteractions("year"),
     getPendingInteractions().catch(() => []),
     getPendingPeople().catch(() => []),
-    getLeaderboard("month").catch(() => [])
+    getLeaderboard("year").catch(() => [])
   ]);
 
   const approved = interactions.filter((item) => item.status === "approved");
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
         </section>
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard label="Active people" value={people.filter((person) => person.active).length} detail="Roster, not evidence." />
-          <StatCard label="Approved this month" value={approved.length} detail="Documented affection." />
+          <StatCard label="Approved in 2026" value={approved.length} detail="Documented affection, calendar-year edition." />
           <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail="Allegedly bonding." />
           <StatCard
             label="Top score"
@@ -36,7 +36,7 @@ export default async function DashboardPage() {
         <section>
           <div className="mb-3 flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-black uppercase text-clay">This month, allegedly</p>
+              <p className="text-xs font-black uppercase text-clay">2026 so far, allegedly</p>
               <h3 className="text-xl font-black">Current leaderboard</h3>
             </div>
           </div>
