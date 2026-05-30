@@ -24,11 +24,7 @@ function redirectWithMessage(request: NextRequest, path: string, key: "removed" 
   return jsonOrRedirect(request, path, key, message);
 }
 
-export async function POST(request: NextRequest) {
-  const formData = await request.formData();
-  const personId = String(formData.get("person_id") || "");
-  const returnTo = String(formData.get("return_to") || "/people");
-
+async function removePerson(request: NextRequest, personId: string, returnTo: string) {
   if (!personId) {
     return redirectWithMessage(request, returnTo, "error", "Missing person id.");
   }
@@ -85,4 +81,17 @@ export async function POST(request: NextRequest) {
   }
 
   return redirectWithMessage(request, returnTo, "removed", person.name);
+}
+
+export async function GET(request: NextRequest) {
+  const personId = request.nextUrl.searchParams.get("person_id") || "";
+  const returnTo = request.nextUrl.searchParams.get("return_to") || "/people";
+  return removePerson(request, personId, returnTo);
+}
+
+export async function POST(request: NextRequest) {
+  const formData = await request.formData();
+  const personId = String(formData.get("person_id") || "");
+  const returnTo = String(formData.get("return_to") || "/people");
+  return removePerson(request, personId, returnTo);
 }
