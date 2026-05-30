@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { approveFamilyMember, setInteractionStatus } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { getPendingInteractions, getPendingPeople } from "@/lib/data";
+import { approvalQueueCopy } from "@/lib/family-lore";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function ApprovalsPage({
         <h2 className="mb-4 text-3xl font-black">Approvals</h2>
         {params?.approved ? (
           <div className="mb-4 rounded-app border border-emerald-200 bg-emerald-50 p-4 font-bold text-emerald-900">
-            Approved {params.approved}. The leaderboard has been informed and is acting normal about it.
+            Approved {params.approved}. The leaderboard has been informed and is acting normal about it. Shit maaaaannn.
           </div>
         ) : null}
         {params?.error ? (
@@ -41,6 +42,7 @@ export default async function ApprovalsPage({
                     <p className="text-sm font-semibold text-muted">
                       {person.relationship} · {person.email || "No email, bold"} · {person.phone || "No phone"}
                     </p>
+                    <p className="mt-2 text-sm font-semibold text-muted">{approvalQueueCopy(person.id)}</p>
                   </div>
                   <form action={approveFamilyMember}>
                     <input type="hidden" name="person_id" value={person.id} />
@@ -66,6 +68,7 @@ export default async function ApprovalsPage({
                       {item.type.replaceAll("_", " ")} · {item.duration_minutes} min · {item.message_count} messages
                     </p>
                     {item.notes ? <p className="mt-2 text-sm text-muted">{item.notes}</p> : null}
+                    <p className="mt-2 text-sm font-semibold text-muted">{approvalQueueCopy(item.id)}</p>
                   </div>
                   <div className="flex gap-2">
                     <form action={setInteractionStatus}>
