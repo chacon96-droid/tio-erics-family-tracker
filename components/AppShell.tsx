@@ -17,9 +17,9 @@ const adminNav = [
   ["Settings", "/admin/settings"]
 ];
 
-export async function AppShell({ children }: { children: React.ReactNode }) {
+export async function AppShell({ children, previewMode = false }: { children: React.ReactNode; previewMode?: boolean }) {
   const profile = await getProfile();
-  const isAdmin = profile?.role === "admin";
+  const isAdmin = profile?.role === "admin" && !previewMode;
 
   return (
     <div className="min-h-screen bg-paper">
@@ -28,6 +28,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <div>
             <p className="text-xs font-black uppercase text-clay">Private family tracker, because vibes need receipts</p>
             <h1 className="text-2xl font-black text-ink">Eric Family Tracker</h1>
+            {previewMode ? (
+              <p className="mt-1 text-sm font-bold text-muted">Family preview mode. Admin buttons are offstage, where they belong.</p>
+            ) : null}
           </div>
           <form action={signOut}>
             <button className="focus-ring rounded-app border border-line bg-white px-3 py-2 text-sm font-bold">
