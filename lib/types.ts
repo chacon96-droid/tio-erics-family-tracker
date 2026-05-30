@@ -85,4 +85,5 @@ export type PersonWithScore = Person & {
   score?: Score;
   topCategory?: string;
   trend?: "up" | "down" | "flat";
+  trendLabel?: string;
 };
