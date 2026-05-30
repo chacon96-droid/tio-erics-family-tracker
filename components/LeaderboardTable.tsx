@@ -2,7 +2,7 @@ import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
 import type { PersonWithScore } from "@/lib/types";
 
-export function LeaderboardTable({ rows }: { rows: PersonWithScore[] }) {
+export function LeaderboardTable({ rows, linkPeople = true }: { rows: PersonWithScore[]; linkPeople?: boolean }) {
   const maxScore = Math.max(...rows.map((row) => row.score?.total_score || 0), 1);
 
   if (!rows.length) {
@@ -31,9 +31,13 @@ export function LeaderboardTable({ rows }: { rows: PersonWithScore[] }) {
             <tr key={row.id} className="border-b border-line last:border-b-0">
               <td className="p-3 font-black">{index + 1}</td>
               <td className="p-3">
-                <Link href={`/people/${row.id}`} className="font-black text-ink underline-offset-4 hover:underline">
-                  {row.name}
-                </Link>
+                {linkPeople ? (
+                  <Link href={`/people/${row.id}`} className="font-black text-ink underline-offset-4 hover:underline">
+                    {row.name}
+                  </Link>
+                ) : (
+                  <span className="font-black text-ink">{row.name}</span>
+                )}
                 <p className="text-xs font-semibold text-muted">{row.relationship}</p>
               </td>
               <td className="p-3">
