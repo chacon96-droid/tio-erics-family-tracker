@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { periodStart } from "@/lib/periods";
-import { calculateScores, topCategory } from "@/lib/scoring";
+import { calculateScores, scoreMomentumLabel, topCategory } from "@/lib/scoring";
 import type { Interaction, Person, PersonWithScore, Score, ScorePeriod, ScoringWeight } from "@/lib/types";
 
 export async function getPeople() {
@@ -136,6 +136,7 @@ export async function getLeaderboard(period: ScorePeriod): Promise<PersonWithSco
         ...person,
         score,
         topCategory: topCategory(score),
+        trendLabel: scoreMomentumLabel(score),
         trend: "flat" as const
       };
     })
