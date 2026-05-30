@@ -138,6 +138,53 @@ export async function savePerson(formData: FormData) {
   redirect("/people");
 }
 
+export async function deletePerson(formData: FormData) {
+  await requireAdmin();
+  const personId = String(formData.get("person_id") || "");
+  if (!personId) throw new Error("Missing person id");
+
+  const supabase = await createClient();
+  const { data: person, error: personError } = await supabase
+    .from("people")
+    .select("id,user_id,name")
+    .eq("id", personId)
+    .maybeSingle();
+  if (personError) throw personError;
+  if (!person) redirect("/people");
+
+  if (person.user_id) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", person.user_id)
+      .maybeSingle();
+    if (profileError) throw profileError;
+    if (profile?.role === "admin") {
+      throw new Error("Admin profiles cannot be removed from the roster.");
+    }
+  }
+
+  const { error } = await supabase.from("people").delete().eq("id", personId);
+  if (error) throw error;
+
+  if (person.user_id) {
+    const adminSupabase = createAdminClient();
+    if (adminSupabase) {
+      const { error: deleteUserError } = await adminSupabase.auth.admin.deleteUser(person.user_id);
+      if (deleteUserError) throw deleteUserError;
+    } else {
+      const { error: profileUpdateError } = await supabase.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
+      if (profileUpdateError) throw profileUpdateError;
+    }
+  }
+
+  revalidatePath("/people");
+  revalidatePath("/leaderboard");
+  revalidatePath("/dashboard");
+  revalidatePath("/admin/approvals");
+  redirect("/people");
+}
+
 export async function createInteraction(formData: FormData) {
   const user = await requireApprovedUser();
   const supabase = await createClient();
