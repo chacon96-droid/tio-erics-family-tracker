@@ -63,7 +63,7 @@ async function uploadProfilePhoto(formData: FormData, personId: string) {
 
   const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
   const path = `${personId}/${Date.now()}.${extension}`;
-  const { error } = await supabase.storage.from("profile-photos").upload(path, file, {
+  const { error } = supabase.storage.from("profile-photos").upload(path, file, {
     cacheControl: "3600",
     contentType: file.type,
     upsert: true
@@ -197,11 +197,11 @@ export async function requestMagicLink(formData: FormData) {
           relationship: rosterPerson.relationship,
           link: data.properties.action_link
         });
-        redirect(`/login?message=${encodeURIComponent("Sign-in link sent. Check your email and tap the button like the chosen one.")}`);
       } catch (emailError) {
         console.error("Custom magic link email failed", emailError);
         redirect(`/login?error=${encodeURIComponent("I made the sign-in link, but the email sender fumbled it. Eric has been emotionally notified.")}`);
       }
+      redirect(`/login?message=${encodeURIComponent("Sign-in link sent. Check your email and tap the button like the chosen one.")}`);
     }
 
     if (error) {
