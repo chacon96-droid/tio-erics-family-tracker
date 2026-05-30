@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { periodStart } from "@/lib/periods";
+import { leaderboardAudienceForRelationship, type LeaderboardAudience } from "@/lib/relationships";
 import { calculateScores, scoreMomentumLabel, topCategory } from "@/lib/scoring";
 import type { Interaction, Person, PersonWithScore, Score, ScorePeriod, ScoringWeight } from "@/lib/types";
 
@@ -125,11 +126,16 @@ export async function getScores(period: ScorePeriod) {
   return (data || []) as Score[];
 }
 
-export async function getLeaderboard(period: ScorePeriod): Promise<PersonWithScore[]> {
+function personMatchesLeaderboardAudience(person: Person, audience: LeaderboardAudience) {
+  if (audience === "all") return true;
+  return leaderboardAudienceForRelationship(person.relationship) === audience;
+}
+
+export async function getLeaderboard(period: ScorePeriod, audience: LeaderboardAudience = "all"): Promise<PersonWithScore[]> {
   const [people, scores] = await Promise.all([getPeople(), getScores(period)]);
   const scoreMap = new Map(scores.map((score) => [score.person_id, score]));
   return people
-    .filter((person) => person.active)
+    .filter((person) => person.active && personMatchesLeaderboardAudience(person, audience))
     .map((person) => {
       const score = scoreMap.get(person.id);
       return {
