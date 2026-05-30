@@ -64,27 +64,31 @@ export async function signUp(formData: FormData) {
     name: parsed.name,
     signup_role: "pending"
   };
-  const { data, error } = adminSupabase
-    ? await adminSupabase.auth.admin.createUser({
-        email: parsed.email,
-        password: parsed.password,
-        email_confirm: true,
-        user_metadata: signupMetadata
-      })
-    : await supabase.auth.signUp({
-        email: parsed.email,
-        password: parsed.password,
-        options: {
-          data: signupMetadata
-        }
-      });
-  if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
 
-  const userId = data.user?.id;
-  if (userId) {
-    const databaseClient = adminSupabase || supabase;
-    const { error: personError } = await databaseClient.rpc("create_pending_person", {
+  if (adminSupabase) {
+    const { data, error } = await adminSupabase.auth.admin.createUser({
+      email: parsed.email,
+      password: parsed.password,
+      email_confirm: true,
+      user_metadata: signupMetadata
+    });
+    if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+
+    const userId = data.user?.id;
+    if (!userId) redirect(`/signup?error=${encodeURIComponent("Could not create roster account")}`);
+
+    const { error: personError } = await adminSupabase.rpc("create_pending_person", {
       target_user_id: userId,
+      person_name: parsed.name,
+      person_relationship: parsed.relationship,
+      person_birthday: parsed.birthday || null,
+      person_age_bracket: parsed.age_bracket,
+      person_phone: parsed.phone || null,
+      person_email: parsed.email
+    });
+    if (personError) redirect(`/signup?error=${encodeURIComponent(personError.message)}`);
+  } else {
+    const { error: personError } = await supabase.rpc("create_public_roster_request", {
       person_name: parsed.name,
       person_relationship: parsed.relationship,
       person_birthday: parsed.birthday || null,
