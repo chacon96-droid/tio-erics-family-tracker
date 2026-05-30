@@ -430,8 +430,11 @@ export async function deletePerson(formData: FormData) {
   const personId = String(formData.get("person_id") || "");
   if (!personId) throw new Error("Missing person id");
 
-  const supabase = await createClient();
-  const { data: person, error: personError } = await supabase
+  const sessionSupabase = await createClient();
+  const adminSupabase = createAdminClient();
+  const db = adminSupabase || sessionSupabase;
+
+  const { data: person, error: personError } = await db
     .from("people")
     .select("id,user_id,name")
     .eq("id", personId)
@@ -440,7 +443,7 @@ export async function deletePerson(formData: FormData) {
   if (!person) redirect("/people");
 
   if (person.user_id) {
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await db
       .from("profiles")
       .select("role")
       .eq("id", person.user_id)
@@ -451,19 +454,18 @@ export async function deletePerson(formData: FormData) {
     }
   }
 
-  const { error } = await supabase.from("people").delete().eq("id", personId);
-  if (error) throw error;
-
   if (person.user_id) {
-    const adminSupabase = createAdminClient();
     if (adminSupabase) {
       const { error: deleteUserError } = await adminSupabase.auth.admin.deleteUser(person.user_id);
       if (deleteUserError) throw deleteUserError;
     } else {
-      const { error: profileUpdateError } = await supabase.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
+      const { error: profileUpdateError } = await sessionSupabase.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
       if (profileUpdateError) throw profileUpdateError;
     }
   }
+
+  const { error } = await db.from("people").delete().eq("id", personId);
+  if (error) throw error;
 
   revalidatePath("/people");
   revalidatePath("/leaderboard");
