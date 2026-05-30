@@ -16,6 +16,13 @@ type TemporaryPasswordInput = {
   temporaryPassword: string;
 };
 
+type SignInLinkInput = {
+  to: string;
+  name: string;
+  relationship: string;
+  link: string;
+};
+
 type EmailVariant = {
   subject: string;
   preview: string;
@@ -289,6 +296,37 @@ And use this temporary password:
 ${temporaryPassword}
 
 Then go to https://calltioeric.com/login and change it after you get back in.`;
+
+  await sendEmail(to, subject, html, text, { requireConfigured: true });
+}
+
+export async function sendSignInLinkEmail({ to, name, relationship, link }: SignInLinkInput) {
+  const copy = relationshipCopy(relationship);
+  const subject = `Your ${copy.leaderboardName} sign-in link`;
+  const safeLink = escapeHtml(link);
+  const html = `
+    <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
+      <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
+        <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
+        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">Re-enter the leaderboard. Try to look casual.</h1>
+        <p style="font-size:16px;line-height:1.55;">Hi ${escapeHtml(name)},</p>
+        <p style="font-size:16px;line-height:1.55;">Here is your private sign-in link for ${copy.leaderboardName}. No password required, because apparently remembering one more thing would be the real family emergency.</p>
+        <p style="margin:24px 0;">
+          <a href="${safeLink}" style="display:inline-block;background:#1f2928;color:#fff;text-decoration:none;border-radius:8px;padding:14px 18px;font-weight:800;">Open the leaderboard</a>
+        </p>
+        <p style="font-size:14px;line-height:1.55;color:#64706d;">If the button refuses to participate, copy and paste this link:</p>
+        <p style="font-size:14px;line-height:1.55;word-break:break-all;">${safeLink}</p>
+        <p style="font-size:16px;line-height:1.55;">${copy.closingNudge}</p>
+      </div>
+    </div>
+  `;
+  const text = `Hi ${name},
+
+Here is your private sign-in link for ${copy.leaderboardName}:
+
+${link}
+
+${copy.closingNudge}`;
 
   await sendEmail(to, subject, html, text, { requireConfigured: true });
 }
