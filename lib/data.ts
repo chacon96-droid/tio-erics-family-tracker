@@ -51,6 +51,7 @@ export type PersonYearlyBreakdown = {
   totalScore: number;
   callScore: number;
   textScore: number;
+  timeTogetherScore: number;
   interactionCount: number;
   approvedInteractionCount: number;
   pendingInteractionCount: number;
@@ -78,6 +79,7 @@ export async function getPersonYearlyBreakdowns(personId: string): Promise<Perso
       totalScore: score?.total_score || 0,
       callScore: score?.call_score || 0,
       textScore: score?.text_score || 0,
+      timeTogetherScore: score?.time_together_score || 0,
       interactionCount: yearInteractions.length,
       approvedInteractionCount: yearInteractions.filter((interaction) => interaction.status === "approved").length,
       pendingInteractionCount: yearInteractions.filter((interaction) => interaction.status === "pending").length,
