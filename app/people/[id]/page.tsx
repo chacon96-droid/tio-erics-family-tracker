@@ -152,8 +152,8 @@ export default async function PersonPage({
                 </div>
               </div>
               <label className="grid gap-1 text-sm font-bold text-muted">
-                Take or upload a photo
-                <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" accept="image/*" required />
+                Upload a photo
+                <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" required />
               </label>
               <button className="focus-ring rounded-app bg-ink px-4 py-3 font-black text-white">Save racer photo</button>
             </form>
