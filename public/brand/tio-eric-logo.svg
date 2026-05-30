@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Tio Eric Leaderboard logo</title>
+  <desc id="desc">A black and gold crest mark with the letters T and E beside a refined wordmark.</desc>
+  <rect width="720" height="220" fill="#101413"/>
+  <path d="M32 32h656v156H32z" fill="none" stroke="#c7a45a" stroke-width="2"/>
+  <path d="M44 44h632v132H44z" fill="none" stroke="#6f5a2f" stroke-width="1"/>
+  <g transform="translate(70 42)">
+    <path d="M70 0 132 24v54c0 42-24 75-62 94C32 153 8 120 8 78V24L70 0Z" fill="#f7f1df" stroke="#c7a45a" stroke-width="4"/>
+    <path d="M70 16 116 34v44c0 31-17 56-46 72-29-16-46-41-46-72V34l46-18Z" fill="#141917"/>
+    <text x="70" y="100" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="-4" fill="#c7a45a">TE</text>
+    <path d="M45 118h50" stroke="#f7f1df" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(235 62)">
+    <text x="0" y="40" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800" letter-spacing="4" fill="#c7a45a">CALL TIO ERIC</text>
+    <text x="0" y="95" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="-2" fill="#f7f1df">Family Tracker</text>
+    <text x="2" y="128" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="2" fill="#a9b6ad">AFFECTION. RECEIPTS. CONSEQUENCES.</text>
+  </g>
+</svg>
