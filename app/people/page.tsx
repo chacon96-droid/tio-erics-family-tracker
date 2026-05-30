@@ -19,15 +19,24 @@ export default async function PeoplePage() {
           {people.length ? (
             <div className="mt-4 overflow-hidden rounded-app border border-line bg-white">
               {people.map((person) => (
-                <Link key={person.id} href={`/people/${person.id}`} className="block border-b border-line p-4 last:border-b-0 hover:bg-paper">
+                <div key={person.id} className="border-b border-line p-4 last:border-b-0 hover:bg-paper">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="font-black">{person.name}</p>
+                      <Link href={`/people/${person.id}`} className="font-black underline-offset-4 hover:underline">
+                        {person.name}
+                      </Link>
                       <p className="text-sm font-semibold text-muted">{person.relationship}</p>
                     </div>
-                    <span className="text-sm font-bold text-muted">{person.active ? "Active" : "Inactive"}</span>
+                    <div className="grid justify-items-end gap-1">
+                      <span className="text-sm font-bold text-muted">{person.active ? "Active" : "Inactive"}</span>
+                      {isAdmin ? (
+                        <Link href={`/admin/preview/${person.id}`} className="text-xs font-black uppercase text-clay underline-offset-4 hover:underline">
+                          Preview family view
+                        </Link>
+                      ) : null}
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           ) : (
