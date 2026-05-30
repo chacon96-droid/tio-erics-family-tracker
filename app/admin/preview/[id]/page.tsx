@@ -7,6 +7,7 @@ import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { requireAdmin } from "@/lib/auth";
 import { getAppSettings, getLeaderboard, getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
+import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function FamilyPreviewPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -25,6 +26,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
   const approvedInteractions = interactions.filter((item) => item.status === "approved");
   const limitedLeaderboardEnabled = settings.limited_family_leaderboard_enabled !== false;
+  const audience = leaderboardAudienceForRelationship(person.relationship);
 
   return (
     <AppShell previewMode>
@@ -91,9 +93,11 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
           <section>
             <div className="mb-3">
               <p className="text-xs font-black uppercase text-clay">What they can compare</p>
-              <h3 className="text-xl font-black">Limited leaderboard</h3>
+              <h3 className="text-xl font-black">
+                {audience === "friends" ? "Family friends leaderboard" : "Family leaderboard"}
+              </h3>
             </div>
-            <LeaderboardTable rows={leaderboard.slice(0, 5)} />
+            <LeaderboardTable rows={leaderboard.filter((row) => leaderboardAudienceForRelationship(row.relationship) === audience).slice(0, 5)} />
           </section>
         ) : (
           <section className="rounded-app border border-line bg-white p-4 font-bold text-muted">
