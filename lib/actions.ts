@@ -169,7 +169,12 @@ export async function requestMagicLink(formData: FormData) {
       emailRedirectTo: `${origin}/auth/callback?next=/dashboard`
     }
   });
-  if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  if (error) {
+    const message = error.message.toLowerCase().includes("signups not allowed")
+      ? "That email is not on the roster yet. Join the roster first, then Eric can approve you for the leaderboard."
+      : error.message;
+    redirect(`/login?error=${encodeURIComponent(message)}`);
+  }
 
   redirect(`/login?message=${encodeURIComponent("Sign-in link sent. Check your email and tap the button like the chosen one.")}`);
 }
