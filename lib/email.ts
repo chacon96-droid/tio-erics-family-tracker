@@ -12,6 +12,7 @@ type ApprovalEmailInput = {
 
 type TemporaryPasswordInput = {
   to: string;
+  loginEmail: string;
   temporaryPassword: string;
 };
 
@@ -261,14 +262,16 @@ export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmai
   await sendEmail(to, contextualText(variant.subject, relationship), shellHtml(name, relationship, variant), textBody(name, relationship, variant));
 }
 
-export async function sendTemporaryPasswordEmail({ to, temporaryPassword }: TemporaryPasswordInput) {
+export async function sendTemporaryPasswordEmail({ to, loginEmail, temporaryPassword }: TemporaryPasswordInput) {
   const subject = "Your Eric Family Tracker admin recovery code";
   const html = `
     <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
       <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
         <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
         <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">Admin access recovered. The keys were under the couch, emotionally.</h1>
-        <p style="font-size:16px;line-height:1.55;">Use this temporary password to sign in under <strong>Admin password sign-in</strong>:</p>
+        <p style="font-size:16px;line-height:1.55;">Use this admin email under <strong>Admin password sign-in</strong>:</p>
+        <p style="font-size:18px;line-height:1.4;background:#f4efe7;border:1px solid #d9cfc0;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(loginEmail)}</p>
+        <p style="font-size:16px;line-height:1.55;">And use this temporary password:</p>
         <p style="font-size:20px;line-height:1.4;background:#f4efe7;border:1px solid #d9cfc0;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(temporaryPassword)}</p>
         <p style="font-size:16px;line-height:1.55;">After you get back in, change it to something you will remember but a cousin could not guess while holding a Capri Sun.</p>
         <p style="font-size:16px;line-height:1.55;"><a href="https://calltioeric.com/login">Go to Eric Family Tracker</a></p>
@@ -277,7 +280,11 @@ export async function sendTemporaryPasswordEmail({ to, temporaryPassword }: Temp
   `;
   const text = `Admin access recovered.
 
-Use this temporary password under Admin password sign-in:
+Use this admin email under Admin password sign-in:
+
+${loginEmail}
+
+And use this temporary password:
 
 ${temporaryPassword}
 
