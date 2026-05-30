@@ -32,6 +32,28 @@ const signupSchema = z.object({
   password: z.string().min(8)
 });
 
+async function uploadProfilePhoto(formData: FormData, personId: string) {
+  const file = formData.get("avatar_file");
+  if (!(file instanceof File) || file.size === 0) return null;
+  if (!file.type.startsWith("image/")) throw new Error("Profile photo must be an image.");
+  if (file.size > 5 * 1024 * 1024) throw new Error("Profile photo must be under 5MB.");
+
+  const supabase = createAdminClient();
+  if (!supabase) throw new Error("Photo upload is not configured yet.");
+
+  const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const path = `${personId}/${Date.now()}.${extension}`;
+  const { error } = await supabase.storage.from("profile-photos").upload(path, file, {
+    cacheControl: "3600",
+    contentType: file.type,
+    upsert: true
+  });
+  if (error) throw error;
+
+  const { data } = supabase.storage.from("profile-photos").getPublicUrl(path);
+  return data.publicUrl;
+}
+
 const interactionSchema = z.object({
   person_id: z.string().uuid(),
   type: z.string().min(1),
@@ -86,6 +108,15 @@ export async function signUp(formData: FormData) {
       person_email: parsed.email
     });
     if (personError) redirect(`/signup?error=${encodeURIComponent(personError.message)}`);
+
+    const { data: person } = await adminSupabase.from("people").select("id").eq("user_id", userId).maybeSingle();
+    if (person?.id) {
+      const avatarUrl = await uploadProfilePhoto(formData, person.id);
+      if (avatarUrl) {
+        const { error: photoError } = await adminSupabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
+        if (photoError) redirect(`/signup?error=${encodeURIComponent(photoError.message)}`);
+      }
+    }
   } else {
     const { error: personError } = await supabase.rpc("create_public_roster_request", {
       person_name: parsed.name,
@@ -117,12 +148,17 @@ export async function savePerson(formData: FormData) {
   await requireAdmin();
   const parsed = personSchema.parse(Object.fromEntries(formData));
   const supabase = await createClient();
+  let avatarUrl = parsed.avatar_url || null;
+  if (parsed.id) {
+    avatarUrl = (await uploadProfilePhoto(formData, parsed.id)) || avatarUrl;
+  }
+
   const payload = {
     ...parsed,
     birthday: parsed.birthday || null,
     email: parsed.email || null,
     phone: parsed.phone || null,
-    avatar_url: parsed.avatar_url || null,
+    avatar_url: avatarUrl,
     active: formData.get("active") === "on"
   };
 
@@ -130,11 +166,39 @@ export async function savePerson(formData: FormData) {
     const { error } = await supabase.from("people").update(payload).eq("id", parsed.id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("people").insert(payload);
+    const { data, error } = await supabase.from("people").insert(payload).select("id").single();
     if (error) throw error;
+    const avatarUrl = await uploadProfilePhoto(formData, data.id);
+    if (avatarUrl) {
+      const { error: photoError } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", data.id);
+      if (photoError) throw photoError;
+    }
   }
   revalidatePath("/people");
   redirect("/people");
+}
+
+export async function updateMyProfilePhoto(formData: FormData) {
+  const user = await requireApprovedUser();
+  const personId = String(formData.get("person_id") || "");
+  if (!personId) throw new Error("Missing person id");
+
+  const supabase = await createClient();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+  const personQuery = supabase.from("people").select("id,user_id").eq("id", personId);
+  if (profile?.role !== "admin") personQuery.eq("user_id", user.id);
+  const { data: person, error: personError } = await personQuery.maybeSingle();
+  if (personError) throw personError;
+  if (!person) throw new Error("You can only update your own leaderboard mugshot.");
+
+  const avatarUrl = await uploadProfilePhoto(formData, person.id);
+  if (!avatarUrl) throw new Error("Choose a photo first.");
+
+  const { error } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
+  if (error) throw error;
+
+  revalidatePath(`/people/${person.id}`);
+  revalidatePath("/people");
 }
 
 export async function deletePerson(formData: FormData) {
