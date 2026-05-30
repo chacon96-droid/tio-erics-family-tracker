@@ -1,8 +1,17 @@
 import Link from "next/link";
+import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { EmptyState } from "@/components/EmptyState";
 import type { PersonWithScore } from "@/lib/types";
 
-export function LeaderboardTable({ rows, linkPeople = true }: { rows: PersonWithScore[]; linkPeople?: boolean }) {
+export function LeaderboardTable({
+  rows,
+  linkPeople = true,
+  canRemovePeople = false
+}: {
+  rows: PersonWithScore[];
+  linkPeople?: boolean;
+  canRemovePeople?: boolean;
+}) {
   const maxScore = Math.max(...rows.map((row) => row.score?.total_score || 0), 1);
 
   if (!rows.length) {
@@ -24,6 +33,7 @@ export function LeaderboardTable({ rows, linkPeople = true }: { rows: PersonWith
             <th className="p-3">Score</th>
             <th className="p-3">Trend</th>
             <th className="p-3">Top category</th>
+            {canRemovePeople ? <th className="p-3 text-right">Admin</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -53,6 +63,11 @@ export function LeaderboardTable({ rows, linkPeople = true }: { rows: PersonWith
                 {row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting"}
               </td>
               <td className="p-3 font-semibold text-muted">{row.topCategory}</td>
+              {canRemovePeople ? (
+                <td className="p-3 text-right">
+                  <DeletePersonButton personId={row.id} personName={row.name} variant="inline" returnTo="/leaderboard" />
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>
