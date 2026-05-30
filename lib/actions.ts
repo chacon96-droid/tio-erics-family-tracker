@@ -98,6 +98,13 @@ async function findAuthUserIdByEmail(email: string) {
   return match?.id || null;
 }
 
+async function repairAuthUserTokens(email: string) {
+  const adminSupabase = createAdminClient();
+  if (!adminSupabase) return;
+  const { error } = await adminSupabase.rpc("repair_auth_user_tokens", { target_email: email });
+  if (error) console.error("Could not repair auth tokens", error);
+}
+
 async function ensureRosterLogin(email: string) {
   const adminSupabase = createAdminClient();
   if (!adminSupabase) return null;
@@ -129,6 +136,7 @@ async function ensureRosterLogin(email: string) {
   }
 
   if (!userId) return;
+  await repairAuthUserTokens(email);
 
   const role = person.active ? "family" : "pending";
   await adminSupabase.from("profiles").upsert({
@@ -203,6 +211,7 @@ export async function requestMagicLink(formData: FormData) {
   }
 
   const origin = await getAuthRedirectOrigin();
+  await repairAuthUserTokens(email);
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
@@ -246,6 +255,7 @@ export async function signUp(formData: FormData) {
     }
 
     if (!userId) redirect(`/signup?error=${encodeURIComponent("Could not create roster account")}`);
+    await repairAuthUserTokens(parsed.email);
 
     const { error: personError } = await adminSupabase.rpc("create_pending_person", {
       target_user_id: userId,
