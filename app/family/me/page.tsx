@@ -5,6 +5,7 @@ import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { submitFamilyActivity } from "@/lib/family-actions";
 import { getFamilyPersonInteractions, getFamilyYearlyBreakdowns, requireFamilyAccessPerson } from "@/lib/family-access";
+import { badgeHints, profileRoast, qualityTimeNudge } from "@/lib/family-lore";
 
 export default async function FamilyMePage({
   searchParams
@@ -18,6 +19,7 @@ export default async function FamilyMePage({
   ]);
   const currentYear = new Date().getFullYear();
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
+  const badges = badgeHints(person);
 
   return (
     <FamilyShell person={person}>
@@ -27,8 +29,15 @@ export default async function FamilyMePage({
             <p className="text-xs font-black uppercase text-clay">{person.relationship}</p>
             <h2 className="text-3xl font-black">{person.name}</h2>
             <p className="mt-2 max-w-2xl font-semibold text-muted">
-              Your personal scoreboard. If this feels accusatory, that is because numbers have no bedside manner.
+              {profileRoast(person, { total_score: currentYearBreakdown?.totalScore || 0 })}
             </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <span key={badge} className="rounded-full border border-line bg-white px-3 py-1 text-xs font-black text-clay">
+                  {badge}
+                </span>
+              ))}
+            </div>
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard label={`${currentYear} score`} value={currentYearBreakdown?.totalScore || 0} />
@@ -70,14 +79,14 @@ export default async function FamilyMePage({
           {params?.error ? <p className="rounded-app bg-red-50 p-3 text-sm font-bold text-red-700">{params.error}</p> : null}
           {params?.submitted ? (
             <p className="rounded-app bg-green-50 p-3 text-sm font-bold text-green-800">
-              Submitted for Eric approval. Due process, but make it family.
+              Submitted for Eric approval. {qualityTimeNudge(person.id)}
             </p>
           ) : null}
           <form action={submitFamilyActivity} className="grid gap-3 rounded-app border border-line bg-white p-4">
             <div>
               <p className="text-xs font-black uppercase text-clay">Claim quality time</p>
               <h3 className="text-xl font-black">Submit an activity</h3>
-              <p className="mt-1 text-sm font-semibold text-muted">Fortnite, visits, actual effort. Eric approves it before it counts.</p>
+              <p className="mt-1 text-sm font-semibold text-muted">{qualityTimeNudge(person.name)}</p>
             </div>
             <label className="grid gap-1 text-sm font-bold text-muted">
               Type
