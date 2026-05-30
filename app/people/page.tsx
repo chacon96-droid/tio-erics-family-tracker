@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPeople } from "@/lib/data";
 
-export default async function PeoplePage() {
+export default async function PeoplePage({ searchParams }: { searchParams?: Promise<{ removed?: string; error?: string }> }) {
   await requireApprovedUser();
+  const params = (await searchParams) || {};
   const [people, profile] = await Promise.all([getPeople(), getProfile()]);
   const isAdmin = profile?.role === "admin";
 
@@ -16,6 +18,16 @@ export default async function PeoplePage() {
         <section>
           <p className="text-xs font-black uppercase text-clay">Family roster</p>
           <h2 className="text-3xl font-black">People</h2>
+          {params.removed ? (
+            <div className="mt-4 rounded-app border border-green-200 bg-green-50 p-3 text-sm font-black text-green-800">
+              Removed {params.removed}. The leaderboard has been informed and is pretending to be mature about it.
+            </div>
+          ) : null}
+          {params.error ? (
+            <div className="mt-4 rounded-app border border-red-200 bg-red-50 p-3 text-sm font-black text-red-800">
+              Could not remove that profile: {params.error}
+            </div>
+          ) : null}
           {people.length ? (
             <div className="mt-4 overflow-hidden rounded-app border border-line bg-white">
               {people.map((person) => (
@@ -34,6 +46,7 @@ export default async function PeoplePage() {
                           Preview family view
                         </Link>
                       ) : null}
+                      {isAdmin ? <DeletePersonButton personId={person.id} personName={person.name} variant="inline" /> : null}
                     </div>
                   </div>
                 </div>
