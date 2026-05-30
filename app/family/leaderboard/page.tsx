@@ -34,7 +34,7 @@ export default async function FamilyLeaderboardPage({ searchParams }: { searchPa
             </Link>
           ))}
         </nav>
-        <LeaderboardTable rows={rows} />
+        <LeaderboardTable rows={rows} linkPeople={false} />
         <InheritanceSimulator rows={rows} />
       </div>
     </FamilyShell>
