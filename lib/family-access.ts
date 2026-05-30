@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { calculateScores, topCategory } from "@/lib/scoring";
+import { calculateScores, scoreMomentumLabel, topCategory } from "@/lib/scoring";
 import { createAdminClient } from "@/lib/supabase/server";
 import type { Interaction, Person, PersonWithScore, Score, ScoringWeight } from "@/lib/types";
 
@@ -106,6 +106,7 @@ export async function getFamilyLeaderboard(period: "week" | "month" | "year" | "
         ...person,
         score,
         topCategory: topCategory(score),
+        trendLabel: scoreMomentumLabel(score),
         trend: "flat"
       };
     })
