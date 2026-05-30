@@ -2,7 +2,7 @@ import type { PersonWithScore } from "@/lib/types";
 
 function RacerAvatar({ row }: { row: PersonWithScore }) {
   return (
-    <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-ink bg-paper text-sm font-black text-clay shadow-sm">
+    <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-gold bg-ink text-sm font-black text-gold shadow-brand">
       {row.avatar_url ? <img src={row.avatar_url} alt="" className="h-full w-full object-cover" /> : row.name.slice(0, 1)}
     </div>
   );
@@ -15,11 +15,11 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
   const maxScore = Math.max(...visibleRows.map((row) => row.score?.total_score || 0), 1);
 
   return (
-    <section className="mb-4 rounded-app border border-line bg-white p-4">
+    <section className="mb-4 rounded-app border border-gold/40 bg-ivory p-4 shadow-brand">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-black uppercase text-clay">Photo finish, emotionally speaking</p>
-          <h4 className="text-xl font-black">{title}</h4>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-clay">Photo finish, emotionally speaking</p>
+          <h4 className="font-serif text-2xl font-black tracking-tight">{title}</h4>
         </div>
         <p className="text-sm font-semibold text-muted">Profile photos move by score. Zero effort starts near the parking lot.</p>
       </div>
@@ -41,10 +41,10 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
                 </div>
                 <p className="shrink-0 font-black">{Math.round(score * 10) / 10} pts</p>
               </div>
-              <div className="relative h-16 overflow-hidden rounded-app border border-line bg-paper">
-                <div className="absolute left-4 right-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white" />
+              <div className="relative h-16 overflow-hidden rounded-app border border-line bg-paper shadow-insetGold">
+                <div className="absolute left-4 right-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white/90" />
                 <div
-                  className="absolute left-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-clay"
+                  className="absolute left-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-gold"
                   style={{ right: `${100 - progress}%` }}
                 />
                 <div
