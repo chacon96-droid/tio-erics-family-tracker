@@ -448,7 +448,15 @@ export async function approveFamilyMember(formData: FormData) {
   const userId = String(formData.get("user_id"));
   const supabase = await createClient();
   const adminSupabase = createAdminClient();
-  const { data: person } = await supabase.from("people").select("name,email,relationship,user_id").eq("id", personId).maybeSingle();
+  const db = adminSupabase || supabase;
+  const { data: person, error: personError } = await db
+    .from("people")
+    .select("name,email,relationship,user_id")
+    .eq("id", personId)
+    .maybeSingle();
+  if (personError) redirect(`/admin/approvals?error=${encodeURIComponent(personError.message)}`);
+  if (!person) redirect("/admin/approvals?error=That%20roster%20request%20already%20left%20the%20building.");
+
   let approvedUserId = userId || person?.user_id || "";
 
   if (!approvedUserId && person?.email && adminSupabase) {
@@ -463,25 +471,28 @@ export async function approveFamilyMember(formData: FormData) {
           signup_role: "family"
         }
       });
-      if (createUserError) throw createUserError;
-      approvedUserId = createdUser.user?.id || "";
+      if (createUserError) {
+        approvedUserId = (await findAuthUserIdByEmail(person.email)) || "";
+        if (!approvedUserId) redirect(`/admin/approvals?error=${encodeURIComponent(createUserError.message)}`);
+      } else {
+        approvedUserId = createdUser.user?.id || "";
+      }
     }
   }
 
   if (approvedUserId) {
-    const profileClient = adminSupabase || supabase;
-    const { error: profileError } = await profileClient.from("profiles").upsert({
+    const { error: profileError } = await db.from("profiles").upsert({
       id: approvedUserId,
       role: "family",
       display_name: person?.name || person?.email || "Family"
     });
-    if (profileError) throw profileError;
+    if (profileError) redirect(`/admin/approvals?error=${encodeURIComponent(profileError.message)}`);
   }
 
   const updatePayload: { active: boolean; user_id?: string } = { active: true };
   if (approvedUserId) updatePayload.user_id = approvedUserId;
-  const { error } = await supabase.from("people").update(updatePayload).eq("id", personId);
-  if (error) throw error;
+  const { error } = await db.from("people").update(updatePayload).eq("id", personId);
+  if (error) redirect(`/admin/approvals?error=${encodeURIComponent(error.message)}`);
   if (person?.email) {
     try {
       await sendApprovalEmail({ to: person.email, name: person.name, relationship: person.relationship });
@@ -491,6 +502,7 @@ export async function approveFamilyMember(formData: FormData) {
   }
   revalidatePath("/people");
   revalidatePath("/admin/approvals");
+  redirect(`/admin/approvals?approved=${encodeURIComponent(person?.name || "Family member")}`);
 }
 
 export async function setInteractionStatus(formData: FormData) {
