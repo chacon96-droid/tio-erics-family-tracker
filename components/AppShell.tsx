@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { signOut } from "@/lib/actions";
 import { getProfile } from "@/lib/auth";
 
@@ -23,30 +24,30 @@ export async function AppShell({ children, previewMode = false }: { children: Re
 
   return (
     <div className="min-h-screen bg-paper">
-      <header className="border-b border-line bg-paper/95">
+      <header className="border-b border-gold/30 bg-ivory/95 shadow-sm">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-black uppercase text-clay">Private family tracker, because vibes need receipts</p>
-            <h1 className="text-2xl font-black text-ink">Eric Family Tracker</h1>
+            <BrandMark />
+            <p className="mt-2 text-xs font-black uppercase tracking-[0.18em] text-clay">Private family tracker, because vibes need receipts</p>
             {previewMode ? (
               <p className="mt-1 text-sm font-bold text-muted">Family preview mode. Admin buttons are offstage, where they belong.</p>
             ) : null}
           </div>
           <form action={signOut}>
-            <button className="focus-ring rounded-app border border-line bg-white px-3 py-2 text-sm font-bold">
+            <button className="focus-ring rounded-app border border-ink bg-ink px-3 py-2 text-sm font-black text-ivory shadow-brand">
               Sign out
             </button>
           </form>
         </div>
         <nav className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 pb-4">
           {nav.map(([label, href]) => (
-            <Link key={href} href={href} className="rounded-app border border-line bg-white px-3 py-2 text-sm font-bold">
+            <Link key={href} href={href} className="rounded-app border border-line bg-white/80 px-3 py-2 text-sm font-black shadow-sm hover:border-gold">
               {label}
             </Link>
           ))}
           {isAdmin &&
             adminNav.map(([label, href]) => (
-              <Link key={href} href={href} className="rounded-app bg-ink px-3 py-2 text-sm font-bold text-white">
+              <Link key={href} href={href} className="rounded-app border border-gold bg-ink px-3 py-2 text-sm font-black text-gold shadow-brand">
                 {label}
               </Link>
             ))}
