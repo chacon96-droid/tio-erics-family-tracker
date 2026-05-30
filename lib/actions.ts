@@ -64,7 +64,6 @@ export async function signUp(formData: FormData) {
     name: parsed.name,
     signup_role: "pending"
   };
-
   if (adminSupabase) {
     const { data, error } = await adminSupabase.auth.admin.createUser({
       email: parsed.email,
@@ -100,7 +99,7 @@ export async function signUp(formData: FormData) {
   }
 
   try {
-    await sendSignupWelcomeEmail({ to: parsed.email, name: parsed.name });
+    await sendSignupWelcomeEmail({ to: parsed.email, name: parsed.name, relationship: parsed.relationship });
   } catch (emailError) {
     console.error("Signup welcome email failed", emailError);
   }
@@ -214,7 +213,7 @@ export async function approveFamilyMember(formData: FormData) {
   const personId = String(formData.get("person_id"));
   const userId = String(formData.get("user_id"));
   const supabase = await createClient();
-  const { data: person } = await supabase.from("people").select("name,email").eq("id", personId).maybeSingle();
+  const { data: person } = await supabase.from("people").select("name,email,relationship").eq("id", personId).maybeSingle();
   if (userId) {
     const { error: profileError } = await supabase.from("profiles").update({ role: "family" }).eq("id", userId);
     if (profileError) throw profileError;
@@ -223,7 +222,7 @@ export async function approveFamilyMember(formData: FormData) {
   if (error) throw error;
   if (person?.email) {
     try {
-      await sendApprovalEmail({ to: person.email, name: person.name });
+      await sendApprovalEmail({ to: person.email, name: person.name, relationship: person.relationship });
     } catch (emailError) {
       console.error("Approval email failed", emailError);
     }
