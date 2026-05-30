@@ -16,7 +16,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
         {params?.error ? <p className="mt-3 rounded-app bg-red-50 p-3 text-sm font-bold text-red-700">{params.error}</p> : null}
         <label className="mt-5 grid gap-1 text-sm font-bold text-muted">
           Profile photo
-          <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" accept="image/*" capture="user" />
+          <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" accept="image/*" />
           <span className="text-xs font-semibold text-muted">Camera or camera roll. The leaderboard deserves a face for the evidence board.</span>
         </label>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
