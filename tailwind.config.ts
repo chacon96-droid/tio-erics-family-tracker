@@ -9,17 +9,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#f7f3ea",
-        ink: "#1e2524",
-        muted: "#65706d",
-        line: "#d8d0c2",
-        clay: "#bd735c",
-        mint: "#79b8a6",
-        gold: "#d6a94f",
-        blue: "#5d7ea6"
+        paper: "#f3eee2",
+        ivory: "#fffaf0",
+        ink: "#101413",
+        muted: "#64706a",
+        line: "#d9cfbd",
+        clay: "#9b6a3b",
+        mint: "#6fb8a4",
+        gold: "#c7a45a",
+        champagne: "#ead7a2",
+        blue: "#526f91",
+        night: "#171c1a"
       },
       borderRadius: {
         app: "8px"
+      },
+      boxShadow: {
+        brand: "0 14px 40px rgba(16, 20, 19, 0.14)",
+        insetGold: "inset 0 0 0 1px rgba(199, 164, 90, 0.28)"
       }
     }
   },
