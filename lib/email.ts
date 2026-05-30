@@ -207,10 +207,11 @@ function shellHtml(name: string, relationship: string, variant: EmailVariant) {
   const closer = contextualText(variant.closer, relationship);
   const finalCloser = closer.includes(copy.closingNudge) ? closer : `${closer} ${copy.closingNudge}`;
   return `
-    <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
-      <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
-        <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
-        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">${intro}</h1>
+    <div style="background:#f3eee2;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#101413;">
+      <div style="max-width:620px;margin:0 auto;background:#fffaf0;border:1px solid #c7a45a;border-radius:8px;padding:28px;">
+        ${brandHeaderHtml()}
+        <p style="margin:0 0 10px;color:#9b6a3b;font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;">Official roster correspondence</p>
+        <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;">${intro}</h1>
         <p style="font-size:16px;line-height:1.55;">Hi ${escapeHtml(name)},</p>
         <p style="font-size:16px;line-height:1.55;">${copy.relationshipLine}</p>
         <p style="font-size:16px;line-height:1.55;">${warning}</p>
@@ -259,6 +260,18 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
+function brandHeaderHtml() {
+  return `
+    <div style="display:flex;align-items:center;gap:14px;margin:0 0 24px;">
+      <div style="width:48px;height:48px;border:1px solid #c7a45a;background:#101413;color:#c7a45a;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;letter-spacing:-.04em;">TE</div>
+      <div>
+        <p style="margin:0;color:#c7a45a;font-size:10px;font-weight:900;letter-spacing:.28em;text-transform:uppercase;">Call Tio Eric</p>
+        <p style="margin:4px 0 0;color:#101413;font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:900;line-height:1;">Family Tracker</p>
+      </div>
+    </div>
+  `;
+}
+
 async function sendEmail(to: string, subject: string, html: string, text: string, options?: { requireConfigured?: boolean }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || "Eric Family Tracker <onboarding@resend.dev>";
@@ -296,14 +309,14 @@ export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmai
 export async function sendTemporaryPasswordEmail({ to, loginEmail, temporaryPassword }: TemporaryPasswordInput) {
   const subject = "Your Eric Family Tracker admin recovery code";
   const html = `
-    <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
-      <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
-        <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
-        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">Admin access recovered. The keys were under the couch, emotionally.</h1>
+    <div style="background:#f3eee2;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#101413;">
+      <div style="max-width:620px;margin:0 auto;background:#fffaf0;border:1px solid #c7a45a;border-radius:8px;padding:28px;">
+        ${brandHeaderHtml()}
+        <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;">Admin access recovered. The keys were under the couch, emotionally.</h1>
         <p style="font-size:16px;line-height:1.55;">Use this admin email under <strong>Admin password sign-in</strong>:</p>
-        <p style="font-size:18px;line-height:1.4;background:#f4efe7;border:1px solid #d9cfc0;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(loginEmail)}</p>
+        <p style="font-size:18px;line-height:1.4;background:#f3eee2;border:1px solid #d9cfbd;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(loginEmail)}</p>
         <p style="font-size:16px;line-height:1.55;">And use this temporary password:</p>
-        <p style="font-size:20px;line-height:1.4;background:#f4efe7;border:1px solid #d9cfc0;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(temporaryPassword)}</p>
+        <p style="font-size:20px;line-height:1.4;background:#f3eee2;border:1px solid #d9cfbd;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(temporaryPassword)}</p>
         <p style="font-size:16px;line-height:1.55;">After you get back in, change it to something you will remember but a cousin could not guess while holding a Capri Sun.</p>
         <p style="font-size:16px;line-height:1.55;"><a href="https://calltioeric.com/login">Go to Eric Family Tracker</a></p>
       </div>
@@ -329,14 +342,14 @@ export async function sendSignInLinkEmail({ to, name, relationship, link }: Sign
   const subject = `Your ${copy.leaderboardName} sign-in link`;
   const safeLink = escapeHtml(link);
   const html = `
-    <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
-      <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
-        <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
-        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">Re-enter the leaderboard. Try to look casual.</h1>
+    <div style="background:#f3eee2;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#101413;">
+      <div style="max-width:620px;margin:0 auto;background:#fffaf0;border:1px solid #c7a45a;border-radius:8px;padding:28px;">
+        ${brandHeaderHtml()}
+        <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;">Re-enter the leaderboard. Try to look casual.</h1>
         <p style="font-size:16px;line-height:1.55;">Hi ${escapeHtml(name)},</p>
         <p style="font-size:16px;line-height:1.55;">Here is your private sign-in link for ${copy.leaderboardName}. No password required, because apparently remembering one more thing would be the real family emergency.</p>
         <p style="margin:24px 0;">
-          <a href="${safeLink}" style="display:inline-block;background:#1f2928;color:#fff;text-decoration:none;border-radius:8px;padding:14px 18px;font-weight:800;">Open the leaderboard</a>
+          <a href="${safeLink}" style="display:inline-block;background:#101413;color:#c7a45a;text-decoration:none;border:1px solid #c7a45a;border-radius:8px;padding:14px 18px;font-weight:900;">Open the leaderboard</a>
         </p>
         <p style="font-size:14px;line-height:1.55;color:#64706d;">If the button refuses to participate, copy and paste this link:</p>
         <p style="font-size:14px;line-height:1.55;word-break:break-all;">${safeLink}</p>
