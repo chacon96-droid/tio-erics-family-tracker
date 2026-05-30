@@ -68,28 +68,52 @@ const signupVariants: EmailVariant[] = [
 
 const approvalVariants: EmailVariant[] = [
   {
-    subject: "Roster approved. The leaderboard sees you now.",
-    preview: "You are officially eligible for points and fictional trust allocation.",
-    intro: "You have been approved for the Tio Eric Leaderboard.",
+    subject: "You have been approved for the Tio Eric Leaderboard",
+    preview: "The committee has spoken. Unfortunately, the committee is Eric.",
+    intro: "You are in.",
     warning:
-      "This means calls, FaceTimes, and text exchanges with Eric can now count toward your score. Group chats remain worthless here, as nature intended.",
-    closer: "The inheritance simulator is a joke, legally speaking. Emotionally, behave accordingly."
+      "Your application to the Tio Eric Leaderboard has been approved by the Committee of Tio Eric, which is mostly Eric, a database, and an alarming amount of confidence.",
+    closer: "Projected inheritance percentages are emotionally binding, legally meaningless, and updated as the data becomes more embarrassing."
   },
   {
-    subject: "Approved. Your silence is now measurable.",
-    preview: "Welcome to the ranked portion of family affection.",
-    intro: "Good news: Eric approved your roster request.",
+    subject: "Is that right? You made the leaderboard.",
+    preview: "Abuelito German has been spiritually notified.",
+    intro: "Is that right? You are approved.",
     warning:
-      "The leaderboard updates when Eric's Mac syncs call and text metadata, currently scheduled nightly at 8 PM. Message content is not stored. Just the facts. Cold, devastating facts.",
-    closer: "You can also submit quality time manually if Fortnite, visits, or actual human effort deserve credit."
+      "The leaderboard will now track your calls, texts, FaceTimes, and approved quality time with Eric. No message contents are stored, only metadata, because even this family has limits.",
+    closer: "If your score is low, the system may assume you are avoiding Eric like Abuelito German avoids his ex-wives. Cold evasiveness will be documented."
   },
   {
-    subject: "You are officially on the board",
-    preview: "The family trust percentage remains fake. The leaderboard is real enough.",
-    intro: "Your Tio Eric Leaderboard profile has been approved.",
+    subject: "Your leaderboard era begins now",
+    preview: "Legally meaningless. Emotionally devastating.",
+    intro: "Congratulations. You have entered the family ranking system.",
     warning:
-      "Weekly, monthly, yearly, and all-time rankings are available. This is either a bonding exercise or a very polished cry for attention. Possibly both.",
-    closer: "Call your uncle. The algorithm is listening, but in a metadata-only way."
+      "Your score is based on calls, texts, FaceTimes, and approved quality time with Eric. Group chats do not count, because that is cowardice with notifications.",
+    closer: "Your projected family trust percentage may rise or fall based on effort, initiative, and whether you remember Eric exists."
+  },
+  {
+    subject: "You could buy everybody here gelato",
+    preview: "Approved with suspicious frozen-dessert energy.",
+    intro: "You are approved.",
+    warning:
+      "The Tio Eric Leaderboard has accepted your presence into the arena. Your calls, texts, FaceTimes, and approved quality time now count toward your score.",
+    closer: "Manual submissions may be reviewed with the seriousness of Brian being accused of stealing from a gelato shop. Big-a-big shot now? Prove it."
+  },
+  {
+    subject: "approved. cool ig.",
+    preview: "Lowercase enthusiasm, officially accepted.",
+    intro: "cool ig.",
+    warning:
+      "You are officially approved for the Tio Eric Leaderboard. Your calls, texts, FaceTimes, and approved quality time with Eric now count.",
+    closer: "Group chats do not count, because lowercase enthusiasm still requires direct effort. Do with this information what you will. Ideally, call Eric. But like, casually."
+  },
+  {
+    subject: "Roster approved. Shit maaaaannn.",
+    preview: "Actual effort has entered the chat.",
+    intro: "Shit maaaaannn, you are approved.",
+    warning:
+      "From here on out, direct calls, texts, FaceTimes, and approved quality time with Eric can move your leaderboard score. A group chat is not effort. It is a hallway with notifications.",
+    closer: "No calls again? Goooooddddammit. A direct text? Is that right? Look at you climbing the board."
   }
 ];
 
