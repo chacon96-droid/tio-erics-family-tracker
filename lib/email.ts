@@ -10,6 +10,11 @@ type ApprovalEmailInput = {
   relationship: string;
 };
 
+type TemporaryPasswordInput = {
+  to: string;
+  temporaryPassword: string;
+};
+
 type EmailVariant = {
   subject: string;
   preview: string;
@@ -222,10 +227,11 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
-async function sendEmail(to: string, subject: string, html: string, text: string) {
+async function sendEmail(to: string, subject: string, html: string, text: string, options?: { requireConfigured?: boolean }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || "Eric Family Tracker <onboarding@resend.dev>";
   if (!apiKey) {
+    if (options?.requireConfigured) throw new Error("Email is not configured.");
     console.info("Skipping email because RESEND_API_KEY is not configured.");
     return;
   }
@@ -253,4 +259,29 @@ export async function sendSignupWelcomeEmail({ to, name, relationship }: SignupE
 export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmailInput) {
   const variant = chooseVariant(approvalVariants);
   await sendEmail(to, contextualText(variant.subject, relationship), shellHtml(name, relationship, variant), textBody(name, relationship, variant));
+}
+
+export async function sendTemporaryPasswordEmail({ to, temporaryPassword }: TemporaryPasswordInput) {
+  const subject = "Your Eric Family Tracker admin recovery code";
+  const html = `
+    <div style="background:#f4efe7;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#1f2928;">
+      <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d9cfc0;border-radius:8px;padding:28px;">
+        <p style="margin:0 0 10px;color:#b86f4b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Eric Family Tracker</p>
+        <h1 style="margin:0 0 16px;font-size:28px;line-height:1.1;">Admin access recovered. The keys were under the couch, emotionally.</h1>
+        <p style="font-size:16px;line-height:1.55;">Use this temporary password to sign in under <strong>Admin password sign-in</strong>:</p>
+        <p style="font-size:20px;line-height:1.4;background:#f4efe7;border:1px solid #d9cfc0;border-radius:8px;padding:14px;font-weight:800;">${escapeHtml(temporaryPassword)}</p>
+        <p style="font-size:16px;line-height:1.55;">After you get back in, change it to something you will remember but a cousin could not guess while holding a Capri Sun.</p>
+        <p style="font-size:16px;line-height:1.55;"><a href="https://calltioeric.com/login">Go to Eric Family Tracker</a></p>
+      </div>
+    </div>
+  `;
+  const text = `Admin access recovered.
+
+Use this temporary password under Admin password sign-in:
+
+${temporaryPassword}
+
+Then go to https://calltioeric.com/login and change it after you get back in.`;
+
+  await sendEmail(to, subject, html, text, { requireConfigured: true });
 }
