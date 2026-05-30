@@ -1,6 +1,8 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin, requireApprovedUser } from "@/lib/auth";
@@ -28,8 +30,7 @@ const signupSchema = z.object({
   birthday: z.string().optional().nullable(),
   age_bracket: z.enum(["kid", "teen", "adult", "unknown"]).default("unknown"),
   phone: z.string().optional().nullable(),
-  email: z.string().email(),
-  password: z.string().min(8)
+  email: z.string().email()
 });
 
 async function uploadProfilePhoto(formData: FormData, personId: string) {
@@ -78,6 +79,25 @@ export async function signIn(formData: FormData) {
   redirect("/dashboard");
 }
 
+export async function requestMagicLink(formData: FormData) {
+  const email = String(formData.get("email") || "").trim();
+  if (!email) redirect("/login?error=Enter%20your%20email%20first.%20Bold%20strategy,%20but%20the%20internet%20needs%20a%20destination.");
+
+  const headerStore = await headers();
+  const origin = headerStore.get("origin") || "https://calltioeric.com";
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: false,
+      emailRedirectTo: `${origin}/auth/callback?next=/dashboard`
+    }
+  });
+  if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
+
+  redirect(`/login?message=${encodeURIComponent("Sign-in link sent. Check your email and tap the button like the chosen one.")}`);
+}
+
 export async function signUp(formData: FormData) {
   const parsed = signupSchema.parse(Object.fromEntries(formData));
   const supabase = await createClient();
@@ -89,7 +109,7 @@ export async function signUp(formData: FormData) {
   if (adminSupabase) {
     const { data, error } = await adminSupabase.auth.admin.createUser({
       email: parsed.email,
-      password: parsed.password,
+      password: randomUUID() + randomUUID(),
       email_confirm: true,
       user_metadata: signupMetadata
     });
@@ -142,6 +162,35 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+export async function requestPasswordReset(formData: FormData) {
+  const email = String(formData.get("email") || "").trim();
+  if (!email) redirect("/forgot-password?error=Enter%20your%20email%20first.%20The%20app%20is%20dramatic,%20not%20psychic.");
+
+  const headerStore = await headers();
+  const origin = headerStore.get("origin") || "https://calltioeric.com";
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`
+  });
+  if (error) redirect(`/forgot-password?error=${encodeURIComponent(error.message)}`);
+
+  redirect(`/forgot-password?sent=${encodeURIComponent(email)}`);
+}
+
+export async function updatePassword(formData: FormData) {
+  const password = String(formData.get("password") || "");
+  const confirmPassword = String(formData.get("confirm_password") || "");
+  if (password.length < 8) redirect("/reset-password?error=Password%20needs%20at%20least%208%20characters.");
+  if (password !== confirmPassword) redirect("/reset-password?error=Passwords%20do%20not%20match.%20A%20classic%20tiny%20betrayal.");
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) redirect(`/reset-password?error=${encodeURIComponent(error.message)}`);
+
+  await supabase.auth.signOut();
+  redirect("/login?message=Password%20updated.%20You%20may%20now%20re-enter%20the%20arena.");
 }
 
 export async function savePerson(formData: FormData) {
