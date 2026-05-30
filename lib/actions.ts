@@ -426,7 +426,7 @@ export async function updateMyProfilePhoto(formData: FormData) {
 }
 
 export async function deletePerson(formData: FormData) {
-  await requireAdmin();
+  const adminProfile = await requireAdmin();
   const personId = String(formData.get("person_id") || "");
   if (!personId) throw new Error("Missing person id");
 
@@ -454,14 +454,9 @@ export async function deletePerson(formData: FormData) {
     }
   }
 
-  if (person.user_id) {
-    if (adminSupabase) {
-      const { error: deleteUserError } = await adminSupabase.auth.admin.deleteUser(person.user_id);
-      if (deleteUserError) throw deleteUserError;
-    } else {
-      const { error: profileUpdateError } = await sessionSupabase.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
-      if (profileUpdateError) throw profileUpdateError;
-    }
+  if (person.user_id && person.user_id !== adminProfile.id) {
+    const { error: profileUpdateError } = await db.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
+    if (profileUpdateError) throw profileUpdateError;
   }
 
   const { error } = await db.from("people").delete().eq("id", personId);
