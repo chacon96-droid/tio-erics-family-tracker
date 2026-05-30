@@ -77,17 +77,11 @@ Email copy for Supabase/Auth templates lives here:
 
 ## Apple Call/Text Sync
 
-The local importer matches approved and pending family profiles by phone/email, optionally checks your Mac Contacts for extra handles, imports call/text metadata only, and recalculates scores.
+The local importer matches approved and pending family profiles by phone/email, optionally checks your Mac Contacts for extra handles, imports call/text metadata only, and recalculates scores. By default, approved people get approved imports and pending people get pending imports.
 
 ```bash
-python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01 --dry-run
+python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01 --dry-run --diagnose
 python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01
-```
-
-For the unapproved weekly dashboard, import newly matched activity as pending:
-
-```bash
-python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01 --status pending
 ```
 
 You need either `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_ADMIN_EMAIL` plus `SUPABASE_ADMIN_PASSWORD` in `.env.local` on your Mac for this script. Keep those private.
