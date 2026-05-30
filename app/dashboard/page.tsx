@@ -2,19 +2,17 @@ import { AppShell } from "@/components/AppShell";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { StatCard } from "@/components/StatCard";
 import { requireApprovedUser } from "@/lib/auth";
-import { getInteractions, getLeaderboard, getPendingInteractions, getPendingPeople, getPeople } from "@/lib/data";
+import { getApprovedInteractionCount, getLeaderboard, getPendingInteractions, getPendingPeople, getPeople } from "@/lib/data";
 
 export default async function DashboardPage() {
   await requireApprovedUser();
-  const [people, interactions, pendingInteractions, pendingPeople, leaderboard] = await Promise.all([
+  const [people, approvedCount, pendingInteractions, pendingPeople, leaderboard] = await Promise.all([
     getPeople(),
-    getInteractions("year"),
+    getApprovedInteractionCount("year"),
     getPendingInteractions().catch(() => []),
     getPendingPeople().catch(() => []),
     getLeaderboard("year").catch(() => [])
   ]);
-
-  const approved = interactions.filter((item) => item.status === "approved");
 
   return (
     <AppShell>
@@ -25,7 +23,7 @@ export default async function DashboardPage() {
         </section>
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard label="Active people" value={people.filter((person) => person.active).length} detail="Roster, not evidence." />
-          <StatCard label="Approved in 2026" value={approved.length} detail="Documented affection, calendar-year edition." />
+          <StatCard label="Approved in 2026" value={approvedCount} detail="Documented affection, calendar-year edition." />
           <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail="Allegedly bonding." />
           <StatCard
             label="Top score"
