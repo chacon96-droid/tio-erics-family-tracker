@@ -27,6 +27,33 @@ const abuelitoReactionLines = [
   "You made Eric check the leaderboard for this? Goooooddddammit."
 ];
 
+const steadyTrendLines = [
+  "Present, accounted for, and not embarrassing the family.",
+  "Respectable effort. The board is watching politely.",
+  "Not a dynasty yet, but the phones are not silent.",
+  "Some signs of life. The committee will allow it.",
+  "Quietly building a case for favorite status.",
+  "Direct communication detected. Group chat lawyers are furious."
+];
+
+const activeTrendLines = [
+  "Actually showing up. Shit maaaaannn.",
+  "A real campaign is forming. Eric may need to act unimpressed.",
+  "This is not casual anymore. Points are being acquired.",
+  "Strong movement. Big-a-big shot, but in a productive way.",
+  "Momentum with receipts. The leaderboard respects paperwork.",
+  "Somebody wants that imaginary trust percentage."
+];
+
+const hotTrendLines = [
+  "Running up the score like Briana chasing a tiny gumball-machine toy.",
+  "Elite contact rate. The rest of the roster should feel nervous.",
+  "This is approaching suspiciously favorite-child behavior.",
+  "Dominant performance. Monopoly-level competitiveness detected.",
+  "The leaderboard has entered witness protection.",
+  "Too much effort to ignore. Eric will pretend to be normal about it."
+];
+
 const approvalQueueLines = [
   "This alleged quality time is awaiting Eric's extremely fair and legally meaningless judgment.",
   "Pending approval. Evidence will be reviewed with the seriousness of Brian being accused of stealing from a gelato shop.",
@@ -88,9 +115,16 @@ export function lowContactCopy(seed = "low-contact") {
   return pickLore(lowContactLines, seed);
 }
 
-export function trendLore(person: Pick<Person, "name" | "relationship">, score?: Pick<Score, "total_score">) {
+export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, score?: Pick<Score, "total_score">) {
   const total = score?.total_score || 0;
   if (total <= 0) return lowContactCopy(person.name);
+
+  const seed = `${person.id}:${person.name}:${person.relationship}:${total}`;
+
+  if (hasName(person, ["sebastian"])) {
+    if (total >= 2500) return "Accelerating like Sebastian into a Thanksgiving fence.";
+    return "cool ig, with mild Aura Theft risk.";
+  }
 
   if (hasName(person, ["sebastian", "lucas"])) {
     if (total >= 2500) return "Moved up. Reacted with devastating emotional restraint.";
@@ -109,7 +143,10 @@ export function trendLore(person: Pick<Person, "name" | "relationship">, score?:
 
   if (hasName(person, ["zander"])) return "Step 43 of 57, somehow still moving.";
 
-  return pickLore(abuelitoReactionLines, person.name + total);
+  if (total >= 2500) return pickLore(hotTrendLines, seed);
+  if (total >= 900) return pickLore(activeTrendLines, seed);
+  if (total >= 150) return pickLore(steadyTrendLines, seed);
+  return pickLore([...steadyTrendLines, ...abuelitoReactionLines], seed);
 }
 
 export function profileRoast(person: Pick<Person, "name" | "relationship">, score?: Pick<Score, "total_score">) {
