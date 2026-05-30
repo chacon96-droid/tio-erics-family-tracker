@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
+import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
 import { StatCard } from "@/components/StatCard";
@@ -49,7 +50,12 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
             <EmptyState title="No interactions logged." body="A clean record, which is technically impressive and socially concerning." />
           )}
         </section>
-        {profile?.role === "admin" ? <PersonForm person={person} /> : null}
+        {profile?.role === "admin" ? (
+          <section className="grid gap-4">
+            <PersonForm person={person} />
+            <DeletePersonButton personId={person.id} personName={person.name} />
+          </section>
+        ) : null}
       </div>
     </AppShell>
   );
