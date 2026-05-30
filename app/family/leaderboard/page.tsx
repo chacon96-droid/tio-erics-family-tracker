@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FamilyShell } from "@/components/FamilyShell";
 import { InheritanceSimulator } from "@/components/InheritanceSimulator";
+import { LeaderboardRaceGraph } from "@/components/LeaderboardRaceGraph";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { getFamilyLeaderboard, requireFamilyAccessPerson } from "@/lib/family-access";
 import { periods } from "@/lib/periods";
@@ -40,6 +41,7 @@ export default async function FamilyLeaderboardPage({ searchParams }: { searchPa
             </Link>
           ))}
         </nav>
+        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Family friends photo race" : "Family photo race"} />
         <LeaderboardTable rows={rows} linkPeople={false} />
         <InheritanceSimulator rows={rows} />
       </div>
