@@ -7,7 +7,7 @@ import { getAppSettings, getLeaderboard } from "@/lib/data";
 import { periods } from "@/lib/periods";
 import type { ScorePeriod } from "@/lib/types";
 
-export default async function LeaderboardPage({ searchParams }: { searchParams?: Promise<{ period?: ScorePeriod }> }) {
+export default async function LeaderboardPage({ searchParams }: { searchParams?: Promise<{ period?: ScorePeriod; removed?: string; error?: string }> }) {
   await requireApprovedUser();
   const params = await searchParams;
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "all_time";
@@ -22,6 +22,16 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
         <section>
           <p className="text-xs font-black uppercase text-clay">Evidence-based favoritism</p>
           <h2 className="text-3xl font-black">Leaderboard</h2>
+          {params?.removed ? (
+            <div className="mt-4 rounded-app border border-green-200 bg-green-50 p-3 text-sm font-black text-green-800">
+              Removed {params.removed}. The leaderboard has agreed to move on, after making it weird for a second.
+            </div>
+          ) : null}
+          {params?.error ? (
+            <div className="mt-4 rounded-app border border-red-200 bg-red-50 p-3 text-sm font-black text-red-800">
+              Could not remove that profile: {params.error}
+            </div>
+          ) : null}
         </section>
         <nav className="flex flex-wrap gap-2">
           {periods.map((item) => (
