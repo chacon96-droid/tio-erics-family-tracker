@@ -1,3 +1,4 @@
+import { inheritanceDisclaimer } from "@/lib/family-lore";
 import type { PersonWithScore } from "@/lib/types";
 
 export function InheritanceSimulator({ rows }: { rows: PersonWithScore[] }) {
@@ -30,7 +31,7 @@ export function InheritanceSimulator({ rows }: { rows: PersonWithScore[] }) {
         })}
       </div>
       <p className="mt-4 text-xs font-semibold text-muted">
-        This is a bit, not a will. Please do not bring a lawyer to Thanksgiving.
+        {inheritanceDisclaimer(visibleRows.map((row) => row.id).join(""))}
       </p>
     </section>
   );
