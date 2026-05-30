@@ -2,7 +2,7 @@ import type { PersonWithScore } from "@/lib/types";
 
 function RacerAvatar({ row }: { row: PersonWithScore }) {
   return (
-    <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-full border-2 border-ink bg-paper text-sm font-black text-clay shadow-sm">
+    <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-ink bg-paper text-sm font-black text-clay shadow-sm">
       {row.avatar_url ? <img src={row.avatar_url} alt="" className="h-full w-full object-cover" /> : row.name.slice(0, 1)}
     </div>
   );
@@ -28,7 +28,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
         {visibleRows.map((row, index) => {
           const score = row.score?.total_score || 0;
           const progress = Math.max(score > 0 ? 10 : 4, Math.min(100, (score / maxScore) * 100));
-          const racerLeft = Math.max(0, Math.min(88, progress - 6));
+          const racerLeft = Math.max(0, Math.min(86, progress - 7));
 
           return (
             <div key={row.id} className="grid gap-2">
@@ -45,9 +45,12 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
                 <div className="absolute left-4 right-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white" />
                 <div
                   className="absolute left-4 top-1/2 h-2 -translate-y-1/2 rounded-full bg-clay"
-                  style={{ width: `calc(${progress}% - 32px)` }}
+                  style={{ right: `${100 - progress}%` }}
                 />
-                <div className="absolute top-1/2 flex -translate-y-1/2 items-center gap-2" style={{ left: `${racerLeft}%` }}>
+                <div
+                  className="absolute top-1/2 flex max-w-[calc(100%-1rem)] -translate-y-1/2 items-center gap-2 transition-[left] duration-500 ease-out"
+                  style={{ left: `${racerLeft}%` }}
+                >
                   <RacerAvatar row={row} />
                   <span className="hidden rounded-full border border-line bg-white px-2 py-1 text-xs font-black text-ink shadow-sm sm:inline">
                     {index === 0 ? "front-runner" : index === 1 ? "lurking" : index === 2 ? "within striking distance" : "needs a call"}
