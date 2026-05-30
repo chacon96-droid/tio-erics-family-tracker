@@ -30,6 +30,21 @@ export async function getInteractions(period?: ScorePeriod) {
   return (data || []) as Interaction[];
 }
 
+export async function getApprovedInteractionCount(period?: ScorePeriod) {
+  const supabase = await createClient();
+  let query = supabase
+    .from("interactions")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "approved");
+
+  const start = period ? periodStart(period) : null;
+  if (start) query = query.gte("started_at", start);
+
+  const { count, error } = await query;
+  if (error) throw error;
+  return count || 0;
+}
+
 export async function getPersonInteractions(personId: string, period?: ScorePeriod) {
   const supabase = await createClient();
   let query = supabase
