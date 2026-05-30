@@ -1,4 +1,5 @@
-import { requestMagicLink, signIn } from "@/lib/actions";
+import { signIn } from "@/lib/actions";
+import { familyQuickAccess } from "@/lib/family-actions";
 import Link from "next/link";
 
 export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string; message?: string }> }) {
@@ -12,12 +13,15 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
         {params?.error ? <p className="mt-3 rounded-app bg-red-50 p-3 text-sm font-bold text-red-700">{params.error}</p> : null}
         {params?.message ? <p className="mt-3 rounded-app bg-green-50 p-3 text-sm font-bold text-green-800">{params.message}</p> : null}
 
-        <form action={requestMagicLink}>
+        <form action={familyQuickAccess}>
           <label className="mt-5 grid gap-1 text-sm font-bold text-muted">
-            Email
-            <input className="rounded-app border border-line px-3 py-2 text-ink" name="email" type="email" autoComplete="email" required />
+            Email or phone
+            <input className="rounded-app border border-line px-3 py-2 text-ink" name="identifier" type="text" autoComplete="email" required />
           </label>
-          <button className="focus-ring mt-5 w-full rounded-app bg-ink px-4 py-3 font-black text-white">Email me a sign-in link</button>
+          <button className="focus-ring mt-5 w-full rounded-app bg-ink px-4 py-3 font-black text-white">Enter the leaderboard</button>
+          <p className="mt-3 text-sm font-semibold text-muted">
+            Approved family only. No password, no email scavenger hunt. Society advances.
+          </p>
         </form>
 
         <details className="mt-4 rounded-app border border-line p-3">
