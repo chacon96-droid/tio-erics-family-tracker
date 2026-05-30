@@ -11,8 +11,9 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
   await requireApprovedUser();
   const params = await searchParams;
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "all_time";
-  const [rows, settings, profile] = await Promise.all([
-    getLeaderboard(period),
+  const [familyRows, friendRows, settings, profile] = await Promise.all([
+    getLeaderboard(period, "family"),
+    getLeaderboard(period, "friends"),
     getAppSettings().catch((): Record<string, unknown> => ({})),
     getProfile()
   ]);
@@ -48,8 +49,22 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             </Link>
           ))}
         </nav>
-        <LeaderboardTable rows={rows} canRemovePeople={isAdmin} />
-        {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={rows} /> : null}
+        <section>
+          <div className="mb-3">
+            <p className="text-xs font-black uppercase text-clay">Bloodline division</p>
+            <h3 className="text-xl font-black">Family leaderboard</h3>
+          </div>
+          <LeaderboardTable rows={familyRows} canRemovePeople={isAdmin} />
+          {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={familyRows} /> : null}
+        </section>
+        <section>
+          <div className="mb-3">
+            <p className="text-xs font-black uppercase text-clay">Chosen chaos division</p>
+            <h3 className="text-xl font-black">Family friends leaderboard</h3>
+          </div>
+          <LeaderboardTable rows={friendRows} canRemovePeople={isAdmin} />
+          {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={friendRows} /> : null}
+        </section>
       </div>
     </AppShell>
   );
