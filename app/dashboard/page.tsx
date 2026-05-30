@@ -3,6 +3,7 @@ import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { StatCard } from "@/components/StatCard";
 import { requireApprovedUser } from "@/lib/auth";
 import { getApprovedInteractionCount, getLeaderboard, getPendingInteractions, getPendingPeople, getPeople } from "@/lib/data";
+import { dashboardReaction, qualityTimeNudge } from "@/lib/family-lore";
 
 export default async function DashboardPage() {
   await requireApprovedUser();
@@ -26,11 +27,11 @@ export default async function DashboardPage() {
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard label="Active people" value={people.filter((person) => person.active).length} detail="Roster, not evidence." />
           <StatCard label="Approved in 2026" value={approvedCount} detail="Documented affection, calendar-year edition." />
-          <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail="Allegedly bonding." />
+          <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail={qualityTimeNudge("dashboard-pending")} />
           <StatCard
             label="Top score"
             value={topScore?.score?.total_score || 0}
-            detail={topScore?.name || "The throne is currently available."}
+            detail={topScore?.name ? `${topScore.name}. ${dashboardReaction(topScore.id)}` : "The throne is currently available."}
           />
         </section>
         <section>
