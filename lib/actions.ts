@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin, requireApprovedUser } from "@/lib/auth";
 import { getInteractions, getScoringWeights } from "@/lib/data";
+import { sendApprovalEmail, sendSignupWelcomeEmail } from "@/lib/email";
 import { periods } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
 import { createClient } from "@/lib/supabase/server";
@@ -84,6 +85,12 @@ export async function signUp(formData: FormData) {
     if (personError) redirect(`/signup?error=${encodeURIComponent(personError.message)}`);
   }
 
+  try {
+    await sendSignupWelcomeEmail({ to: parsed.email, name: parsed.name });
+  } catch (emailError) {
+    console.error("Signup welcome email failed", emailError);
+  }
+
   redirect("/pending");
 }
 
@@ -146,12 +153,20 @@ export async function approveFamilyMember(formData: FormData) {
   const personId = String(formData.get("person_id"));
   const userId = String(formData.get("user_id"));
   const supabase = await createClient();
+  const { data: person } = await supabase.from("people").select("name,email").eq("id", personId).maybeSingle();
   if (userId) {
     const { error: profileError } = await supabase.from("profiles").update({ role: "family" }).eq("id", userId);
     if (profileError) throw profileError;
   }
   const { error } = await supabase.from("people").update({ active: true }).eq("id", personId);
   if (error) throw error;
+  if (person?.email) {
+    try {
+      await sendApprovalEmail({ to: person.email, name: person.name });
+    } catch (emailError) {
+      console.error("Approval email failed", emailError);
+    }
+  }
   revalidatePath("/people");
   revalidatePath("/admin/approvals");
 }
