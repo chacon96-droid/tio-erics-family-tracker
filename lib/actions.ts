@@ -426,20 +426,20 @@ export async function updateMyProfilePhoto(formData: FormData) {
 }
 
 export async function deletePerson(formData: FormData) {
-  const adminProfile = await requireAdmin();
+  await requireAdmin();
   const personId = String(formData.get("person_id") || "");
   if (!personId) throw new Error("Missing person id");
 
-  const sessionSupabase = await createClient();
+  const fallbackSupabase = await createClient();
   const adminSupabase = createAdminClient();
-  const db = adminSupabase || sessionSupabase;
+  const db = adminSupabase || fallbackSupabase;
 
   const { data: person, error: personError } = await db
     .from("people")
     .select("id,user_id,name")
     .eq("id", personId)
     .maybeSingle();
-  if (personError) throw personError;
+  if (personError) redirect(`/people?error=${encodeURIComponent(personError.message)}`);
   if (!person) redirect("/people");
 
   if (person.user_id) {
@@ -448,25 +448,20 @@ export async function deletePerson(formData: FormData) {
       .select("role")
       .eq("id", person.user_id)
       .maybeSingle();
-    if (profileError) throw profileError;
+    if (profileError) redirect(`/people?error=${encodeURIComponent(profileError.message)}`);
     if (profile?.role === "admin") {
-      throw new Error("Admin profiles cannot be removed from the roster.");
+      redirect("/people?error=Admin%20profiles%20cannot%20be%20removed%20from%20the%20roster.");
     }
   }
 
-  if (person.user_id && person.user_id !== adminProfile.id) {
-    const { error: profileUpdateError } = await db.from("profiles").update({ role: "pending" }).eq("id", person.user_id);
-    if (profileUpdateError) throw profileUpdateError;
-  }
-
   const { error } = await db.from("people").delete().eq("id", personId);
-  if (error) throw error;
+  if (error) redirect(`/people?error=${encodeURIComponent(error.message)}`);
 
   revalidatePath("/people");
   revalidatePath("/leaderboard");
   revalidatePath("/dashboard");
   revalidatePath("/admin/approvals");
-  redirect("/people");
+  redirect(`/people?removed=${encodeURIComponent(person.name)}`);
 }
 
 export async function createInteraction(formData: FormData) {
