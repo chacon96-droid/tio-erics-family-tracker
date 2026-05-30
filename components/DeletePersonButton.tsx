@@ -1,20 +1,19 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { deletePerson } from "@/lib/actions";
-
 type DeletePersonButtonProps = {
   personId: string;
   personName: string;
   variant?: "card" | "inline";
+  returnTo?: string;
 };
 
-export function DeletePersonButton({ personId, personName, variant = "card" }: DeletePersonButtonProps) {
+export function DeletePersonButton({ personId, personName, variant = "card", returnTo = "/people" }: DeletePersonButtonProps) {
   const isInline = variant === "inline";
 
   return (
     <form
-      action={deletePerson}
+      action="/people/remove"
+      method="post"
       onSubmit={(event) => {
         const confirmed = window.confirm(
           `Remove ${personName} from the roster? Their interactions, scores, and badges will also disappear. Extremely clean. Mildly dramatic.`
@@ -24,6 +23,7 @@ export function DeletePersonButton({ personId, personName, variant = "card" }: D
       className={isInline ? "" : "rounded-app border border-red-200 bg-red-50 p-4"}
     >
       <input type="hidden" name="person_id" value={personId} />
+      <input type="hidden" name="return_to" value={returnTo} />
       {isInline ? null : (
         <>
           <p className="text-xs font-black uppercase text-red-700">Danger-ish zone</p>
@@ -38,20 +38,18 @@ export function DeletePersonButton({ personId, personName, variant = "card" }: D
 }
 
 function DeleteSubmitButton({ variant }: { variant: "card" | "inline" }) {
-  const { pending } = useFormStatus();
   const isInline = variant === "inline";
 
   return (
     <button
       type="submit"
-      disabled={pending}
       className={
         isInline
-          ? "rounded-app border border-red-200 bg-red-50 px-3 py-2 text-xs font-black uppercase text-red-700 hover:bg-red-100 disabled:cursor-wait disabled:opacity-70"
-          : "mt-3 rounded-app bg-red-700 px-4 py-3 font-black text-white hover:bg-red-800 disabled:cursor-wait disabled:opacity-70"
+          ? "rounded-app border border-red-200 bg-red-50 px-3 py-2 text-xs font-black uppercase text-red-700 hover:bg-red-100"
+          : "mt-3 rounded-app bg-red-700 px-4 py-3 font-black text-white hover:bg-red-800"
       }
     >
-      {pending ? "Removing..." : isInline ? "Remove" : "Remove from roster"}
+      {isInline ? "Remove" : "Remove from roster"}
     </button>
   );
 }
