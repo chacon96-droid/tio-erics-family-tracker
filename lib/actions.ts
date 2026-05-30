@@ -194,9 +194,13 @@ export async function signUp(formData: FormData) {
       email_confirm: true,
       user_metadata: signupMetadata
     });
-    if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
 
-    const userId = data.user?.id;
+    let userId = data.user?.id || null;
+    if (error) {
+      userId = await findAuthUserIdByEmail(parsed.email);
+      if (!userId) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    }
+
     if (!userId) redirect(`/signup?error=${encodeURIComponent("Could not create roster account")}`);
 
     const { error: personError } = await adminSupabase.rpc("create_pending_person", {
@@ -210,7 +214,17 @@ export async function signUp(formData: FormData) {
     });
     if (personError) redirect(`/signup?error=${encodeURIComponent(personError.message)}`);
 
-    const { data: person } = await adminSupabase.from("people").select("id").eq("user_id", userId).maybeSingle();
+    let { data: person } = await adminSupabase.from("people").select("id").eq("user_id", userId).maybeSingle();
+    if (!person) {
+      const { data: emailPerson } = await adminSupabase
+        .from("people")
+        .select("id")
+        .eq("email", parsed.email.toLowerCase())
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      person = emailPerson;
+    }
     if (person?.id) {
       try {
         const avatarUrl = await uploadProfilePhoto(formData, person.id);
