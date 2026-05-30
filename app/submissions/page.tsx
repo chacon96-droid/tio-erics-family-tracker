@@ -2,6 +2,7 @@ import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
 import { requireApprovedUser } from "@/lib/auth";
 import { getInteractions } from "@/lib/data";
+import { approvalQueueCopy } from "@/lib/family-lore";
 
 export default async function SubmissionsPage() {
   await requireApprovedUser();
@@ -23,6 +24,7 @@ export default async function SubmissionsPage() {
                 <p className="text-sm font-semibold text-muted">
                   {new Date(item.started_at).toLocaleString()} · {item.duration_minutes} minutes
                 </p>
+                {item.status === "pending" ? <p className="mt-2 text-sm font-semibold text-muted">{approvalQueueCopy(item.id)}</p> : null}
               </div>
             ))}
           </div>
