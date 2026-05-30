@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { InheritanceSimulator } from "@/components/InheritanceSimulator";
 import { LeaderboardTable } from "@/components/LeaderboardTable";
-import { requireApprovedUser } from "@/lib/auth";
+import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getAppSettings, getLeaderboard } from "@/lib/data";
 import { periods } from "@/lib/periods";
 import type { ScorePeriod } from "@/lib/types";
@@ -11,10 +11,12 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
   await requireApprovedUser();
   const params = await searchParams;
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "all_time";
-  const [rows, settings] = await Promise.all([
+  const [rows, settings, profile] = await Promise.all([
     getLeaderboard(period),
-    getAppSettings().catch((): Record<string, unknown> => ({}))
+    getAppSettings().catch((): Record<string, unknown> => ({})),
+    getProfile()
   ]);
+  const isAdmin = profile?.role === "admin";
 
   return (
     <AppShell>
@@ -46,7 +48,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             </Link>
           ))}
         </nav>
-        <LeaderboardTable rows={rows} />
+        <LeaderboardTable rows={rows} canRemovePeople={isAdmin} />
         {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={rows} /> : null}
       </div>
     </AppShell>
