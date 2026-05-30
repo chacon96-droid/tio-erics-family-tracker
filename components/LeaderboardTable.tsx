@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { EmptyState } from "@/components/EmptyState";
+import { emptyLeaderboardCopy, trendLore } from "@/lib/family-lore";
 import type { PersonWithScore } from "@/lib/types";
 
 export function LeaderboardTable({
@@ -18,7 +19,7 @@ export function LeaderboardTable({
     return (
       <EmptyState
         title="No approved family activity yet. Tragic, honestly."
-        body="The leaderboard is ready. The family, apparently, is pacing itself."
+        body={emptyLeaderboardCopy("leaderboard-empty")}
       />
     );
   }
@@ -60,7 +61,8 @@ export function LeaderboardTable({
                 </div>
               </td>
               <td className="p-3 font-bold">
-                {row.trendLabel ||
+                {trendLore(row, row.score) ||
+                  row.trendLabel ||
                   (row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting")}
               </td>
               <td className="p-3 font-semibold text-muted">{row.topCategory}</td>
