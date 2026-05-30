@@ -33,6 +33,22 @@ const signupSchema = z.object({
   email: z.string().email()
 });
 
+async function getAuthRedirectOrigin() {
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL;
+  if (configuredOrigin && !configuredOrigin.includes("localhost") && !configuredOrigin.includes("127.0.0.1")) {
+    return configuredOrigin.replace(/\/$/, "");
+  }
+
+  const headerStore = await headers();
+  const host = headerStore.get("x-forwarded-host") || headerStore.get("host");
+  const protocol = headerStore.get("x-forwarded-proto") || "https";
+  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
+    return `${protocol}://${host}`;
+  }
+
+  return "https://calltioeric.com";
+}
+
 async function uploadProfilePhoto(formData: FormData, personId: string) {
   const file = formData.get("avatar_file");
   if (!(file instanceof File) || file.size === 0) return null;
@@ -141,8 +157,7 @@ export async function requestMagicLink(formData: FormData) {
     console.error("Could not prepare passwordless login", loginRepairError);
   }
 
-  const headerStore = await headers();
-  const origin = headerStore.get("origin") || "https://calltioeric.com";
+  const origin = await getAuthRedirectOrigin();
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
@@ -226,8 +241,7 @@ export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/forgot-password?error=Enter%20your%20email%20first.%20The%20app%20is%20dramatic,%20not%20psychic.");
 
-  const headerStore = await headers();
-  const origin = headerStore.get("origin") || "https://calltioeric.com";
+  const origin = await getAuthRedirectOrigin();
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/reset-password`
