@@ -63,7 +63,7 @@ async function uploadProfilePhoto(formData: FormData, personId: string) {
 
   const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
   const path = `${personId}/${Date.now()}.${extension}`;
-  const { error } = supabase.storage.from("profile-photos").upload(path, file, {
+  const { error } = await supabase.storage.from("profile-photos").upload(path, file, {
     cacheControl: "3600",
     contentType: file.type,
     upsert: true
