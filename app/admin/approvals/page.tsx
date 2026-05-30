@@ -6,8 +6,13 @@ import { getPendingInteractions, getPendingPeople } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
-export default async function ApprovalsPage() {
+export default async function ApprovalsPage({
+  searchParams
+}: {
+  searchParams?: Promise<{ approved?: string; error?: string }>;
+}) {
   await requireAdmin();
+  const params = await searchParams;
   const [pending, pendingPeople] = await Promise.all([getPendingInteractions(), getPendingPeople()]);
 
   return (
@@ -15,6 +20,16 @@ export default async function ApprovalsPage() {
       <section>
         <p className="text-xs font-black uppercase text-clay">Admin queue, court is in session</p>
         <h2 className="mb-4 text-3xl font-black">Approvals</h2>
+        {params?.approved ? (
+          <div className="mb-4 rounded-app border border-emerald-200 bg-emerald-50 p-4 font-bold text-emerald-900">
+            Approved {params.approved}. The leaderboard has been informed and is acting normal about it.
+          </div>
+        ) : null}
+        {params?.error ? (
+          <div className="mb-4 rounded-app border border-red-200 bg-red-50 p-4 font-bold text-red-800">
+            Could not approve that one: {params.error}
+          </div>
+        ) : null}
         <div className="mb-6 grid gap-3">
           <h3 className="text-xl font-black">Roster requests</h3>
           {pendingPeople.length ? (
