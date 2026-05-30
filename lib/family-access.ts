@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { leaderboardAudienceForRelationship, type LeaderboardAudience } from "@/lib/relationships";
 import { calculateScores, scoreMomentumLabel, topCategory } from "@/lib/scoring";
 import { createAdminClient } from "@/lib/supabase/server";
 import type { Interaction, Person, PersonWithScore, Score, ScoringWeight } from "@/lib/types";
@@ -87,7 +88,7 @@ export async function getFamilyYearlyBreakdowns(personId: string) {
   });
 }
 
-export async function getFamilyLeaderboard(period: "week" | "month" | "year" | "all_time") {
+export async function getFamilyLeaderboard(period: "week" | "month" | "year" | "all_time", audience: LeaderboardAudience) {
   const supabase = createAdminClient();
   if (!supabase) return [];
 
@@ -100,6 +101,7 @@ export async function getFamilyLeaderboard(period: "week" | "month" | "year" | "
 
   const scoreMap = new Map((scores || []).map((score) => [score.person_id, score as Score]));
   return ((people || []) as Person[])
+    .filter((person) => leaderboardAudienceForRelationship(person.relationship) === audience)
     .map((person): PersonWithScore => {
       const score = scoreMap.get(person.id);
       return {
