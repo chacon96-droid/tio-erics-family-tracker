@@ -3,9 +3,11 @@ import { recalculateScores, updateWeight } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { getScoringWeights } from "@/lib/data";
 
-export default async function WeightsPage() {
+export default async function WeightsPage({ searchParams }: { searchParams?: Promise<{ recalculated?: string; rows?: string }> }) {
   await requireAdmin();
+  const params = await searchParams;
   const weights = await getScoringWeights();
+  const refreshedRows = Number(params?.rows || 0);
 
   return (
     <AppShell>
@@ -19,6 +21,11 @@ export default async function WeightsPage() {
             <button className="rounded-app bg-ink px-4 py-3 font-black text-white">Recalculate scores</button>
           </form>
         </div>
+        {params?.recalculated ? (
+          <div className="mb-4 rounded-app border border-emerald-200 bg-emerald-50 p-4 font-bold text-emerald-900">
+            Scores recalculated. {refreshedRows} leaderboard rows refreshed. The spreadsheet blinked first.
+          </div>
+        ) : null}
         <div className="grid gap-3">
           {weights.map((weight) => (
             <form key={weight.id} action={updateWeight} className="grid gap-3 rounded-app border border-line bg-white p-4 xl:grid-cols-[1.4fr_repeat(6,1fr)_auto]">
