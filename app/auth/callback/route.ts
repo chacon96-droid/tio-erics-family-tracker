@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (!code) {
-    return loginRedirect(requestUrl, "That sign-in link was missing its code. Ask for a fresh one; this one arrived wearing a fake mustache.");
+    return loginRedirect(requestUrl, "That sign-in link was missing its code. Ask for a fresh one; this one arrived wearing a tiny fake mustache.");
   }
 
   const supabase = await createClient();
