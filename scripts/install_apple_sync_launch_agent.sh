@@ -23,7 +23,7 @@ cat > "$PLIST_PATH" <<PLIST
     <string>--since</string>
     <string>2026-01-01</string>
     <string>--status</string>
-    <string>auto</string>
+    <string>approved</string>
   </array>
   <key>WorkingDirectory</key>
   <string>$ROOT_DIR</string>
