@@ -509,20 +509,26 @@ export async function recalculateScores() {
   await requireAdmin();
   const supabase = await createClient();
   const weights = await getScoringWeights();
+  let refreshedRows = 0;
 
   for (const period of periods) {
     const interactions = await getInteractions(period.value);
     const scores = calculateScores(interactions, weights, period.value);
-    await supabase.from("scores").delete().eq("period", period.value);
+    const { error: deleteError } = await supabase.from("scores").delete().eq("period", period.value);
+    if (deleteError) throw deleteError;
+
     if (scores.length) {
       const { error } = await supabase.from("scores").upsert(scores);
       if (error) throw error;
+      refreshedRows += scores.length;
     }
   }
 
   revalidatePath("/dashboard");
   revalidatePath("/leaderboard");
   revalidatePath("/people");
+  revalidatePath("/admin/weights");
+  redirect(`/admin/weights?recalculated=1&rows=${refreshedRows}&at=${Date.now()}`);
 }
 
 export async function updateSetting(formData: FormData) {
