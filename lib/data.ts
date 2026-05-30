@@ -30,15 +30,65 @@ export async function getInteractions(period?: ScorePeriod) {
   return (data || []) as Interaction[];
 }
 
-export async function getPersonInteractions(personId: string) {
+export async function getPersonInteractions(personId: string, period?: ScorePeriod) {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("interactions")
     .select("*")
     .eq("person_id", personId)
     .order("started_at", { ascending: false });
+
+  const start = period ? periodStart(period) : null;
+  if (start) query = query.gte("started_at", start);
+
+  const { data, error } = await query;
   if (error) throw error;
   return (data || []) as Interaction[];
+}
+
+export type PersonYearlyBreakdown = {
+  year: number;
+  totalScore: number;
+  callScore: number;
+  textScore: number;
+  interactionCount: number;
+  approvedInteractionCount: number;
+  pendingInteractionCount: number;
+  callCount: number;
+  textExchangeCount: number;
+  qualityTimeMinutes: number;
+  totalMinutes: number;
+  messageCount: number;
+  topCategory: string;
+};
+
+export async function getPersonYearlyBreakdowns(personId: string): Promise<PersonYearlyBreakdown[]> {
+  const [interactions, weights] = await Promise.all([getPersonInteractions(personId), getScoringWeights()]);
+  const years = [...new Set(interactions.map((interaction) => new Date(interaction.started_at).getFullYear()))].sort((a, b) => b - a);
+
+  return years.map((year) => {
+    const yearInteractions = interactions.filter((interaction) => new Date(interaction.started_at).getFullYear() === year);
+    const score = calculateScores(yearInteractions, weights, "year")[0];
+    const qualityTimeMinutes = yearInteractions
+      .filter((interaction) => ["fortnite", "visit", "manual_activity"].includes(interaction.type))
+      .reduce((sum, interaction) => sum + Number(interaction.duration_minutes || 0), 0);
+
+    return {
+      year,
+      totalScore: score?.total_score || 0,
+      callScore: score?.call_score || 0,
+      textScore: score?.text_score || 0,
+      interactionCount: yearInteractions.length,
+      approvedInteractionCount: yearInteractions.filter((interaction) => interaction.status === "approved").length,
+      pendingInteractionCount: yearInteractions.filter((interaction) => interaction.status === "pending").length,
+      callCount: yearInteractions.filter((interaction) => ["call", "missed_call_returned"].includes(interaction.type)).length,
+      textExchangeCount: yearInteractions.filter((interaction) => interaction.type === "text_exchange").length,
+      qualityTimeMinutes,
+      totalMinutes: yearInteractions.reduce((sum, interaction) => sum + Number(interaction.duration_minutes || 0), 0),
+      messageCount: yearInteractions.reduce((sum, interaction) => sum + Number(interaction.message_count || 0), 0),
+      topCategory: topCategory(score)
+    };
+  });
 }
 
 export async function getScoringWeights() {
