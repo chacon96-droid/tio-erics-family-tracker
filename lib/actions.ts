@@ -212,10 +212,14 @@ export async function signUp(formData: FormData) {
 
     const { data: person } = await adminSupabase.from("people").select("id").eq("user_id", userId).maybeSingle();
     if (person?.id) {
-      const avatarUrl = await uploadProfilePhoto(formData, person.id);
-      if (avatarUrl) {
-        const { error: photoError } = await adminSupabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
-        if (photoError) redirect(`/signup?error=${encodeURIComponent(photoError.message)}`);
+      try {
+        const avatarUrl = await uploadProfilePhoto(formData, person.id);
+        if (avatarUrl) {
+          const { error: photoError } = await adminSupabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
+          if (photoError) throw photoError;
+        }
+      } catch (photoError) {
+        console.error("Signup profile photo upload failed", photoError);
       }
     }
   } else {
