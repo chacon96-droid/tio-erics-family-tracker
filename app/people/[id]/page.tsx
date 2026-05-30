@@ -31,7 +31,17 @@ export default async function PersonPage({
 
   return (
     <AppShell>
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+      <div className="grid gap-6">
+        {profile?.role === "admin" ? (
+          <section className="grid gap-3 rounded-app border border-line bg-paper/60 p-4">
+            <div>
+              <p className="text-xs font-black uppercase text-clay">Admin edit</p>
+              <h3 className="text-xl font-black">Profile controls</h3>
+            </div>
+            <PersonForm person={person} layout="wide" />
+            <DeletePersonButton personId={person.id} personName={person.name} returnTo="/leaderboard" />
+          </section>
+        ) : null}
         <section className="grid gap-4">
           <div>
             <p className="text-xs font-black uppercase text-clay">{person.relationship}</p>
@@ -116,12 +126,7 @@ export default async function PersonPage({
             <EmptyState title="No interactions logged." body="A clean record, which is technically impressive and socially concerning." />
           )}
         </section>
-        {profile?.role === "admin" ? (
-          <section className="grid gap-4">
-            <PersonForm person={person} />
-            <DeletePersonButton personId={person.id} personName={person.name} returnTo="/leaderboard" />
-          </section>
-        ) : profile?.id === person.user_id ? (
+        {profile?.role !== "admin" && profile?.id === person.user_id ? (
           <section>
             <form action={updateMyProfilePhoto} encType="multipart/form-data" className="grid gap-3 rounded-app border border-line bg-white p-4">
               <input type="hidden" name="person_id" value={person.id} />
