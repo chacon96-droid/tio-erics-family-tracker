@@ -92,7 +92,6 @@ export async function getPendingPeople() {
     .from("people")
     .select("*")
     .eq("active", false)
-    .not("user_id", "is", null)
     .order("created_at", { ascending: true });
   if (error) throw error;
   return (data || []) as Person[];
