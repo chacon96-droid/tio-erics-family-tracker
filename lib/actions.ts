@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin, requireApprovedUser } from "@/lib/auth";
 import { getInteractions, getScoringWeights } from "@/lib/data";
-import { sendApprovalEmail, sendSignupWelcomeEmail } from "@/lib/email";
+import { sendApprovalEmail, sendSignupWelcomeEmail, sendTemporaryPasswordEmail } from "@/lib/email";
 import { periods } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
@@ -240,6 +240,30 @@ export async function signOut() {
 export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/forgot-password?error=Enter%20your%20email%20first.%20The%20app%20is%20dramatic,%20not%20psychic.");
+
+  const adminSupabase = createAdminClient();
+  if (adminSupabase) {
+    const userId = await findAuthUserIdByEmail(email);
+    if (userId) {
+      const { data: profile } = await adminSupabase.from("profiles").select("role").eq("id", userId).maybeSingle();
+      if (profile?.role === "admin") {
+        const temporaryPassword = `Eric-${randomUUID().replaceAll("-", "").slice(0, 16)}`;
+        const { error: updateError } = await adminSupabase.auth.admin.updateUserById(userId, {
+          password: temporaryPassword
+        });
+        if (updateError) redirect(`/forgot-password?error=${encodeURIComponent(updateError.message)}`);
+
+        try {
+          await sendTemporaryPasswordEmail({ to: email, temporaryPassword });
+        } catch (emailError) {
+          console.error("Temporary password email failed", emailError);
+          redirect("/forgot-password?error=I%20made%20a%20temporary%20password,%20but%20the%20email%20did%20not%20send.%20Rude%20of%20the%20internet.");
+        }
+
+        redirect(`/forgot-password?sent=${encodeURIComponent(email)}`);
+      }
+    }
+  }
 
   const origin = await getAuthRedirectOrigin();
   const supabase = await createClient();
