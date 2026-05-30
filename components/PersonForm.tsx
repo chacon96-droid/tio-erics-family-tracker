@@ -16,7 +16,7 @@ export function PersonForm({ person, layout = "stacked" }: { person?: Person | n
         </div>
         <label className="grid flex-1 gap-1 text-sm font-bold text-muted">
           Profile photo
-          <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" accept="image/*" />
+          <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" />
         </label>
       </div>
       <div className={fieldGridClass}>
