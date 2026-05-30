@@ -106,6 +106,7 @@ async function ensureRosterLogin(email: string) {
     .from("people")
     .select("id,user_id,name,email,relationship,active")
     .ilike("email", email)
+    .order("active", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -197,6 +198,7 @@ export async function requestMagicLink(formData: FormData) {
 
     if (error) {
       console.error("Admin magic link generation failed", error);
+      redirect(`/login?error=${encodeURIComponent(`That email is approved, but I could not make the sign-in link yet: ${error.message}`)}`);
     }
   }
 
