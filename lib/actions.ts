@@ -33,6 +33,9 @@ const signupSchema = z.object({
   email: z.string().email()
 });
 
+const adminLoginEmail = "ericschacon@gmail.com";
+const adminRecoveryAliases = new Set([adminLoginEmail, "chacon96@icloud.com", "ericchacon@icloud.com"]);
+
 async function getAuthRedirectOrigin() {
   const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL;
   if (configuredOrigin && !configuredOrigin.includes("localhost") && !configuredOrigin.includes("127.0.0.1")) {
@@ -241,9 +244,11 @@ export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   if (!email) redirect("/forgot-password?error=Enter%20your%20email%20first.%20The%20app%20is%20dramatic,%20not%20psychic.");
 
+  const normalizedEmail = email.toLowerCase();
   const adminSupabase = createAdminClient();
   if (adminSupabase) {
-    const userId = await findAuthUserIdByEmail(email);
+    const lookupEmail = adminRecoveryAliases.has(normalizedEmail) ? adminLoginEmail : email;
+    const userId = await findAuthUserIdByEmail(lookupEmail);
     if (userId) {
       const { data: profile } = await adminSupabase.from("profiles").select("role").eq("id", userId).maybeSingle();
       if (profile?.role === "admin") {
@@ -254,7 +259,7 @@ export async function requestPasswordReset(formData: FormData) {
         if (updateError) redirect(`/forgot-password?error=${encodeURIComponent(updateError.message)}`);
 
         try {
-          await sendTemporaryPasswordEmail({ to: email, temporaryPassword });
+          await sendTemporaryPasswordEmail({ to: email, loginEmail: lookupEmail, temporaryPassword });
         } catch (emailError) {
           console.error("Temporary password email failed", emailError);
           redirect("/forgot-password?error=I%20made%20a%20temporary%20password,%20but%20the%20email%20did%20not%20send.%20Rude%20of%20the%20internet.");
