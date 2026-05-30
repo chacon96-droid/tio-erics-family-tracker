@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signUp } from "@/lib/actions";
+import { relationshipOptions } from "@/lib/relationships";
 
 export default async function SignupPage({ searchParams }: { searchParams?: Promise<{ error?: string }> }) {
   const params = await searchParams;
@@ -20,7 +21,16 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
           </label>
           <label className="grid gap-1 text-sm font-bold text-muted">
             Relationship to Eric
-            <input className="rounded-app border border-line px-3 py-2 text-ink" name="relationship" placeholder="Niece, nephew, brother..." required />
+            <select className="rounded-app border border-line px-3 py-2 text-ink" name="relationship" defaultValue="" required>
+              <option value="" disabled>
+                Choose your role in the audit
+              </option>
+              {relationshipOptions.map((relationship) => (
+                <option key={relationship} value={relationship}>
+                  {relationship}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="grid gap-1 text-sm font-bold text-muted">
             Phone
