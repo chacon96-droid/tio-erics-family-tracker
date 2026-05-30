@@ -265,14 +265,11 @@ export async function requestPasswordReset(formData: FormData) {
     }
   }
 
-  const origin = await getAuthRedirectOrigin();
-  const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/reset-password`
-  });
-  if (error) redirect(`/forgot-password?error=${encodeURIComponent(error.message)}`);
-
-  redirect(`/forgot-password?sent=${encodeURIComponent(email)}`);
+  redirect(
+    `/forgot-password?error=${encodeURIComponent(
+      "That email is not set up as the admin account. Family members do not need password recovery; they use the email sign-in link on the login page."
+    )}`
+  );
 }
 
 export async function updatePassword(formData: FormData) {
