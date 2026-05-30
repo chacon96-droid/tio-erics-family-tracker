@@ -4,6 +4,8 @@ import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { EmptyState } from "@/components/EmptyState";
 import { PersonForm } from "@/components/PersonForm";
 import { StatCard } from "@/components/StatCard";
+import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
+import { updateMyProfilePhoto } from "@/lib/actions";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
 import { getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
 
@@ -33,6 +35,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
             <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label={`Pending in ${currentYear}`} value={currentYearBreakdown?.pendingInteractionCount || 0} />
           </div>
+          <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
           {yearlyBreakdowns.length ? (
             <div className="grid gap-3">
               <div>
@@ -105,6 +108,26 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           <section className="grid gap-4">
             <PersonForm person={person} />
             <DeletePersonButton personId={person.id} personName={person.name} />
+          </section>
+        ) : profile?.id === person.user_id ? (
+          <section>
+            <form action={updateMyProfilePhoto} encType="multipart/form-data" className="grid gap-3 rounded-app border border-line bg-white p-4">
+              <input type="hidden" name="person_id" value={person.id} />
+              <div className="grid justify-items-start gap-3">
+                <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border border-line bg-paper text-2xl font-black text-clay">
+                  {person.avatar_url ? <img src={person.avatar_url} alt="" className="h-full w-full object-cover" /> : person.name.slice(0, 1)}
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase text-clay">Profile photo</p>
+                  <h3 className="text-xl font-black">Update your racer</h3>
+                </div>
+              </div>
+              <label className="grid gap-1 text-sm font-bold text-muted">
+                Take or upload a photo
+                <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" accept="image/*" capture="user" required />
+              </label>
+              <button className="focus-ring rounded-app bg-ink px-4 py-3 font-black text-white">Save racer photo</button>
+            </form>
           </section>
         ) : null}
       </div>
