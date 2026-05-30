@@ -37,7 +37,6 @@ export function createAdminClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!serviceRoleKey) return null;
-  if (!serviceRoleKey.startsWith("sb_secret_")) return null;
   if (!/^[\x20-\x7E]+$/.test(serviceRoleKey)) return null;
 
   return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey, {
