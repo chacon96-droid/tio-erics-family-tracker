@@ -56,7 +56,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
 
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard
-            label={`${currentYear} Favor Score`}
+            label={`${currentYear} Aura Index`}
             value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points.`}
           />
