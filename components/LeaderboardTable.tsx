@@ -25,8 +25,8 @@ export function LeaderboardTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-app border border-white/10 bg-ink/45 shadow-[0_24px_70px_rgba(0,0,0,0.22)]">
-      <table className="w-full border-collapse text-left text-sm">
+    <div className="max-w-full overflow-x-auto rounded-app border border-white/10 bg-ink/45 shadow-[0_24px_70px_rgba(0,0,0,0.22)]">
+      <table className="min-w-[720px] w-full border-collapse text-left text-sm">
         <thead className="border-b border-white/10 bg-white/[0.06] text-xs uppercase tracking-[0.16em] text-champagne/60">
           <tr>
             <th className="p-3">Rank</th>
