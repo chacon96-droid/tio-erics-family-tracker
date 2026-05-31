@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
   background:
-    linear-gradient(90deg, rgba(16, 20, 19, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(16, 20, 19, 0.03) 1px, transparent 1px),
-    #f3eee2;
+    radial-gradient(circle at 16% 8%, rgba(121, 213, 190, 0.12), transparent 32rem),
+    radial-gradient(circle at 88% 4%, rgba(215, 183, 103, 0.12), transparent 34rem),
+    linear-gradient(90deg, rgba(247, 241, 223, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(247, 241, 223, 0.035) 1px, transparent 1px),
+    #0b0f0e;
   background-size: 42px 42px;
-  color: #101413;
+  color: #f7f1df;
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
@@ -25,11 +27,68 @@ body {
 [class~="bg-white"],
 [class~="bg-white/70"],
 [class~="bg-white/80"],
+[class~="bg-white/85"],
 [class~="bg-ivory"],
 [class~="bg-ivory/95"],
 [class~="bg-paper/60"],
+[class~="bg-paper/70"],
+[class~="bg-paper/75"],
 [class~="bg-paper"] {
+  background-color: rgba(21, 27, 25, 0.92);
+  color: #f7f1df;
+}
+
+[class~="bg-red-50"] {
+  background-color: rgba(127, 29, 29, 0.24);
+}
+
+[class~="bg-green-50"],
+[class~="bg-emerald-50"] {
+  background-color: rgba(6, 78, 59, 0.24);
+}
+
+[class~="bg-amber-50"] {
+  background-color: rgba(120, 53, 15, 0.24);
+}
+
+[class~="text-ink"] {
+  color: #f7f1df;
+}
+
+[class~="bg-gold"][class~="text-ink"],
+[class~="bg-champagne"][class~="text-ink"] {
   color: #101413;
+}
+
+[class~="text-muted"] {
+  color: #b7c2ba;
+}
+
+[class~="text-clay"] {
+  color: #d39a67;
+}
+
+[class~="text-red-700"],
+[class~="text-red-800"],
+[class~="text-red-900"] {
+  color: #fecaca;
+}
+
+[class~="text-green-800"],
+[class~="text-emerald-900"] {
+  color: #bbf7d0;
+}
+
+[class~="text-amber-950"] {
+  color: #fde68a;
+}
+
+[class~="border-line"] {
+  border-color: #303934;
+}
+
+[class~="focus-ring"] {
+  @apply focus:ring-gold focus:ring-offset-ink;
 }
 
 button,
@@ -40,7 +99,7 @@ textarea {
 }
 
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 focus:ring-offset-paper;
+  @apply focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-ink;
 }
 
 .font-serif {
