@@ -167,6 +167,12 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
     return "Step 43 of 57, somehow still moving.";
   }
 
+  if (hasName(person, ["jessica"])) {
+    if (total >= 2500) return "what up biiiitch! Jessica is officially on the board.";
+    if (total >= 900) return "Jessica answered the call. what up biiiitch energy confirmed.";
+    return "Quiet observer, occasional what up biiiitch recipient.";
+  }
+
   if (total >= 2500) return pickLore(hotTrendLines, seed);
   if (total >= 900) return pickLore(activeTrendLines, seed);
   if (total >= 150) return pickLore(steadyTrendLines, seed);
@@ -190,7 +196,7 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
     return "Joyride Energy, wit yo bitch-ass. Shirtless confidence is not currently a scored category, but the committee is aware.";
   }
   if (hasName(person, ["jessica"])) {
-    return "Jessica observes everything. Luigi gets consequences. Briana somehow gets funding and transportation.";
+    return "Jessica observes everything. Eric calls with a what up biiiitch. Luigi gets consequences. Briana somehow gets funding and transportation.";
   }
   if (hasName(person, ["brian"])) {
     return "Could Buy Everyone Gelato energy. A financial declaration may or may not have been made.";
@@ -206,7 +212,7 @@ export function badgeHints(person: Pick<Person, "name" | "relationship">) {
   if (hasName(person, ["sebastian"])) return ["Thanksgiving Accelerator", "Aura Theft", "Goofy Ahh Certified"];
   if (hasName(person, ["lucas"])) return ["cool ig?", "Nonchalant Final Boss", "Aura Reserve"];
   if (hasName(person, ["luigi"])) return ["Joyride Energy"];
-  if (hasName(person, ["jessica"])) return ["Selective Enforcement", "Justice, But Make It Briana-Proof"];
+  if (hasName(person, ["jessica"])) return ["Selective Enforcement", "What Up Biiiitch", "Justice, But Make It Briana-Proof"];
   if (hasName(person, ["brian"])) return ["Could Buy Everyone Gelato"];
   return ["Side Quest Survivor", "Passenger Seat Pop Star", "Rizz Pending"];
 }
