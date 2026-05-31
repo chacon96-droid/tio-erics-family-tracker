@@ -140,9 +140,9 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
   const seed = `${person.id}:${person.name}:${person.relationship}:${total}`;
 
   if (hasName(person, ["sebastian"])) {
-    if (total >= 2500) return "Accelerating like Sebastian into a Thanksgiving fence. Aura somehow intact.";
-    if (total >= 900) return "cool ig? with suspiciously high Aura.";
-    return "Goofy Ahh score movement, with mild Aura Theft risk.";
+    if (total >= 2500) return "Accelerating like Sebastian into a Thanksgiving fence, wit yo bitch-ass.";
+    if (total >= 900) return "cool ig? with suspiciously high Aura, wit yo bitch-ass.";
+    return "Goofy Ahh score movement, wit yo bitch-ass.";
   }
 
   if (hasName(person, ["sebastian", "lucas"])) {
@@ -157,8 +157,8 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
   }
 
   if (hasName(person, ["luigi"])) {
-    if (total >= 2500) return "This score took off like one of Luigi's shirtless joyrides.";
-    return "Rapid acceleration detected. Hopefully no Amazon trucks nearby.";
+    if (total >= 2500) return "This score took off like one of Luigi's shirtless joyrides, wit yo bitch-ass.";
+    return "Rapid acceleration detected, wit yo bitch-ass. Hopefully no Amazon trucks nearby.";
   }
 
   if (hasName(person, ["zander"])) {
@@ -181,13 +181,13 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
     return "Briana once ran up a $90 rotary sushi bill for a tiny gumball-machine toy. Commitment like that deserves documentation.";
   }
   if (hasName(person, ["sebastian"])) {
-    return "Known risk factors: Drake glazing, dad quips, Goofy Ahh naming rights, and suspiciously familiar one-liners. Possible Aura Theft.";
+    return "Known risk factors: Drake glazing, dad quips, Goofy Ahh naming rights, and suspiciously familiar one-liners, wit yo bitch-ass. Possible Aura Theft.";
   }
   if (hasName(person, ["lucas"])) {
     return "Quality time, lowercase enthusiasm, and a response style best summarized as cool ig? Nonchalant Aura remains under review.";
   }
   if (hasName(person, ["luigi"])) {
-    return "Joyride Energy. Shirtless confidence is not currently a scored category, but the committee is aware.";
+    return "Joyride Energy, wit yo bitch-ass. Shirtless confidence is not currently a scored category, but the committee is aware.";
   }
   if (hasName(person, ["jessica"])) {
     return "Jessica observes everything. Luigi gets consequences. Briana somehow gets funding and transportation.";
