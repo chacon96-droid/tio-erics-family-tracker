@@ -214,6 +214,8 @@ lib/email.ts
 
 This keeps inside jokes, roasts, approval lines, trend labels, and email copy easy to review without digging through UI components.
 
+Short family slang like "cool ig", "Goofy Ahh", Aura, and Rizz is also centralized there so the site can reuse those jokes consistently across trends, profile copy, badges, and approval states.
+
 ## Family Vs Family Friends
 
 The app separates actual family from family friends with relationship logic in:
