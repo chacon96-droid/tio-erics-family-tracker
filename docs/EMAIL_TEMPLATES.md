@@ -107,6 +107,8 @@ Roster approved. Shit maaaaannn.
 Approved. Whitey psychos caucus notified.
 ```
 
+Approval emails use their own mobile-safe HTML shell in `lib/email.ts`: the headline is always `Roster approved.`, the randomized joke appears as a smaller subline, rules appear in a boxed section, and the email includes an `Open the leaderboard` button.
+
 All approval emails still explain the important rules: direct calls, texts, FaceTimes, and approved quality time count; group chats do not count; message contents are not stored; the inheritance percentage is a non-binding joke.
 
 The actual approval email implementation lives in `lib/email.ts`. Update that file when adding or removing randomized approval copy.
