@@ -100,7 +100,7 @@ Scoring is separated from the UI. The UI never hard-codes point values.
 
 The scoring engine reads `scoring_weights`, then calculates `scores`.
 
-The database stores raw score totals. The visible website usually displays a normalized `0-100` Favor Score from `lib/display-score.ts` so the leaderboard feels understandable instead of showing giant raw point totals.
+The database stores raw score totals. The visible website usually displays a normalized `0-100` Tio Eric Aura Index from `lib/display-score.ts` so the leaderboard feels understandable instead of showing giant raw point totals.
 
 Important rules:
 
