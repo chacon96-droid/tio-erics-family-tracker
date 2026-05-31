@@ -16,6 +16,12 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 [class~="bg-white"],
 [class~="bg-white/70"],
 [class~="bg-white/80"],
