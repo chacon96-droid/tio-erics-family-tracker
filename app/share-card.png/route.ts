@@ -1,1 +1,7 @@
-export { default as GET, runtime } from "../opengraph-image";
+import Image from "../opengraph-image";
+
+export const runtime = "edge";
+
+export function GET() {
+  return Image();
+}
