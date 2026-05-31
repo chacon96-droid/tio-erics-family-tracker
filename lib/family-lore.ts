@@ -1,5 +1,20 @@
 import type { Person, Score } from "@/lib/types";
 
+type ScoreSuggestionBreakdown = {
+  year: number;
+  totalScore: number;
+  callScore: number;
+  textScore: number;
+  timeTogetherScore: number;
+  approvedInteractionCount: number;
+  pendingInteractionCount: number;
+  callCount: number;
+  textExchangeCount: number;
+  qualityTimeMinutes: number;
+  totalMinutes: number;
+  messageCount: number;
+};
+
 const lowContactLines = [
   "Avoiding Eric like Abuelito German avoids his ex-wives.",
   "Current status: deep cover. Abuelito German would respect the cold evasiveness.",
@@ -100,6 +115,19 @@ const carConcertLines = [
   "Passenger Seat Pop Star energy detected."
 ];
 
+const funnyScoreSuggestionLines = [
+  "Call Eric before the group chat lawyers get involved.",
+  "A direct text counts more than telepathic affection, which remains hard to audit.",
+  "Submit Fortnite, dinner, car singing, or anything that proves this relationship exists outside theory.",
+  "Remember: silence has consequences. Possibly fake inheritance consequences, but consequences.",
+  "If you are losing, try the ancient technique of saying hello.",
+  "Avoid Big-a-big shot behavior. The phone has a call button for a reason.",
+  "Increase Aura by initiating contact before Eric starts narrating your absence like a documentary.",
+  "Quality time claims are welcome. Fraud is discouraged, unless it is extremely funny and still denied.",
+  "Skip the group chat. Private communication is where the points live.",
+  "A thoughtful check-in can move mountains, or at least this deeply unnecessary chart."
+];
+
 function hashSeed(seed: string) {
   return seed.split("").reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 7);
 }
@@ -189,6 +217,7 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
   if (hasName(person, ["sebastian"])) {
     return "Known risk factors: Drake glazing, dad quips, Goofy Ahh naming rights, and suspiciously familiar one-liners, wit yo bitch-ass. Possible Aura Theft.";
   }
+
   if (hasName(person, ["lucas"])) {
     return "Quality time, lowercase enthusiasm, and a response style best summarized as cool ig? Nonchalant Aura remains under review.";
   }
@@ -219,4 +248,53 @@ export function badgeHints(person: Pick<Person, "name" | "relationship">) {
 
 export function qualityTimeNudge(seed = "quality-time") {
   return pickLore([...approvalQueueLines, ...carConcertLines], seed);
+}
+
+export function scoreImprovementSuggestions(person: Pick<Person, "id" | "name" | "relationship">, breakdown?: ScoreSuggestionBreakdown) {
+  const seed = `${person.id}:${person.name}:${breakdown?.year || "no-year"}:${breakdown?.totalScore || 0}`;
+  const suggestions: string[] = [];
+
+  if (!breakdown || breakdown.approvedInteractionCount === 0) {
+    suggestions.push("Start with one real interaction: a call, a text exchange, or submitted quality time. The bar is low, which is either generous or tragic.");
+  } else {
+    const scores = [
+      { key: "calls", value: breakdown.callScore },
+      { key: "texts", value: breakdown.textScore },
+      { key: "quality", value: breakdown.timeTogetherScore }
+    ].sort((a, b) => a.value - b.value);
+
+    const weakest = scores[0]?.key;
+    if (weakest === "calls") {
+      suggestions.push(`Call Eric. You have ${breakdown.callCount} calls logged this year, and the committee is pretending not to stare.`);
+    } else if (weakest === "texts") {
+      suggestions.push(`Send a real text exchange. ${breakdown.messageCount} messages is the current paper trail, and the paper looks thin.`);
+    } else {
+      suggestions.push(`Submit quality time: gaming, visits, car concerts, errands, side quests. You have ${Math.round(breakdown.qualityTimeMinutes)} approved minutes so far.`);
+    }
+  }
+
+  if ((breakdown?.pendingInteractionCount || 0) > 0) {
+    suggestions.push("You have pending claims. Eric has them in the tiny courtroom. Do not bribe the judge unless the bribe is calling him.");
+  }
+
+  if (hasName(person, ["zander"])) {
+    suggestions.push("Complete the 57-step routine, rearrange the sock drawer, then call Eric before the window of emotional availability closes.");
+  } else if (hasName(person, ["briana"])) {
+    suggestions.push("Channel the $90 tiny-toy sushi commitment into one direct check-in. Sour first, sweet after approval.");
+  } else if (hasName(person, ["sebastian"])) {
+    suggestions.push("Stop stealing Eric's sayings for one minute and use the original source. Call him, wit yo bitch-ass.");
+  } else if (hasName(person, ["luigi"])) {
+    suggestions.push("No shirtless joyride required. A normal call will score better and involve fewer incident reports, wit yo bitch-ass.");
+  } else if (hasName(person, ["jessica"])) {
+    suggestions.push("Answer with one clean what up biiiitch and the analytics department will have something to work with.");
+  } else if (hasName(person, ["brian"])) {
+    suggestions.push("You could buy everyone gelato, allegedly. Or just call Eric, which is cheaper and scores immediately.");
+  } else if (hasName(person, ["lucas"])) {
+    suggestions.push("The nonchalant strategy is powerful, but the board still needs evidence. A cool ig text is technically a start.");
+  }
+
+  suggestions.push(pickLore(funnyScoreSuggestionLines, seed));
+  suggestions.push(pickLore(funnyScoreSuggestionLines, `${seed}:bonus`));
+
+  return [...new Set(suggestions)].slice(0, 4);
 }
