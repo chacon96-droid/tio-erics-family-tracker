@@ -1,4 +1,4 @@
-export function BrandMark({ compact = false }: { compact?: boolean }) {
+export function BrandMark({ compact = false, tone = "dark" }: { compact?: boolean; tone?: "dark" | "light" }) {
   return (
     <div className="flex items-center gap-3">
       <div className="grid h-12 w-12 shrink-0 place-items-center border border-gold bg-ink text-lg font-black text-gold shadow-brand">
@@ -7,7 +7,7 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
       {!compact ? (
         <div className="leading-none">
           <p className="text-[10px] font-black uppercase tracking-[0.28em] text-gold">Call Tio Eric</p>
-          <p className="mt-1 font-serif text-2xl font-black tracking-tight text-ivory">Family Tracker</p>
+          <p className={`mt-1 font-serif text-2xl font-black tracking-tight ${tone === "light" ? "text-ivory" : "text-ink"}`}>Family Tracker</p>
         </div>
       ) : null}
     </div>
