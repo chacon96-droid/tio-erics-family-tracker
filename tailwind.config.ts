@@ -9,16 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#f3eee2",
-        ivory: "#fffaf0",
+        paper: "#0b0f0e",
+        ivory: "#f7f1df",
         ink: "#101413",
-        muted: "#64706a",
-        line: "#d9cfbd",
-        clay: "#9b6a3b",
-        mint: "#6fb8a4",
-        gold: "#c7a45a",
-        champagne: "#ead7a2",
-        blue: "#526f91",
+        muted: "#b7c2ba",
+        line: "#303934",
+        clay: "#d39a67",
+        mint: "#79d5be",
+        gold: "#d7b767",
+        champagne: "#efe0b2",
+        blue: "#7ea3d1",
         night: "#171c1a"
       },
       borderRadius: {
