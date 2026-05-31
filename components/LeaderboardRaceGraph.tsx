@@ -9,7 +9,7 @@ function RacerAvatar({ row }: { row: PersonWithScore }) {
   );
 }
 
-export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { rows: PersonWithScore[]; title?: string }) {
+export function LeaderboardRaceGraph({ rows, title = "The affection race", tone = "dark" }: { rows: PersonWithScore[]; title?: string; tone?: "dark" | "light" }) {
   if (!rows.length) return null;
 
   const chartId = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -31,16 +31,22 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
   const linePath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
 
   return (
-    <section className="min-w-0 max-w-full rounded-app border border-white/10 bg-white/[0.07] p-3 shadow-[0_30px_90px_rgba(0,0,0,0.28)] sm:p-5">
+    <section
+      className={`min-w-0 max-w-full rounded-app border p-3 shadow-[0_30px_90px_rgba(0,0,0,0.12)] sm:p-5 ${
+        tone === "light" ? "border-line bg-white/85" : "border-white/10 bg-white/[0.07]"
+      }`}
+    >
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Evidence chart, emotionally speaking</p>
-          <h4 className="font-serif text-3xl font-black tracking-tight text-ivory">{title}</h4>
+          <h4 className={`font-serif text-3xl font-black tracking-tight ${tone === "light" ? "text-ink" : "text-ivory"}`}>{title}</h4>
         </div>
-        <p className="max-w-md text-sm font-semibold text-champagne/65">X axis is rank. Y axis is Favor Score. The math is petty, but official-looking.</p>
+        <p className={`max-w-md text-sm font-semibold ${tone === "light" ? "text-muted" : "text-champagne/65"}`}>
+          X axis is rank. Y axis is Favor Score. The math is petty, but official-looking.
+        </p>
       </div>
 
-      <div className="mt-5 max-w-full overflow-x-auto rounded-app border border-white/10 bg-ink/55 shadow-insetGold">
+      <div className="mt-5 max-w-full overflow-x-auto rounded-app border border-white/10 bg-ink/90 shadow-insetGold">
         <div className="w-full min-w-[540px] p-2 sm:min-w-[760px] sm:p-3">
           <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-label={`${title} score by rank line graph`} className="h-auto w-full">
             <defs>
@@ -119,13 +125,13 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {points.slice(0, 4).map(({ row, index, score }) => (
-          <div key={row.id} className="flex items-center gap-3 rounded-app border border-white/10 bg-white/[0.06] p-2">
+          <div key={row.id} className={`flex items-center gap-3 rounded-app border p-2 ${tone === "light" ? "border-line bg-paper/75" : "border-white/10 bg-white/[0.06]"}`}>
             <RacerAvatar row={row} />
             <div className="min-w-0">
-              <p className="truncate text-sm font-black text-ivory">
+              <p className={`truncate text-sm font-black ${tone === "light" ? "text-ink" : "text-ivory"}`}>
                 #{index + 1} {row.name}
               </p>
-              <p className="text-xs font-bold text-champagne/60">{score}/100 Favor Score</p>
+              <p className={`text-xs font-bold ${tone === "light" ? "text-muted" : "text-champagne/60"}`}>{score}/100 Favor Score</p>
             </div>
           </div>
         ))}
