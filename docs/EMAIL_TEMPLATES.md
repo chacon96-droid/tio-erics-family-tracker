@@ -19,6 +19,16 @@ lib/email.ts
 
 This file includes signup, approval, sign-in link, and admin recovery emails. The examples below are reference copy, not the only variants.
 
+## Preview And Test Sending
+
+Admin can preview and test-send the approval email from:
+
+```text
+/admin/email-previews
+```
+
+That page renders the same approval email HTML used by the real approval workflow. It lets Eric pick a sample person, choose one randomized variant, preview the email in the browser, and send a test approval email to himself before approving real people.
+
 ## Signup Confirmation
 
 Subject:
@@ -107,8 +117,8 @@ Roster approved. Shit maaaaannn.
 Approved. Whitey psychos caucus notified.
 ```
 
-Approval emails use their own mobile-safe HTML shell in `lib/email.ts`: the headline is always `Roster approved.`, the randomized joke appears as a smaller subline, rules appear in a boxed section, and the email includes an `Open the leaderboard` button.
-
 All approval emails still explain the important rules: direct calls, texts, FaceTimes, and approved quality time count; group chats do not count; message contents are not stored; the inheritance percentage is a non-binding joke.
 
 The actual approval email implementation lives in `lib/email.ts`. Update that file when adding or removing randomized approval copy.
+
+The approval email uses a dedicated mobile-safe shell so long joke lines do not become giant broken headlines in iPhone Mail. Keep long jokes in the smaller intro/subline area instead of the main headline.
