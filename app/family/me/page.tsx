@@ -49,9 +49,10 @@ export default async function FamilyMePage({
             <StatCard
               label={`${currentYear} Favor Score`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+              tone="light"
             />
-            <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
-            <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
+            <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} tone="light" />
+            <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." tone="light" />
           </div>
           <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
           <div className="grid gap-3">
