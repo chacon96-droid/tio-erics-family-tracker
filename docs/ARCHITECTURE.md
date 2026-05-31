@@ -94,7 +94,7 @@ Auth routes:
 
 `lib/display-score.ts`
 
-- Converts raw score totals into visible `0-100` Favor Scores
+- Converts raw score totals into visible `0-100` Tio Eric Aura Index values
 - Keeps raw points available internally while making the UI easier to read
 
 `lib/family-lore.ts`
@@ -171,9 +171,9 @@ This prevents family friends from being ranked directly against nieces/nephews/s
 There are two score concepts:
 
 - Raw score: calculated from `scoring_weights` and stored in `scores.total_score`.
-- Favor Score: UI-normalized score from `lib/display-score.ts`, shown as `0-100`.
+- Tio Eric Aura Index: UI-normalized score from `lib/display-score.ts`, shown as `0-100`.
 
-The raw score is useful for detailed math and historical comparisons. The Favor Score is easier for people to understand on the website.
+The raw score is useful for detailed math and historical comparisons. The Tio Eric Aura Index is easier for people to understand on the website.
 
 Do not hard-code point values in UI components. Edit `scoring_weights` or the scoring engine instead.
 
@@ -239,7 +239,7 @@ Analytics components:
 
 - `DashboardAnalytics`: admin analytics panels
 - `LeaderboardIntelligence`: leaderboard insights
-- `LeaderboardRaceGraph`: Tio Eric Favorability Index / Family Totem Pole graph with family order on the x-axis and Favor Score on the y-axis
+- `LeaderboardRaceGraph`: Tio Eric Aura Index / Family Totem Pole graph with family order on the x-axis, aura on the y-axis, and category-driver bars below the chart
 - `TurtleRaceBreakdown`: person-level favorability lanes by communication type
 
 ## Humor And Inside Jokes
