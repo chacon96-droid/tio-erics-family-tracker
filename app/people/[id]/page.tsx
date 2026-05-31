@@ -7,8 +7,10 @@ import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { updateMyProfilePhoto } from "@/lib/actions";
 import { getProfile, requireApprovedUser } from "@/lib/auth";
-import { getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
+import { getLeaderboard, getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
+import { favorScoreForRow, formatRawScore, maxTotalScore } from "@/lib/display-score";
 import { badgeHints, profileRoast } from "@/lib/family-lore";
+import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function PersonPage({
   params,
@@ -20,15 +22,20 @@ export default async function PersonPage({
   await requireApprovedUser();
   const { id } = await params;
   const query = (await searchParams) || {};
-  const [person, interactions, yearlyBreakdowns, profile] = await Promise.all([
+  const [person, interactions, yearlyBreakdowns, profile, leaderboard] = await Promise.all([
     getPerson(id),
     getPersonInteractions(id),
     getPersonYearlyBreakdowns(id),
-    getProfile()
+    getProfile(),
+    getLeaderboard("year").catch(() => [])
   ]);
   if (!person) notFound();
   const currentYear = new Date().getFullYear();
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
+  const audience = leaderboardAudienceForRelationship(person.relationship);
+  const audienceRows = leaderboard.filter((row) => leaderboardAudienceForRelationship(row.relationship) === audience);
+  const leaderboardRow = audienceRows.find((row) => row.id === person.id);
+  const leaderboardMax = maxTotalScore(audienceRows);
   const badges = badgeHints(person);
 
   return (
@@ -65,7 +72,11 @@ export default async function PersonPage({
             ) : null}
           </div>
           <div className="grid gap-3 md:grid-cols-3">
-            <StatCard label={`${currentYear} score`} value={currentYearBreakdown?.totalScore || 0} />
+            <StatCard
+              label={`${currentYear} Favor Score`}
+              value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+              detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points`}
+            />
             <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label={`Pending in ${currentYear}`} value={currentYearBreakdown?.pendingInteractionCount || 0} />
           </div>
@@ -84,7 +95,7 @@ export default async function PersonPage({
                         <p className="text-xs font-black uppercase text-clay">{year.topCategory}</p>
                         <h4 className="text-2xl font-black">{year.year}</h4>
                       </div>
-                      <p className="text-2xl font-black">{year.totalScore}</p>
+                      <p className="text-2xl font-black">{formatRawScore(year.totalScore)}</p>
                     </div>
                     <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                       <div>
@@ -113,7 +124,7 @@ export default async function PersonPage({
                       </div>
                     </div>
                     <p className="mt-4 text-sm font-semibold text-muted">
-                      Calls: {Math.round(year.callScore * 10) / 10} pts · Texts: {Math.round(year.textScore * 10) / 10} pts
+                      Calls: {formatRawScore(year.callScore)} raw · Texts: {formatRawScore(year.textScore)} raw
                     </p>
                   </div>
                 ))}
@@ -152,7 +163,7 @@ export default async function PersonPage({
                 </div>
               </div>
               <label className="grid gap-1 text-sm font-bold text-muted">
-                Upload a photo
+                Take or upload a photo
                 <input className="rounded-app border border-line px-3 py-2 text-ink" name="avatar_file" type="file" required />
               </label>
               <button className="focus-ring rounded-app bg-ink px-4 py-3 font-black text-white">Save racer photo</button>
