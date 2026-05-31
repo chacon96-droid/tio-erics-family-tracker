@@ -1,3 +1,4 @@
+import { favorScore, maxTotalScore, rawTotalScore } from "@/lib/display-score";
 import type { Interaction, Person, PersonWithScore } from "@/lib/types";
 
 function formatNumber(value: number) {
@@ -50,13 +51,13 @@ function Sparkline({ values }: { values: number[] }) {
 
 function CompositionBars({ rows }: { rows: PersonWithScore[] }) {
   const leaders = rows.slice(0, 5);
-  const max = Math.max(...leaders.map((row) => row.score?.total_score || 0), 1);
+  const max = maxTotalScore(leaders);
 
   return (
     <div className="grid gap-3">
       {leaders.map((row, index) => {
         const score = row.score;
-        const total = score?.total_score || 0;
+        const total = rawTotalScore(row);
         const call = total ? ((score?.call_score || 0) / total) * 100 : 0;
         const text = total ? ((score?.text_score || 0) / total) * 100 : 0;
         const time = total ? ((score?.time_together_score || 0) / total) * 100 : 0;
@@ -77,7 +78,7 @@ function CompositionBars({ rows }: { rows: PersonWithScore[] }) {
                   <p className="text-xs font-bold text-champagne/70">{row.topCategory}</p>
                 </div>
               </div>
-              <p className="shrink-0 text-sm font-black text-gold">{formatNumber(total)}</p>
+              <p className="shrink-0 text-sm font-black text-gold">{favorScore(total, max)}</p>
             </div>
             <div className="mt-3 h-3 rounded-full bg-white/10" style={{ width: `${width}%` }}>
               <div className="flex h-full overflow-hidden rounded-full">
@@ -117,7 +118,8 @@ export function DashboardAnalytics({
   const combinedRows = [...familyRows, ...friendRows].sort((a, b) => (b.score?.total_score || 0) - (a.score?.total_score || 0));
   const leader = combinedRows[0];
   const second = combinedRows[1];
-  const gap = (leader?.score?.total_score || 0) - (second?.score?.total_score || 0);
+  const maxScore = maxTotalScore(combinedRows);
+  const gap = favorScore(rawTotalScore(leader), maxScore) - favorScore(rawTotalScore(second), maxScore);
   const activePeople = people.filter((person) => person.active).length || 1;
   const contactCoverage = Math.round((combinedRows.filter((row) => (row.score?.total_score || 0) > 0).length / activePeople) * 100);
 
@@ -175,7 +177,7 @@ export function DashboardAnalytics({
         <div className="mt-4 rounded-app border border-white/10 bg-ink/40 p-3">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-champagne/60">Current spread</p>
           <p className="mt-1 text-sm font-bold text-ivory">
-            {leader?.name || "Nobody"} leads by {formatNumber(Math.max(0, gap))} points. {qualityTime.length ? `${qualityTime.length} quality-time entries are on the board.` : "Quality time remains an allegation."}
+            {leader?.name || "Nobody"} leads by {formatNumber(Math.max(0, gap))} Favor Score. {qualityTime.length ? `${qualityTime.length} quality-time entries are on the board.` : "Quality time remains an allegation."}
           </p>
         </div>
       </div>
