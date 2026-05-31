@@ -177,7 +177,7 @@ export function DashboardAnalytics({
         <div className="mt-4 rounded-app border border-white/10 bg-ink/40 p-3">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-champagne/60">Current spread</p>
           <p className="mt-1 text-sm font-bold text-ivory">
-            {leader?.name || "Nobody"} leads by {formatNumber(Math.max(0, gap))} Favor Score. {qualityTime.length ? `${qualityTime.length} quality-time entries are on the board.` : "Quality time remains an allegation."}
+            {leader?.name || "Nobody"} leads by {formatNumber(Math.max(0, gap))} Aura Index points. {qualityTime.length ? `${qualityTime.length} quality-time entries are on the board.` : "Quality time remains an allegation."}
           </p>
         </div>
       </div>
