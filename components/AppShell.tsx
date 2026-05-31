@@ -24,7 +24,7 @@ export async function AppShell({ children, previewMode = false }: { children: Re
   const navigation = [...nav, ...(isAdmin ? adminNav : [])];
 
   return (
-    <div className="min-h-screen bg-ink text-ivory">
+    <div className="min-h-screen overflow-x-hidden bg-ink text-ivory">
       <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/[0.88] shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -59,7 +59,7 @@ export async function AppShell({ children, previewMode = false }: { children: Re
           })}
         </nav>
       </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+      <main className="mx-auto min-w-0 max-w-7xl px-3 py-5 sm:px-4 sm:py-6">{children}</main>
     </div>
   );
 }
