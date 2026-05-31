@@ -211,7 +211,7 @@ export default function Image() {
               fontWeight: 800
             }}
           >
-            Calls / texts / receipts / consequences.
+            This dashboard shows who really cares about me and who does not.
           </div>
         </div>
       </div>
