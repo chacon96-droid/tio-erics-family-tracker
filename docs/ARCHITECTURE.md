@@ -192,6 +192,8 @@ The script:
 
 - Reads approved and pending people from Supabase
 - Matches by phone and email
+- Treats signup as identity matching, not the beginning of the scoring window
+- Re-scans from the requested historical start date, currently `2026-01-01`
 - Optionally checks macOS Contacts for extra handles
 - Reads local Apple Messages and CallHistory databases
 - Skips group chats
@@ -207,6 +209,8 @@ scripts/install_apple_sync_launch_agent.sh
 
 Default schedule: every night at 8 PM on Eric's Mac.
 
+When a new person signs up, their phone/email can match older Apple metadata already on Eric's Mac during the next sync. The site itself cannot read the Mac logs; it only receives the metadata rows that the local sync script uploads.
+
 ## UI Structure
 
 `components/AppShell.tsx`
@@ -217,8 +221,10 @@ Default schedule: every night at 8 PM on Eric's Mac.
 `components/FamilyShell.tsx`
 
 - Family-facing shell
-- Light branded experience
+- Dark branded experience
 - Used by `/family/me` and `/family/leaderboard`
+
+The design system is dark-first. `tailwind.config.ts` owns the token values and `app/globals.css` contains compatibility overrides for older light utility classes so legacy cards do not create low-contrast beige panels.
 
 Shared components with tone support:
 
