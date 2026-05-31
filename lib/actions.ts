@@ -6,9 +6,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin, requireApprovedUser } from "@/lib/auth";
-import { getInteractions, getScoringWeights } from "@/lib/data";
-import { sendApprovalEmail, sendSignInLinkEmail, sendSignupWelcomeEmail, sendTemporaryPasswordEmail } from "@/lib/email";
-import { periods } from "@/lib/periods";
+import { sendApprovalEmail, sendApprovalEmailPreview, sendSignInLinkEmail, sendSignupWelcomeEmail, sendTemporaryPasswordEmail } from "@/lib/email";
+import { periods, periodStart } from "@/lib/periods";
 import { calculateScores } from "@/lib/scoring";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import type { ApprovalStatus, InteractionDirection, InteractionSource, InteractionType } from "@/lib/types";
@@ -150,6 +149,49 @@ async function ensureRosterLogin(email: string) {
   }
 
   return { ...person, user_id: userId };
+}
+
+async function refreshLeaderboardData(paths: string[] = []) {
+  const db = createAdminClient() || (await createClient());
+  const { data: weightRows, error: weightsError } = await db
+    .from("scoring_weights")
+    .select("*")
+    .order("interaction_type", { ascending: true });
+  if (weightsError) throw weightsError;
+  const weights = weightRows || [];
+  let refreshedRows = 0;
+
+  for (const period of periods) {
+    let interactionQuery = db.from("interactions").select("*").order("started_at", { ascending: false });
+    const start = periodStart(period.value);
+    if (start) interactionQuery = interactionQuery.gte("started_at", start);
+    const { data: interactionRows, error: interactionsError } = await interactionQuery;
+    if (interactionsError) throw interactionsError;
+    const interactions = interactionRows || [];
+    const scores = calculateScores(interactions, weights, period.value);
+    const { error: deleteError } = await db.from("scores").delete().eq("period", period.value);
+    if (deleteError) throw deleteError;
+
+    if (scores.length) {
+      const { error } = await db.from("scores").upsert(scores);
+      if (error) throw error;
+      refreshedRows += scores.length;
+    }
+  }
+
+  [
+    "/dashboard",
+    "/leaderboard",
+    "/people",
+    "/family/me",
+    "/family/leaderboard",
+    "/admin/approvals",
+    "/admin/pending",
+    "/admin/weights",
+    ...paths
+  ].forEach((path) => revalidatePath(path));
+
+  return refreshedRows;
 }
 
 export async function signIn(formData: FormData) {
@@ -306,6 +348,12 @@ export async function signUp(formData: FormData) {
     await sendSignupWelcomeEmail({ to: parsed.email, name: parsed.name, relationship: parsed.relationship });
   } catch (emailError) {
     console.error("Signup welcome email failed", emailError);
+  }
+
+  try {
+    await refreshLeaderboardData(["/pending"]);
+  } catch (scoreError) {
+    console.error("Signup data refresh failed", scoreError);
   }
 
   redirect("/pending");
@@ -484,7 +532,13 @@ export async function createInteraction(formData: FormData) {
 
   const { error } = await supabase.from("interactions").insert(payload);
   if (error) throw error;
-  revalidatePath("/submissions");
+  if (isAdmin) {
+    await refreshLeaderboardData(["/submissions"]);
+  } else {
+    revalidatePath("/submissions");
+    revalidatePath("/admin/approvals");
+    revalidatePath("/admin/pending");
+  }
   redirect(isAdmin ? "/leaderboard" : "/submissions");
 }
 
@@ -546,8 +600,11 @@ export async function approveFamilyMember(formData: FormData) {
       console.error("Approval email failed", emailError);
     }
   }
-  revalidatePath("/people");
-  revalidatePath("/admin/approvals");
+  try {
+    await refreshLeaderboardData([`/people/${personId}`]);
+  } catch (scoreError) {
+    console.error("Approval score refresh failed", scoreError);
+  }
   redirect(`/admin/approvals?approved=${encodeURIComponent(person?.name || "Family member")}`);
 }
 
@@ -559,8 +616,7 @@ export async function setInteractionStatus(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.from("interactions").update({ status }).eq("id", id);
   if (error) throw error;
-  revalidatePath("/admin/approvals");
-  revalidatePath("/submissions");
+  await refreshLeaderboardData(["/submissions"]);
 }
 
 export async function updateWeight(formData: FormData) {
@@ -583,28 +639,27 @@ export async function updateWeight(formData: FormData) {
 
 export async function recalculateScores() {
   await requireAdmin();
-  const supabase = await createClient();
-  const weights = await getScoringWeights();
-  let refreshedRows = 0;
+  const refreshedRows = await refreshLeaderboardData();
+  redirect(`/admin/weights?recalculated=1&rows=${refreshedRows}&at=${Date.now()}`);
+}
 
-  for (const period of periods) {
-    const interactions = await getInteractions(period.value);
-    const scores = calculateScores(interactions, weights, period.value);
-    const { error: deleteError } = await supabase.from("scores").delete().eq("period", period.value);
-    if (deleteError) throw deleteError;
+export async function sendTestApprovalEmail(formData: FormData) {
+  await requireAdmin();
+  const to = String(formData.get("to") || "").trim();
+  const name = String(formData.get("name") || "Zander").trim();
+  const relationship = String(formData.get("relationship") || "nephew").trim();
+  const variantId = String(formData.get("variant_id") || "0");
 
-    if (scores.length) {
-      const { error } = await supabase.from("scores").upsert(scores);
-      if (error) throw error;
-      refreshedRows += scores.length;
-    }
+  if (!to) redirect("/admin/email-previews?error=Add%20the%20email%20address%20first.%20Even%20a%20joke%20needs%20a%20recipient.");
+
+  try {
+    await sendApprovalEmailPreview({ to, name, relationship, variantId });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Email did not send.";
+    redirect(`/admin/email-previews?error=${encodeURIComponent(message)}`);
   }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/leaderboard");
-  revalidatePath("/people");
-  revalidatePath("/admin/weights");
-  redirect(`/admin/weights?recalculated=1&rows=${refreshedRows}&at=${Date.now()}`);
+  redirect(`/admin/email-previews?sent=${encodeURIComponent(to)}&variant=${encodeURIComponent(variantId)}`);
 }
 
 export async function updateSetting(formData: FormData) {
