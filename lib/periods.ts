@@ -4,7 +4,7 @@ import type { ScorePeriod } from "@/lib/types";
 export const periods: Array<{ value: ScorePeriod; label: string }> = [
   { value: "week", label: "Week" },
   { value: "month", label: "Month" },
-  { value: "year", label: "2026 so far" },
+  { value: "year", label: "Big 26 so far" },
   { value: "all_time", label: "All-time" }
 ];
 
