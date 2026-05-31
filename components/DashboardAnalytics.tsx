@@ -25,7 +25,7 @@ function Sparkline({ values }: { values: number[] }) {
   const path = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Approved activity by month" className="h-auto w-full">
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Tracked activity by month" className="h-auto w-full">
       <defs>
         <linearGradient id="activityLine" x1="0" x2="1">
           <stop offset="0%" stopColor="#6fb8a4" />
