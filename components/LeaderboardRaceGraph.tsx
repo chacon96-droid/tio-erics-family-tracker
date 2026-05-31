@@ -29,7 +29,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
   const linePath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
 
   return (
-    <section className="rounded-app border border-white/10 bg-white/[0.07] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.28)]">
+    <section className="min-w-0 max-w-full rounded-app border border-white/10 bg-white/[0.07] p-3 shadow-[0_30px_90px_rgba(0,0,0,0.28)] sm:p-5">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Evidence chart, emotionally speaking</p>
@@ -38,8 +38,8 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
         <p className="max-w-md text-sm font-semibold text-champagne/65">X axis is rank. Y axis is points. The math is petty, but official-looking.</p>
       </div>
 
-      <div className="mt-5 overflow-x-auto rounded-app border border-white/10 bg-ink/55 shadow-insetGold">
-        <div className="min-w-[760px] p-3">
+      <div className="mt-5 max-w-full overflow-x-auto rounded-app border border-white/10 bg-ink/55 shadow-insetGold">
+        <div className="w-full min-w-[540px] p-2 sm:min-w-[760px] sm:p-3">
           <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-label={`${title} score by rank line graph`} className="h-auto w-full">
             <defs>
               <linearGradient id={`${chartId}-rankLine`} x1="0" x2="1" y1="0" y2="0">
