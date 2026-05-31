@@ -192,7 +192,7 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
   if (hasName(person, ["zander"])) {
     if (total >= 2500) return "Goofy Ahh Doofy Ahh numbers, formally entered into the relevant schema.";
     if (total >= 900) return "Goofy, doofy, and statistically relevant.";
-    return "Step 43 of 57, somehow still moving.";
+    return "Zander is allegedly on step 43 of his 57-step morning routine, but somehow the score is still moving.";
   }
 
   if (hasName(person, ["jessica"])) {
@@ -209,7 +209,7 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
 
 export function profileRoast(person: Pick<Person, "name" | "relationship">, score?: Pick<Score, "total_score">) {
   if (hasName(person, ["zander"])) {
-    return "Zander has to rearrange his sock drawer before this can proceed. Goofy Doofy operations and all relevant schema remain ongoing.";
+    return "Zander is famous for needing a 57-step morning routine before leaving the house. Somewhere in there he also has to rearrange his sock drawer. Goofy Doofy operations and all relevant schema remain ongoing.";
   }
   if (hasName(person, ["briana"])) {
     return "Briana once ran up a $90 rotary sushi bill for a tiny gumball-machine toy. Commitment like that deserves documentation.";
@@ -217,7 +217,6 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
   if (hasName(person, ["sebastian"])) {
     return "Known risk factors: Drake glazing, dad quips, Goofy Ahh naming rights, and suspiciously familiar one-liners, wit yo bitch-ass. Possible Aura Theft.";
   }
-
   if (hasName(person, ["lucas"])) {
     return "Quality time, lowercase enthusiasm, and a response style best summarized as cool ig? Nonchalant Aura remains under review.";
   }
@@ -278,7 +277,7 @@ export function scoreImprovementSuggestions(person: Pick<Person, "id" | "name" |
   }
 
   if (hasName(person, ["zander"])) {
-    suggestions.push("Complete the 57-step routine, rearrange the sock drawer, then call Eric before the window of emotional availability closes.");
+    suggestions.push("Finish the famous 57-step morning routine, complete the emergency sock-drawer rearrangement, then call Eric before the window of emotional availability closes.");
   } else if (hasName(person, ["briana"])) {
     suggestions.push("Channel the $90 tiny-toy sushi commitment into one direct check-in. Sour first, sweet after approval.");
   } else if (hasName(person, ["sebastian"])) {
