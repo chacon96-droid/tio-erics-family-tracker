@@ -6,6 +6,8 @@ const lowContactLines = [
   "No calls. No texts. Just vibes and legal distance.",
   "No calls again. Goooooddddammit.",
   "Big-a-big shot now? Too good for a call?",
+  "cool ig? Bold response from someone currently doing nothing.",
+  "Goofy Ahh absence. Sebastian would have named this immediately.",
   "Another week of emotional absenteeism. Big-a-big shot behavior.",
   "Low contact, high suspicion. Abuelito German is muttering whitey psychos somewhere.",
   "This score has whitey psychos energy, and not in a productive way."
@@ -36,6 +38,8 @@ const steadyTrendLines = [
   "Not a dynasty yet, but the phones are not silent.",
   "Some signs of life. The committee will allow it.",
   "Quietly building a case for favorite status.",
+  "Mild Aura detected. Not enough to brag, enough to document.",
+  "Some Rizz in the communication portfolio. The committee is intrigued.",
   "Direct communication detected. Group chat lawyers are furious.",
   "Stable performance. Not quite whitey psychos behavior, which is growth."
 ];
@@ -46,6 +50,8 @@ const activeTrendLines = [
   "This is not casual anymore. Points are being acquired.",
   "Strong movement. Big-a-big shot, but in a productive way.",
   "Momentum with receipts. The leaderboard respects paperwork.",
+  "Aura increasing. The chart is trying to stay professional.",
+  "Rizz with receipts. Very dangerous in a leaderboard environment.",
   "Somebody wants that imaginary trust percentage.",
   "The whitey psychos caucus has requested a recount."
 ];
@@ -57,6 +63,8 @@ const hotTrendLines = [
   "Dominant performance. Monopoly-level competitiveness detected.",
   "The leaderboard has entered witness protection.",
   "Too much effort to ignore. Eric will pretend to be normal about it.",
+  "Aura fully operational. The cousins should be concerned.",
+  "Generational Rizz numbers. Someone audit the charm department.",
   "Whitey psychos allegations dismissed due to overwhelming call evidence."
 ];
 
@@ -66,6 +74,8 @@ const approvalQueueLines = [
   "Eric will approve this once he finishes making the story 27% more dramatic.",
   "Manual activity submitted. The court of Tio Eric is now in session.",
   "This has Briana-at-rotary-sushi levels of unnecessary commitment.",
+  "Pending review for possible Rizz inflation.",
+  "Quality time claim received. Aura pending verification.",
   "Approval will resume after skincare, sock alignment, existential pacing, and 54 other steps.",
   "Pending review. Abuelito German has not yet determined whether this is whitey psychos behavior."
 ];
@@ -129,13 +139,15 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
   const seed = `${person.id}:${person.name}:${person.relationship}:${total}`;
 
   if (hasName(person, ["sebastian"])) {
-    if (total >= 2500) return "Accelerating like Sebastian into a Thanksgiving fence.";
-    return "cool ig, with mild Aura Theft risk.";
+    if (total >= 2500) return "Accelerating like Sebastian into a Thanksgiving fence. Aura somehow intact.";
+    if (total >= 900) return "cool ig? with suspiciously high Aura.";
+    return "Goofy Ahh score movement, with mild Aura Theft risk.";
   }
 
   if (hasName(person, ["sebastian", "lucas"])) {
-    if (total >= 2500) return "Moved up. Reacted with devastating emotional restraint.";
-    return "cool ig";
+    if (total >= 2500) return "Moved up. Reacted with devastating emotional restraint. cool ig.";
+    if (total >= 900) return "Nonchalant Aura detected. Possibly too calm.";
+    return "cool ig?";
   }
 
   if (hasName(person, ["briana"])) {
@@ -164,10 +176,10 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
     return "Briana once ran up a $90 rotary sushi bill for a tiny gumball-machine toy. Commitment like that deserves documentation.";
   }
   if (hasName(person, ["sebastian"])) {
-    return "Known risk factors: Drake glazing, dad quips, and suspiciously familiar one-liners. Possible Aura Theft.";
+    return "Known risk factors: Drake glazing, dad quips, Goofy Ahh naming rights, and suspiciously familiar one-liners. Possible Aura Theft.";
   }
   if (hasName(person, ["lucas"])) {
-    return "Quality time, lowercase enthusiasm, and a response style best summarized as cool ig.";
+    return "Quality time, lowercase enthusiasm, and a response style best summarized as cool ig? Nonchalant Aura remains under review.";
   }
   if (hasName(person, ["luigi"])) {
     return "Joyride Energy. Shirtless confidence is not currently a scored category, but the committee is aware.";
@@ -186,12 +198,12 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
 export function badgeHints(person: Pick<Person, "name" | "relationship">) {
   if (hasName(person, ["zander"])) return ["57-Step Certified", "Sock Drawer Protocol"];
   if (hasName(person, ["briana"])) return ["Sweet After Further Review", "$90 Sushi Toy Run"];
-  if (hasName(person, ["sebastian"])) return ["Thanksgiving Accelerator", "Aura Theft"];
-  if (hasName(person, ["lucas"])) return ["cool ig", "Nonchalant Final Boss"];
+  if (hasName(person, ["sebastian"])) return ["Thanksgiving Accelerator", "Aura Theft", "Goofy Ahh Certified"];
+  if (hasName(person, ["lucas"])) return ["cool ig?", "Nonchalant Final Boss", "Aura Reserve"];
   if (hasName(person, ["luigi"])) return ["Joyride Energy"];
   if (hasName(person, ["jessica"])) return ["Selective Enforcement", "Justice, But Make It Briana-Proof"];
   if (hasName(person, ["brian"])) return ["Could Buy Everyone Gelato"];
-  return ["Side Quest Survivor", "Passenger Seat Pop Star"];
+  return ["Side Quest Survivor", "Passenger Seat Pop Star", "Rizz Pending"];
 }
 
 export function qualityTimeNudge(seed = "quality-time") {
