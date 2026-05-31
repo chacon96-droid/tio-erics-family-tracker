@@ -57,7 +57,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           </label>
           <button className="focus-ring mt-5 w-full rounded-app border border-gold bg-gold px-4 py-3 font-black text-ink shadow-brand hover:bg-champagne">Enter the leaderboard</button>
           <p className="mt-3 text-sm font-semibold text-champagne/65">
-            Approved family only. No password, no email scavenger hunt. Society advances.
+            Approved roster only. No password, no email scavenger hunt. Society advances.
           </p>
         </form>
 
