@@ -196,14 +196,14 @@ function contextualText(value: string, relationship: string) {
 function rulesList(relationship: string) {
   const copy = relationshipCopy(relationship);
   return `
-    <ul>
-      <li>${copy.callLine}</li>
-      <li>Group chats do not count. A group chat is not effort. It is a hallway with notifications.</li>
-      <li>The leaderboard updates when Eric's Mac runs the sync, currently scheduled nightly at 8 PM.</li>
-      <li>You can view weekly, monthly, yearly, and all-time standings.</li>
-      <li>You can submit quality time manually if calls, texts, and FaceTime do not cover it.</li>
-      <li>Manual quality time requires Eric's approval, because apparently we have standards now.</li>
-      <li>The projected inheritance percentage is a non-binding joke. Mostly. Do not test the mostly.</li>
+    <ul style="margin:0;padding:0 0 0 18px;color:#101413;font-size:14px;line-height:1.55;">
+      <li style="margin:0 0 7px;">${copy.callLine}</li>
+      <li style="margin:0 0 7px;">Group chats do not count. A group chat is not effort. It is a hallway with notifications.</li>
+      <li style="margin:0 0 7px;">The leaderboard updates when Eric's Mac runs the sync, currently scheduled nightly at 8 PM.</li>
+      <li style="margin:0 0 7px;">You can view weekly, monthly, yearly, and all-time standings.</li>
+      <li style="margin:0 0 7px;">You can submit quality time manually if calls, texts, and FaceTime do not cover it.</li>
+      <li style="margin:0 0 7px;">Manual quality time requires Eric's approval, because apparently we have standards now.</li>
+      <li style="margin:0;">The projected inheritance percentage is a non-binding joke. Mostly. Do not test the mostly.</li>
     </ul>
   `;
 }
@@ -227,6 +227,61 @@ function shellHtml(name: string, relationship: string, variant: EmailVariant) {
         ${rulesList(relationship)}
         <p style="font-size:16px;line-height:1.55;">${finalCloser}</p>
       </div>
+    </div>
+  `;
+}
+
+function approvalShellHtml(name: string, relationship: string, variant: EmailVariant) {
+  const copy = relationshipCopy(relationship);
+  const intro = contextualText(variant.intro, relationship);
+  const warning = contextualText(variant.warning, relationship);
+  const closer = contextualText(variant.closer, relationship);
+  const finalCloser = closer.includes(copy.closingNudge) ? closer : `${closer} ${copy.closingNudge}`;
+
+  return `
+    <div style="margin:0;padding:0;background:#f3eee2;font-family:Arial,Helvetica,sans-serif;color:#101413;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#f3eee2;">
+        <tr>
+          <td align="center" style="padding:24px 12px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;max-width:560px;background:#fffaf0;border:1px solid #c7a45a;border-radius:12px;overflow:hidden;">
+              <tr>
+                <td style="padding:24px 22px 18px;border-bottom:1px solid #e2d4bd;background:#101413;">
+                  ${brandHeaderHtml("dark")}
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:26px 22px 8px;">
+                  <p style="margin:0 0 8px;color:#9b6a3b;font-size:11px;line-height:1.4;font-weight:900;letter-spacing:.14em;text-transform:uppercase;">Official roster correspondence</p>
+                  <h1 style="margin:0;color:#101413;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.08;font-weight:900;">Roster approved.</h1>
+                  <p style="margin:12px 0 0;color:#64706d;font-size:16px;line-height:1.5;font-weight:700;">${intro}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 22px 0;">
+                  <p style="margin:0 0 14px;font-size:16px;line-height:1.58;">Hi ${escapeHtml(name)},</p>
+                  <p style="margin:0 0 14px;font-size:16px;line-height:1.58;">${copy.relationshipLine}</p>
+                  <p style="margin:0 0 16px;font-size:16px;line-height:1.58;">${warning}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 22px 18px;">
+                  <div style="border:1px solid #e2d4bd;border-radius:10px;background:#f8f0df;padding:16px;">
+                    <p style="margin:0 0 10px;color:#9b6a3b;font-size:11px;line-height:1.4;font-weight:900;letter-spacing:.12em;text-transform:uppercase;">Rules, because apparently we have those</p>
+                    ${rulesList(relationship)}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 22px 22px;">
+                  <p style="margin:0 0 18px;font-size:16px;line-height:1.58;"><strong>Kidding. Mostly.</strong> You are now part of the ${copy.leaderboardName} ecosystem.</p>
+                  <p style="margin:0 0 20px;font-size:16px;line-height:1.58;">${finalCloser}</p>
+                  <a href="https://calltioeric.com/login" style="display:inline-block;background:#101413;color:#c7a45a;text-decoration:none;border:1px solid #c7a45a;border-radius:8px;padding:13px 16px;font-size:15px;font-weight:900;">Open the leaderboard</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
     </div>
   `;
 }
@@ -268,15 +323,20 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
-function brandHeaderHtml() {
+function brandHeaderHtml(tone: "light" | "dark" = "light") {
+  const titleColor = tone === "dark" ? "#fffaf0" : "#101413";
+  const markBackground = tone === "dark" ? "#fffaf0" : "#101413";
+  const markColor = tone === "dark" ? "#9b6a3b" : "#c7a45a";
   return `
-    <div style="display:flex;align-items:center;gap:14px;margin:0 0 24px;">
-      <div style="width:48px;height:48px;border:1px solid #c7a45a;background:#101413;color:#c7a45a;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;letter-spacing:-.04em;">TE</div>
-      <div>
-        <p style="margin:0;color:#c7a45a;font-size:10px;font-weight:900;letter-spacing:.28em;text-transform:uppercase;">Call Tio Eric</p>
-        <p style="margin:4px 0 0;color:#101413;font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:900;line-height:1;">Family Tracker</p>
-      </div>
-    </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+      <tr>
+        <td style="width:48px;height:48px;border:1px solid #c7a45a;background:${markBackground};color:${markColor};text-align:center;vertical-align:middle;font-size:18px;font-weight:900;letter-spacing:-.04em;">TE</td>
+        <td style="padding-left:14px;vertical-align:middle;">
+          <p style="margin:0;color:#c7a45a;font-size:10px;font-weight:900;letter-spacing:.24em;text-transform:uppercase;">Call Tio Eric</p>
+          <p style="margin:4px 0 0;color:${titleColor};font-family:Georgia,'Times New Roman',serif;font-size:25px;font-weight:900;line-height:1;">Family Tracker</p>
+        </td>
+      </tr>
+    </table>
   `;
 }
 
@@ -311,7 +371,7 @@ export async function sendSignupWelcomeEmail({ to, name, relationship }: SignupE
 
 export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmailInput) {
   const variant = chooseVariant(approvalVariants);
-  await sendEmail(to, contextualText(variant.subject, relationship), shellHtml(name, relationship, variant), textBody(name, relationship, variant));
+  await sendEmail(to, contextualText(variant.subject, relationship), approvalShellHtml(name, relationship, variant), textBody(name, relationship, variant));
 }
 
 export async function sendTemporaryPasswordEmail({ to, loginEmail, temporaryPassword }: TemporaryPasswordInput) {
