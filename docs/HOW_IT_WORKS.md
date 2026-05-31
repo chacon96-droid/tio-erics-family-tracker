@@ -51,6 +51,7 @@ RLS policies ensure family users can only read their own person/profile rows and
 - `/submissions`: Submission approval status
 - `/admin/weights`: Edit scoring formula and recalculate scores
 - `/admin/approvals`: Approve or deny pending submissions
+- `/admin/email-previews`: Preview and send test approval emails
 - `/admin/settings`: Toggle leaderboard and joke simulator settings
 - `/export/leaderboard.csv`: Admin-only CSV export
 - `/family/me`: Family-facing personal profile
@@ -119,6 +120,13 @@ Default scoring weights are seeded in `supabase/migrations/001_initial_schema.sq
 ## Score Recalculation
 
 Admin can recalculate scores from `/admin/weights`.
+
+The app also forces a score refresh when:
+
+- Someone joins the roster
+- Eric approves a roster request
+- Eric creates an approved interaction
+- Eric approves or denies an activity claim
 
 The app recalculates scores for:
 
