@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           <StatCard label="Approved in 2026" value={approvedCount} detail="Documented affection, calendar-year edition." />
           <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail={qualityTimeNudge("dashboard-pending")} />
           <StatCard
-            label="Top Favor Score"
+            label="Top Aura Index"
             value={topScore ? favorScoreForRow(topScore, topScoreMax) : 0}
             detail={topScore?.name ? `${topScore.name}. ${dashboardReaction(topScore.id)}` : "The throne is currently available."}
           />
