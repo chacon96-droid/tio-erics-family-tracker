@@ -239,8 +239,8 @@ Analytics components:
 
 - `DashboardAnalytics`: admin analytics panels
 - `LeaderboardIntelligence`: leaderboard insights
-- `LeaderboardRaceGraph`: photo race line graph with rank x-axis and Favor Score y-axis
-- `TurtleRaceBreakdown`: person-level breakdown by communication type
+- `LeaderboardRaceGraph`: Tio Eric Favorability Index / Family Totem Pole graph with family order on the x-axis and Favor Score on the y-axis
+- `TurtleRaceBreakdown`: person-level favorability lanes by communication type
 
 ## Humor And Inside Jokes
 
