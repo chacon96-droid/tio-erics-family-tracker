@@ -6,13 +6,16 @@ const lowContactLines = [
   "No calls. No texts. Just vibes and legal distance.",
   "No calls again. Goooooddddammit.",
   "Big-a-big shot now? Too good for a call?",
-  "Another week of emotional absenteeism. Big-a-big shot behavior."
+  "Another week of emotional absenteeism. Big-a-big shot behavior.",
+  "Low contact, high suspicion. Abuelito German is muttering whitey psychos somewhere.",
+  "This score has whitey psychos energy, and not in a productive way."
 ];
 
 const abuelitoReactionLines = [
   "Coño, chucha, mierda. The leaderboard has updated.",
   "Shit maaaaannn, somebody actually called.",
   "Is that right? A text message? In this economy?",
+  "Whitey psychos on the move. The leaderboard has been informed.",
   "Coño, somebody remembered Eric exists.",
   "Shit maaaaannn, that is a real phone call.",
   "Is that right? Look at you climbing the board.",
@@ -33,7 +36,8 @@ const steadyTrendLines = [
   "Not a dynasty yet, but the phones are not silent.",
   "Some signs of life. The committee will allow it.",
   "Quietly building a case for favorite status.",
-  "Direct communication detected. Group chat lawyers are furious."
+  "Direct communication detected. Group chat lawyers are furious.",
+  "Stable performance. Not quite whitey psychos behavior, which is growth."
 ];
 
 const activeTrendLines = [
@@ -42,7 +46,8 @@ const activeTrendLines = [
   "This is not casual anymore. Points are being acquired.",
   "Strong movement. Big-a-big shot, but in a productive way.",
   "Momentum with receipts. The leaderboard respects paperwork.",
-  "Somebody wants that imaginary trust percentage."
+  "Somebody wants that imaginary trust percentage.",
+  "The whitey psychos caucus has requested a recount."
 ];
 
 const hotTrendLines = [
@@ -51,7 +56,8 @@ const hotTrendLines = [
   "This is approaching suspiciously favorite-child behavior.",
   "Dominant performance. Monopoly-level competitiveness detected.",
   "The leaderboard has entered witness protection.",
-  "Too much effort to ignore. Eric will pretend to be normal about it."
+  "Too much effort to ignore. Eric will pretend to be normal about it.",
+  "Whitey psychos allegations dismissed due to overwhelming call evidence."
 ];
 
 const approvalQueueLines = [
@@ -60,7 +66,8 @@ const approvalQueueLines = [
   "Eric will approve this once he finishes making the story 27% more dramatic.",
   "Manual activity submitted. The court of Tio Eric is now in session.",
   "This has Briana-at-rotary-sushi levels of unnecessary commitment.",
-  "Approval will resume after skincare, sock alignment, existential pacing, and 54 other steps."
+  "Approval will resume after skincare, sock alignment, existential pacing, and 54 other steps.",
+  "Pending review. Abuelito German has not yet determined whether this is whitey psychos behavior."
 ];
 
 const emptyStateLines = [
