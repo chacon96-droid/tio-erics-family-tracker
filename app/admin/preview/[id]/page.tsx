@@ -8,6 +8,7 @@ import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { requireAdmin } from "@/lib/auth";
 import { getAppSettings, getLeaderboard, getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
 import { favorScoreForRow, formatRawScore, maxTotalScore } from "@/lib/display-score";
+import { scoreImprovementSuggestions } from "@/lib/family-lore";
 import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function FamilyPreviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -31,6 +32,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
   const audienceRows = leaderboard.filter((row) => leaderboardAudienceForRelationship(row.relationship) === audience);
   const leaderboardRow = audienceRows.find((row) => row.id === person.id);
   const leaderboardMax = maxTotalScore(audienceRows);
+  const suggestions = scoreImprovementSuggestions(person, currentYearBreakdown);
 
   return (
     <AppShell previewMode>
@@ -56,7 +58,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
 
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard
-            label={`${currentYear} Aura Index`}
+            label={`${currentYear} Tio Eric Aura Index`}
             value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points.`}
           />
@@ -66,6 +68,21 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
         </section>
 
         <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
+
+        <section className="rounded-app border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
+          <p className="text-xs font-black uppercase text-clay">Score improvement plan</p>
+          <h3 className="mt-1 text-xl font-black">How they climb, allegedly</h3>
+          <p className="mt-1 text-sm font-semibold text-muted">
+            This is the same style of suggestion they see on their own profile.
+          </p>
+          <div className="mt-4 grid gap-2">
+            {suggestions.map((suggestion) => (
+              <div key={suggestion} className="rounded-app border border-white/10 bg-ink/45 p-3 text-sm font-bold text-champagne/85">
+                {suggestion}
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section>
           <div className="mb-3">
