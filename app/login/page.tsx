@@ -1,7 +1,38 @@
+import type { Metadata } from "next";
 import { signIn } from "@/lib/actions";
 import { familyQuickAccess } from "@/lib/family-actions";
 import { BrandMark } from "@/components/BrandMark";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  description:
+    "The Tio Eric dashboard showing who really cares about me and who does not.",
+  alternates: {
+    canonical: "/login"
+  },
+  openGraph: {
+    title: "Tio Eric Family Tracker",
+    description:
+      "This dashboard shows who really cares about me and who does not.",
+    url: "https://calltioeric.com/login",
+    images: [
+      {
+        url: "https://calltioeric.com/share-card.png",
+        width: 1200,
+        height: 630,
+        alt: "Tio Eric Family Tracker leaderboard preview"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tio Eric Family Tracker",
+    description:
+      "This dashboard shows who really cares about me and who does not.",
+    images: ["https://calltioeric.com/share-card.png"]
+  }
+};
 
 export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string; message?: string }> }) {
   const params = await searchParams;
