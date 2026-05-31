@@ -73,11 +73,11 @@ export default async function PersonPage({
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
-              label={`${currentYear} Aura Index`}
+              label={`${currentYear} Tio Eric Aura Index`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
               detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points`}
             />
-            <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
+            <StatCard label={`${currentYear} interactions tracked`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label={`Pending in ${currentYear}`} value={currentYearBreakdown?.pendingInteractionCount || 0} />
           </div>
           <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
@@ -116,7 +116,7 @@ export default async function PersonPage({
                       </div>
                       <div>
                         <p className="font-black">{year.approvedInteractionCount}</p>
-                        <p className="font-semibold text-muted">Approved</p>
+                        <p className="font-semibold text-muted">Tracked</p>
                       </div>
                       <div>
                         <p className="font-black">{year.pendingInteractionCount}</p>
