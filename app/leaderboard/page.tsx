@@ -22,13 +22,13 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
 
   return (
     <AppShell>
-      <div className="grid gap-7">
-        <section className="relative overflow-hidden rounded-app border border-white/10 bg-white/[0.07] p-6 shadow-[0_35px_100px_rgba(0,0,0,0.34)]">
+      <div className="grid min-w-0 gap-5 sm:gap-7">
+        <section className="relative min-w-0 overflow-hidden rounded-app border border-white/10 bg-white/[0.07] p-4 shadow-[0_35px_100px_rgba(0,0,0,0.34)] sm:p-6">
           <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-blue/20 blur-3xl" />
           <div className="absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
           <div className="relative max-w-4xl">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-gold">Evidence-based favoritism</p>
-            <h2 className="mt-3 font-serif text-5xl font-black tracking-tight text-ivory md:text-7xl">Leaderboard</h2>
+            <h2 className="mt-3 font-serif text-4xl font-black tracking-tight text-ivory sm:text-5xl md:text-7xl">Leaderboard</h2>
             <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-champagne/75">
               The official market index of who remembered Eric exists. Updated with Apple metadata, manual claims, and a dangerous amount of confidence.
             </p>
@@ -44,7 +44,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             </div>
           ) : null}
         </section>
-        <nav className="flex flex-wrap gap-2 rounded-app border border-white/10 bg-white/[0.05] p-2">
+        <nav className="flex min-w-0 flex-wrap gap-2 rounded-app border border-white/10 bg-white/[0.05] p-2">
           {periods.map((item) => (
             <Link
               key={item.value}
@@ -57,19 +57,19 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             </Link>
           ))}
         </nav>
-        <section className="grid gap-4 rounded-app border border-white/10 bg-white/[0.06] p-5">
+        <section className="grid min-w-0 gap-4 rounded-app border border-white/10 bg-white/[0.06] p-3 sm:p-5">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Bloodline division</p>
-            <h3 className="font-serif text-3xl font-black text-ivory">Family leaderboard</h3>
+            <h3 className="font-serif text-2xl font-black text-ivory sm:text-3xl">Family leaderboard</h3>
           </div>
           <LeaderboardRaceGraph rows={familyRows} title="Family photo race" />
           <LeaderboardTable rows={familyRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={familyRows} /> : null}
         </section>
-        <section className="grid gap-4 rounded-app border border-white/10 bg-white/[0.06] p-5">
+        <section className="grid min-w-0 gap-4 rounded-app border border-white/10 bg-white/[0.06] p-3 sm:p-5">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-gold">Chosen chaos division</p>
-            <h3 className="font-serif text-3xl font-black text-ivory">Family friends leaderboard</h3>
+            <h3 className="font-serif text-2xl font-black text-ivory sm:text-3xl">Family friends leaderboard</h3>
           </div>
           <LeaderboardRaceGraph rows={friendRows} title="Family friends photo race" />
           <LeaderboardTable rows={friendRows} canRemovePeople={isAdmin} />
