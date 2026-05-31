@@ -62,7 +62,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Bloodline division</p>
             <h3 className="font-serif text-2xl font-black text-ivory sm:text-3xl">Family leaderboard</h3>
           </div>
-          <LeaderboardRaceGraph rows={familyRows} title="Family photo race" />
+          <LeaderboardRaceGraph rows={familyRows} title="Family Totem Pole" />
           <LeaderboardTable rows={familyRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={familyRows} /> : null}
         </section>
@@ -71,7 +71,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
             <p className="text-xs font-black uppercase tracking-[0.18em] text-gold">Chosen chaos division</p>
             <h3 className="font-serif text-2xl font-black text-ivory sm:text-3xl">Family friends leaderboard</h3>
           </div>
-          <LeaderboardRaceGraph rows={friendRows} title="Family friends photo race" />
+          <LeaderboardRaceGraph rows={friendRows} title="Friends Favorability Index" />
           <LeaderboardTable rows={friendRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={friendRows} /> : null}
         </section>
