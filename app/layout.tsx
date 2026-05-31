@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: "Tio Eric Family Tracker",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image?v=sleek-1",
         width: 1200,
         height: 630,
         alt: "Tio Eric Family Tracker leaderboard preview"
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Tio Eric Family Tracker",
     description:
       "The private leaderboard where the Tio Eric Aura Index keeps score.",
-    images: ["/opengraph-image"]
+    images: ["/opengraph-image?v=sleek-1"]
   }
 };
 
