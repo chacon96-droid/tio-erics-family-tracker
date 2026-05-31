@@ -51,7 +51,7 @@ export default async function FamilyMePage({
               label={`${currentYear} Tio Eric Aura Index`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             />
-            <StatCard label={`${currentYear} interactions tracked`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
+            <StatCard label={`${currentYear} interactions tracked`} value={currentYearBreakdown?.interactionCount || 0} />
             <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
           </div>
           <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
