@@ -50,7 +50,7 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
     {
       label: "Quality time",
       score: breakdown.timeTogetherScore,
-      detail: `${Math.round(breakdown.qualityTimeMinutes)} minutes approved`,
+      detail: `${Math.round(breakdown.qualityTimeMinutes)} minutes tracked`,
       color: "bg-gold"
     }
   ];
