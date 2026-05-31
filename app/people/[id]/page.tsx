@@ -73,7 +73,7 @@ export default async function PersonPage({
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
-              label={`${currentYear} Favor Score`}
+              label={`${currentYear} Aura Index`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
               detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points`}
             />
