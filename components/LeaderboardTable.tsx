@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DeletePersonButton } from "@/components/DeletePersonButton";
 import { EmptyState } from "@/components/EmptyState";
+import { favorScoreForRow, maxTotalScore, rawTotalScore } from "@/lib/display-score";
 import { emptyLeaderboardCopy, trendLore } from "@/lib/family-lore";
 import type { PersonWithScore } from "@/lib/types";
 
@@ -13,7 +14,7 @@ export function LeaderboardTable({
   linkPeople?: boolean;
   canRemovePeople?: boolean;
 }) {
-  const maxScore = Math.max(...rows.map((row) => row.score?.total_score || 0), 1);
+  const maxScore = maxTotalScore(rows);
 
   if (!rows.length) {
     return (
@@ -31,7 +32,7 @@ export function LeaderboardTable({
           <tr>
             <th className="p-3">Rank</th>
             <th className="p-3">Name</th>
-            <th className="p-3">Score</th>
+            <th className="p-3">Favor score</th>
             <th className="p-3">Trend</th>
             <th className="p-3">Top category</th>
             {canRemovePeople ? <th className="p-3 text-right">Admin</th> : null}
@@ -52,11 +53,11 @@ export function LeaderboardTable({
                 <p className="text-xs font-semibold text-champagne/60">{row.relationship}</p>
               </td>
               <td className="p-3">
-                <div className="font-black text-ivory">{row.score?.total_score || 0}</div>
+                <div className="font-black text-ivory">{favorScoreForRow(row, maxScore)}</div>
                 <div className="mt-1 h-2 w-32 rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-mint via-gold to-blue"
-                    style={{ width: `${Math.max(2, ((row.score?.total_score || 0) / maxScore) * 100)}%` }}
+                    style={{ width: `${Math.max(2, (rawTotalScore(row) / maxScore) * 100)}%` }}
                   />
                 </div>
               </td>
