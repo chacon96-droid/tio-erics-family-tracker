@@ -1,4 +1,5 @@
 import type { PersonYearlyBreakdown } from "@/lib/data";
+import { favorScore } from "@/lib/display-score";
 import type { Person } from "@/lib/types";
 
 type Lane = {
@@ -66,7 +67,8 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
       </div>
       <div className="mt-5 grid gap-4">
         {lanes.map((lane) => {
-          const progress = Math.max(4, Math.min(100, (lane.score / maxScore) * 100));
+          const normalizedScore = favorScore(lane.score, maxScore);
+          const progress = Math.max(4, normalizedScore);
           const racerLeft = Math.max(0, Math.min(88, progress - 8));
 
           return (
@@ -76,7 +78,7 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
                   <p className="font-black">{lane.label}</p>
                   <p className="font-semibold text-muted">{lane.detail}</p>
                 </div>
-                <p className="font-black">{Math.round(lane.score * 10) / 10} pts</p>
+                <p className="font-black">{normalizedScore}/100</p>
               </div>
               <div className="relative h-14 rounded-app border border-line bg-paper">
                 <div className="absolute left-3 right-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white" />
