@@ -114,6 +114,14 @@ const approvalVariants: EmailVariant[] = [
     warning:
       "From here on out, direct calls, texts, FaceTimes, and approved quality time with Eric can move your leaderboard score. A group chat is not effort. It is a hallway with notifications.",
     closer: "No calls again? Goooooddddammit. A direct text? Is that right? Look at you climbing the board."
+  },
+  {
+    subject: "Approved. Whitey psychos caucus notified.",
+    preview: "Abuelito German has entered the minutes.",
+    intro: "You are approved. Abuelito German has been briefed.",
+    warning:
+      "Your direct calls, texts, FaceTimes, and approved quality time now count toward the leaderboard. Group chats still do not count, because that is where accountability goes to wear sunglasses indoors.",
+    closer: "If your score collapses, the official explanation may become whitey psychos behavior. The cure is simple: call Eric."
   }
 ];
 
