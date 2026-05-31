@@ -29,6 +29,7 @@ This log tracks meaningful product and architecture changes in plain English.
 - Eric can remove people from the roster.
 - Pending members can be previewed by admin.
 - Approval emails are randomized.
+- Approval emails now use a cleaner mobile-safe layout with a fixed headline, compact joke line, boxed rules, and consistent spacing.
 
 ### Apple Metadata Sync
 
