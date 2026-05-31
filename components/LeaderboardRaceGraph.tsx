@@ -34,7 +34,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
           <p className="text-xs font-black uppercase tracking-[0.18em] text-clay">Evidence chart, emotionally speaking</p>
           <h4 className="font-serif text-2xl font-black tracking-tight">{title}</h4>
         </div>
-        <p className="text-sm font-semibold text-muted">X axis is rank. Y axis is points. The math is petty, but legible.</p>
+        <p className="text-sm font-semibold text-muted">X axis is rank. Y axis is points. The math is petty, but official-looking.</p>
       </div>
 
       <div className="mt-5 overflow-x-auto rounded-app border border-line bg-paper shadow-insetGold">
