@@ -9,7 +9,7 @@ function RacerAvatar({ row }: { row: PersonWithScore }) {
   );
 }
 
-export function LeaderboardRaceGraph({ rows, title = "The affection race", tone = "dark" }: { rows: PersonWithScore[]; title?: string; tone?: "dark" | "light" }) {
+export function LeaderboardRaceGraph({ rows, title = "Tio Eric Favorability Index", tone = "dark" }: { rows: PersonWithScore[]; title?: string; tone?: "dark" | "light" }) {
   if (!rows.length) return null;
 
   const chartId = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -38,11 +38,11 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race", tone 
     >
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Evidence chart, emotionally speaking</p>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Favorability index, aura audited</p>
           <h4 className={`font-serif text-3xl font-black tracking-tight ${tone === "light" ? "text-ink" : "text-ivory"}`}>{title}</h4>
         </div>
         <p className={`max-w-md text-sm font-semibold ${tone === "light" ? "text-muted" : "text-champagne/65"}`}>
-          X axis is rank. Y axis is Favor Score. The math is petty, but official-looking.
+          X axis is family order. Y axis is Tio Eric approval. Higher means aura maxxing. Lower means call your uncle.
         </p>
       </div>
 
@@ -89,10 +89,10 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race", tone 
               strokeWidth="2.5"
             />
             <text x="20" y={padding.top + 18} className="fill-gold text-[13px] font-black uppercase tracking-[0.14em]">
-              Score
+              Favor
             </text>
             <text x={chartWidth - 95} y={chartHeight - 18} className="fill-gold text-[13px] font-black uppercase tracking-[0.14em]">
-              Rank
+              Totem
             </text>
 
             {points.length > 1 ? <path d={linePath} fill="none" stroke={`url(#${chartId}-rankLine)`} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /> : null}
