@@ -47,7 +47,7 @@ export default async function FamilyMePage({
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
-              label={`${currentYear} Favor Score`}
+              label={`${currentYear} Aura Index`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             />
             <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
