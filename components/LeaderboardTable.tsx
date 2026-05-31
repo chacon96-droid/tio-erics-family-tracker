@@ -25,9 +25,9 @@ export function LeaderboardTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-app border border-line bg-white">
+    <div className="overflow-hidden rounded-app border border-white/10 bg-ink/45 shadow-[0_24px_70px_rgba(0,0,0,0.22)]">
       <table className="w-full border-collapse text-left text-sm">
-        <thead className="border-b border-line bg-paper">
+        <thead className="border-b border-white/10 bg-white/[0.06] text-xs uppercase tracking-[0.16em] text-champagne/60">
           <tr>
             <th className="p-3">Rank</th>
             <th className="p-3">Name</th>
@@ -39,33 +39,33 @@ export function LeaderboardTable({
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr key={row.id} className="border-b border-line last:border-b-0">
-              <td className="p-3 font-black">{index + 1}</td>
+            <tr key={row.id} className="border-b border-white/10 transition last:border-b-0 hover:bg-white/[0.04]">
+              <td className="p-3 align-middle font-serif text-2xl font-black text-gold">{index + 1}</td>
               <td className="p-3">
                 {linkPeople ? (
-                  <Link href={`/people/${row.id}`} className="font-black text-ink underline-offset-4 hover:underline">
+                  <Link href={`/people/${row.id}`} className="font-black text-ivory underline-offset-4 hover:text-gold hover:underline">
                     {row.name}
                   </Link>
                 ) : (
-                  <span className="font-black text-ink">{row.name}</span>
+                  <span className="font-black text-ivory">{row.name}</span>
                 )}
-                <p className="text-xs font-semibold text-muted">{row.relationship}</p>
+                <p className="text-xs font-semibold text-champagne/60">{row.relationship}</p>
               </td>
               <td className="p-3">
-                <div className="font-black">{row.score?.total_score || 0}</div>
-                <div className="mt-1 h-2 w-32 rounded-full bg-paper">
+                <div className="font-black text-ivory">{row.score?.total_score || 0}</div>
+                <div className="mt-1 h-2 w-32 rounded-full bg-white/10">
                   <div
-                    className="h-full rounded-full bg-clay"
+                    className="h-full rounded-full bg-gradient-to-r from-mint via-gold to-blue"
                     style={{ width: `${Math.max(2, ((row.score?.total_score || 0) / maxScore) * 100)}%` }}
                   />
                 </div>
               </td>
-              <td className="p-3 font-bold">
+              <td className="p-3 font-bold text-champagne/85">
                 {trendLore(row, row.score) ||
                   row.trendLabel ||
                   (row.trend === "up" ? "Climbing" : row.trend === "down" ? "Slipping" : "Quietly coasting")}
               </td>
-              <td className="p-3 font-semibold text-muted">{row.topCategory}</td>
+              <td className="p-3 font-semibold text-champagne/60">{row.topCategory}</td>
               {canRemovePeople ? (
                 <td className="p-3 text-right">
                   <DeletePersonButton personId={row.id} personName={row.name} variant="inline" returnTo="/leaderboard" />
