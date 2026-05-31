@@ -1,3 +1,4 @@
+import { favorScore, maxTotalScore } from "@/lib/display-score";
 import type { PersonWithScore } from "@/lib/types";
 
 function RacerAvatar({ row }: { row: PersonWithScore }) {
@@ -13,15 +14,16 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
 
   const chartId = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const visibleRows = rows.slice(0, 10);
-  const maxScore = Math.max(...visibleRows.map((row) => row.score?.total_score || 0), 1);
+  const rawMaxScore = maxTotalScore(visibleRows);
+  const maxScore = 100;
   const chartWidth = 900;
   const chartHeight = 360;
   const padding = { top: 34, right: 34, bottom: 70, left: 76 };
   const plotWidth = chartWidth - padding.left - padding.right;
   const plotHeight = chartHeight - padding.top - padding.bottom;
-  const yTicks = [1, 0.75, 0.5, 0.25, 0].map((ratio) => Math.round(maxScore * ratio));
+  const yTicks = [100, 75, 50, 25, 0];
   const points = visibleRows.map((row, index) => {
-    const score = row.score?.total_score || 0;
+    const score = favorScore(row.score?.total_score, rawMaxScore);
     const x = padding.left + (visibleRows.length === 1 ? plotWidth / 2 : (index / (visibleRows.length - 1)) * plotWidth);
     const y = padding.top + plotHeight - (score / maxScore) * plotHeight;
     return { row, index, score, x, y };
@@ -35,7 +37,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
           <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Evidence chart, emotionally speaking</p>
           <h4 className="font-serif text-3xl font-black tracking-tight text-ivory">{title}</h4>
         </div>
-        <p className="max-w-md text-sm font-semibold text-champagne/65">X axis is rank. Y axis is points. The math is petty, but official-looking.</p>
+        <p className="max-w-md text-sm font-semibold text-champagne/65">X axis is rank. Y axis is Favor Score. The math is petty, but official-looking.</p>
       </div>
 
       <div className="mt-5 max-w-full overflow-x-auto rounded-app border border-white/10 bg-ink/55 shadow-insetGold">
@@ -81,7 +83,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
               strokeWidth="2.5"
             />
             <text x="20" y={padding.top + 18} className="fill-gold text-[13px] font-black uppercase tracking-[0.14em]">
-              Points
+              Score
             </text>
             <text x={chartWidth - 95} y={chartHeight - 18} className="fill-gold text-[13px] font-black uppercase tracking-[0.14em]">
               Rank
@@ -107,7 +109,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
                   {row.name.length > 12 ? `${row.name.slice(0, 11)}...` : row.name}
                 </text>
                 <text x={x} y={Math.max(18, y - 38)} textAnchor="middle" className="fill-ivory text-[12px] font-black">
-                  {Math.round(score * 10) / 10}
+                  {score}
                 </text>
               </g>
             ))}
@@ -123,7 +125,7 @@ export function LeaderboardRaceGraph({ rows, title = "The affection race" }: { r
               <p className="truncate text-sm font-black text-ivory">
                 #{index + 1} {row.name}
               </p>
-              <p className="text-xs font-bold text-champagne/60">{Math.round(score * 10) / 10} pts</p>
+              <p className="text-xs font-bold text-champagne/60">{score}/100 Favor Score</p>
             </div>
           </div>
         ))}
