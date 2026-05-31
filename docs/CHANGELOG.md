@@ -83,9 +83,11 @@ This log tracks meaningful product and architecture changes in plain English.
   - "whitey psychos"
 - Added Brian gelato shop jokes.
 - Added Zander sock drawer / 57-step routine jokes.
+- Added Zander/Eric "Goofy Ahh Doofy Ahh" and "relevant schema" language.
 - Added Briana Sour Patch, rotary sushi toy, and selective enforcement jokes.
 - Added Luigi shirtless joyride jokes.
 - Added Sebastian Thanksgiving fence, Drake glazing, and Aura Theft jokes.
+- Added Sebastian/Luigi "wit yo bitch-ass" phrasing for their person-specific copy.
 - Added Lucas/Sebastian nonchalant "cool ig" jokes.
 - Added Sebastian-flavored "Goofy Ahh" language plus Aura/Rizz trend and badge copy.
 - Added car singing / Olivia Rodrigo / Gracie Abrams references.
