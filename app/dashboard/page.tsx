@@ -4,6 +4,7 @@ import { LeaderboardTable } from "@/components/LeaderboardTable";
 import { StatCard } from "@/components/StatCard";
 import { requireApprovedUser } from "@/lib/auth";
 import { getApprovedInteractionCount, getInteractions, getLeaderboard, getPendingInteractions, getPendingPeople, getPeople } from "@/lib/data";
+import { favorScoreForRow, maxTotalScore } from "@/lib/display-score";
 import { dashboardReaction, qualityTimeNudge } from "@/lib/family-lore";
 
 export default async function DashboardPage() {
@@ -17,7 +18,9 @@ export default async function DashboardPage() {
     getLeaderboard("year", "friends").catch(() => []),
     getInteractions("year").catch(() => [])
   ]);
-  const topScore = [...familyLeaderboard, ...friendLeaderboard].sort((a, b) => (b.score?.total_score || 0) - (a.score?.total_score || 0))[0];
+  const combinedLeaderboard = [...familyLeaderboard, ...friendLeaderboard].sort((a, b) => (b.score?.total_score || 0) - (a.score?.total_score || 0));
+  const topScore = combinedLeaderboard[0];
+  const topScoreMax = maxTotalScore(combinedLeaderboard);
 
   return (
     <AppShell>
@@ -38,8 +41,8 @@ export default async function DashboardPage() {
           <StatCard label="Approved in 2026" value={approvedCount} detail="Documented affection, calendar-year edition." />
           <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail={qualityTimeNudge("dashboard-pending")} />
           <StatCard
-            label="Top score"
-            value={topScore?.score?.total_score || 0}
+            label="Top Favor Score"
+            value={topScore ? favorScoreForRow(topScore, topScoreMax) : 0}
             detail={topScore?.name ? `${topScore.name}. ${dashboardReaction(topScore.id)}` : "The throne is currently available."}
           />
         </section>
