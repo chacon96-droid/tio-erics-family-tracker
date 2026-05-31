@@ -12,7 +12,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
       <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-gold/20 blur-3xl" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
       <form action={signUp} encType="multipart/form-data" className="relative w-full max-w-2xl rounded-app border border-white/10 bg-white/[0.08] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.38)] backdrop-blur-xl">
-        <BrandMark />
+        <BrandMark tone="light" />
         <p className="mt-6 text-xs font-black uppercase tracking-[0.22em] text-gold">Join the roster</p>
         <h1 className="mt-2 font-serif text-5xl font-black tracking-tight">State your case</h1>
         <p className="mt-3 max-w-lg text-sm font-semibold leading-6 text-champagne/70">
