@@ -19,6 +19,7 @@ const lowContactLines = [
   "Avoiding Eric like Abuelito German avoids his ex-wives.",
   "Current status: deep cover. Abuelito German would respect the cold evasiveness.",
   "No calls. No texts. Just vibes and legal distance.",
+  "Not calling Tio in the big 26? Tragic.",
   "No calls again. Goooooddddammit.",
   "Big-a-big shot now? Too good for a call?",
   "cool ig? Bold response from someone currently doing nothing.",
@@ -99,7 +100,7 @@ const approvalQueueLines = [
 const emptyStateLines = [
   "The phones are silent. The inheritance simulator is unimpressed.",
   "Nobody has called. Somewhere, Monopoly is still causing more damage.",
-  "No one has earned points yet. Tragic, honestly.",
+  "No one has earned points in the big 26 yet. Tragic.",
   "The roster exists. The effort remains theoretical."
 ];
 
@@ -254,7 +255,7 @@ export function scoreImprovementSuggestions(person: Pick<Person, "id" | "name" |
   const suggestions: string[] = [];
 
   if (!breakdown || breakdown.approvedInteractionCount === 0) {
-    suggestions.push("Start with one real interaction: a call, a text exchange, or submitted quality time. The bar is low, which is either generous or tragic.");
+    suggestions.push("Start with one real interaction in the big 26: a call, a text exchange, or submitted quality time. The bar is low, which is either generous or tragic.");
   } else {
     const scores = [
       { key: "calls", value: breakdown.callScore },
