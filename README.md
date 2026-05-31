@@ -71,6 +71,12 @@ Read the human-facing project explainer:
 
 [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)
 
+Architecture map and change log:
+
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+
+[docs/CHANGELOG.md](docs/CHANGELOG.md)
+
 Email copy for Supabase/Auth templates lives here:
 
 [docs/EMAIL_TEMPLATES.md](docs/EMAIL_TEMPLATES.md)
