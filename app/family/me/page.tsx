@@ -6,7 +6,7 @@ import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { submitFamilyActivity } from "@/lib/family-actions";
 import { getFamilyLeaderboard, getFamilyPersonInteractions, getFamilyYearlyBreakdowns, requireFamilyAccessPerson } from "@/lib/family-access";
 import { favorScoreForRow, maxTotalScore } from "@/lib/display-score";
-import { badgeHints, profileRoast, qualityTimeNudge } from "@/lib/family-lore";
+import { badgeHints, profileRoast, qualityTimeNudge, scoreImprovementSuggestions } from "@/lib/family-lore";
 import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function FamilyMePage({
@@ -26,6 +26,7 @@ export default async function FamilyMePage({
   const leaderboardRow = leaderboard.find((row) => row.id === person.id);
   const leaderboardMax = maxTotalScore(leaderboard);
   const badges = badgeHints(person);
+  const suggestions = scoreImprovementSuggestions(person, currentYearBreakdown);
 
   return (
     <FamilyShell person={person}>
@@ -47,13 +48,27 @@ export default async function FamilyMePage({
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
-              label={`${currentYear} Aura Index`}
+              label={`${currentYear} Tio Eric Aura Index`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             />
             <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
           </div>
           <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
+          <section className="rounded-app border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
+            <p className="text-xs font-black uppercase text-clay">Score improvement plan</p>
+            <h3 className="mt-1 text-xl font-black">How to climb, allegedly</h3>
+            <p className="mt-1 text-sm font-semibold text-muted">
+              Personalized recommendations from the Department of Unnecessary Measurement.
+            </p>
+            <div className="mt-4 grid gap-2">
+              {suggestions.map((suggestion) => (
+                <div key={suggestion} className="rounded-app border border-white/10 bg-ink/45 p-3 text-sm font-bold text-champagne/85">
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          </section>
           <div className="grid gap-3">
             <div className="flex items-end justify-between gap-3">
               <div>
