@@ -11,7 +11,7 @@ This log tracks meaningful product and architecture changes in plain English.
 - Family friends are separated from actual family leaderboard views.
 - Apple metadata import runs from Eric's Mac, not from the hosted website.
 - Text message content is not stored.
-- Visible leaderboard scores use normalized `0-100` Favor Scores.
+- Visible leaderboard scores use normalized `0-100` Tio Eric Aura Index values.
 
 ## Recent Changes
 
@@ -49,8 +49,8 @@ This log tracks meaningful product and architecture changes in plain English.
 - Scoring reads from `scoring_weights`.
 - Scores are calculated by week, month, year, and all-time.
 - Raw score totals remain stored in the database.
-- UI now displays normalized Favor Scores near `0-100`.
-- Leaderboard graph is now framed as the Tio Eric Favorability Index / Family Totem Pole, with Favor Score on the y-axis.
+- UI now displays normalized Tio Eric Aura Index values near `0-100`.
+- Leaderboard graph is now framed as the Tio Eric Aura Index / Family Totem Pole, with aura on the y-axis and visible category drivers under the chart.
 
 ### Leaderboard And Analytics
 
