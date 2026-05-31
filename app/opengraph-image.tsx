@@ -16,8 +16,8 @@ export default function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#070807",
-          color: "#f7f0df",
+          background: "#050607",
+          color: "#f8f4e8",
           fontFamily: "Arial, Helvetica, sans-serif",
           position: "relative",
           overflow: "hidden"
@@ -28,108 +28,190 @@ export default function Image() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(135deg, rgba(210,169,92,0.24), rgba(20,151,128,0.14) 38%, rgba(7,8,7,0.94) 72%)"
+              "radial-gradient(circle at 82% 18%, rgba(93,214,190,0.28), transparent 30%), radial-gradient(circle at 10% 92%, rgba(224,176,87,0.28), transparent 30%), linear-gradient(135deg, #050607 0%, #101516 52%, #060707 100%)"
           }}
         />
         <div
           style={{
             position: "absolute",
-            inset: 44,
-            border: "2px solid rgba(210,169,92,0.72)"
+            inset: 0,
+            opacity: 0.16,
+            backgroundImage:
+              "linear-gradient(rgba(248,244,232,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(248,244,232,0.18) 1px, transparent 1px)",
+            backgroundSize: "54px 54px"
           }}
         />
         <div
           style={{
             position: "absolute",
-            inset: "92px 92px 82px",
+            right: 84,
+            top: 82,
+            width: 390,
+            height: 466,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between"
+            gap: 18,
+            padding: 30,
+            borderRadius: 36,
+            background: "rgba(248,244,232,0.06)",
+            border: "1px solid rgba(248,244,232,0.18)"
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          {[
+            ["#1", "Sebastian", "92"],
+            ["#2", "Briana", "88"],
+            ["#3", "Zander", "74"],
+            ["#4", "Luigi", "68"]
+          ].map(([rank, name, score]) => (
             <div
+              key={name}
               style={{
-                width: 104,
-                height: 104,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                border: "2px solid #d2a95c",
-                background: "#101211",
-                color: "#d2a95c",
-                fontSize: 42,
-                fontWeight: 900,
-                letterSpacing: "-1px"
+                gap: 18,
+                padding: "18px 20px",
+                borderRadius: 24,
+                background:
+                  rank === "#1" ? "rgba(224,176,87,0.20)" : "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(248,244,232,0.14)"
               }}
             >
-              TE
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <div
                 style={{
-                  color: "#d2a95c",
-                  fontSize: 25,
-                  fontWeight: 900,
-                  letterSpacing: "9px",
-                  textTransform: "uppercase"
+                  width: 54,
+                  height: 54,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 18,
+                  background: "#070807",
+                  color: rank === "#1" ? "#e0b057" : "#79d6c4",
+                  fontSize: 22,
+                  fontWeight: 900
                 }}
               >
-                Call Tio Eric
+                {rank}
               </div>
-              <div
-                style={{
-                  fontFamily: "Georgia, serif",
-                  fontSize: 70,
-                  fontWeight: 900,
-                  lineHeight: 0.9
-                }}
-              >
-                Family Tracker
+              <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: 4 }}>
+                <div style={{ fontSize: 25, fontWeight: 900 }}>{name}</div>
+                <div
+                  style={{
+                    height: 7,
+                    borderRadius: 999,
+                    background: "rgba(248,244,232,0.16)",
+                    overflow: "hidden"
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${score}%`,
+                      height: "100%",
+                      borderRadius: 999,
+                      background:
+                        rank === "#1"
+                          ? "linear-gradient(90deg, #e0b057, #79d6c4)"
+                          : "linear-gradient(90deg, #79d6c4, #6c88ff)"
+                    }}
+                  />
+                </div>
               </div>
+              <div style={{ color: "#e0b057", fontSize: 24, fontWeight: 900 }}>{score}</div>
             </div>
-          </div>
+          ))}
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 76,
+            top: 70,
+            display: "flex",
+            alignItems: "center",
+            gap: 18
+          }}
+        >
+          <div
+            style={{
+              width: 70,
+              height: 70,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 18,
+              background: "#f8f4e8",
+              color: "#050607",
+              fontSize: 28,
+              fontWeight: 950,
+              letterSpacing: "-1px"
+            }}
+          >
+            TE
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <div
               style={{
-                color: "#79c6b5",
-                fontSize: 24,
+                color: "#e0b057",
+                fontSize: 20,
                 fontWeight: 900,
-                letterSpacing: "8px",
+                letterSpacing: "7px",
                 textTransform: "uppercase"
               }}
             >
-              Tio Eric Aura Index
+              Call Tio Eric
             </div>
-            <div
-              style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 82,
-                fontWeight: 900,
-                lineHeight: 0.96,
-                maxWidth: 890
-              }}
-            >
-              Yes, I pick favorites. Here they are.
+            <div style={{ color: "#f8f4e8", fontSize: 34, fontWeight: 900 }}>
+              Family Tracker
             </div>
-            <div
-              style={{
-                display: "flex",
-                gap: 18,
-                color: "#efe5c7",
-                fontSize: 28,
-                fontWeight: 800
-              }}
-            >
-              <span>Calls</span>
-              <span style={{ color: "#d2a95c" }}>•</span>
-              <span>Texts</span>
-              <span style={{ color: "#d2a95c" }}>•</span>
-              <span>Receipts</span>
-              <span style={{ color: "#d2a95c" }}>•</span>
-              <span>Consequences</span>
-            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            left: 76,
+            top: 198,
+            width: 680,
+            display: "flex",
+            flexDirection: "column",
+            gap: 22
+          }}
+        >
+          <div
+            style={{
+              color: "#79d6c4",
+              fontSize: 21,
+              fontWeight: 900,
+              letterSpacing: "7px",
+              textTransform: "uppercase"
+            }}
+          >
+            Tio Eric Aura Index
+          </div>
+          <div
+            style={{
+              fontSize: 82,
+              fontWeight: 950,
+              lineHeight: 0.94,
+              letterSpacing: "-3px"
+            }}
+          >
+            Yes, I pick favorites. Here they are.
+          </div>
+          <div
+            style={{
+              width: 520,
+              height: 2,
+              background: "linear-gradient(90deg, #e0b057, #79d6c4, transparent)"
+            }}
+          />
+          <div
+            style={{
+              color: "#d7d1c2",
+              fontSize: 28,
+              fontWeight: 800
+            }}
+          >
+            Calls / texts / receipts / consequences.
           </div>
         </div>
       </div>
