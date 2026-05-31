@@ -62,7 +62,7 @@ export default async function FamilyLeaderboardPage({ searchParams }: { searchPa
             </Link>
           ))}
         </nav>
-        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Verifiably Eric's Favorite Friends" : "Verifiably Eric's Favorite Family"} />
+        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Eric's Friend Aura Index" : "Tio Eric Family Totem Pole"} />
         <LeaderboardTable rows={rows} linkPeople={false} />
         <InheritanceSimulator rows={rows} />
       </div>
