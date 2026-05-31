@@ -28,7 +28,7 @@ export async function AppShell({ children, previewMode = false }: { children: Re
       <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/[0.88] shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <BrandMark />
+            <BrandMark tone="light" />
             <p className="mt-2 text-xs font-black uppercase tracking-[0.18em] text-gold">Private family intelligence, because vibes need receipts</p>
             {previewMode ? (
               <p className="mt-1 text-sm font-bold text-champagne">Family preview mode. Admin buttons are offstage, where they belong.</p>
