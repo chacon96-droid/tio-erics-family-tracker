@@ -8,6 +8,7 @@ const lowContactLines = [
   "Big-a-big shot now? Too good for a call?",
   "cool ig? Bold response from someone currently doing nothing.",
   "Goofy Ahh absence. Sebastian would have named this immediately.",
+  "Goofy Doofy silence, with all relevant schema attached.",
   "Another week of emotional absenteeism. Big-a-big shot behavior.",
   "Low contact, high suspicion. Abuelito German is muttering whitey psychos somewhere.",
   "This score has whitey psychos energy, and not in a productive way."
@@ -160,7 +161,11 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
     return "Rapid acceleration detected. Hopefully no Amazon trucks nearby.";
   }
 
-  if (hasName(person, ["zander"])) return "Step 43 of 57, somehow still moving.";
+  if (hasName(person, ["zander"])) {
+    if (total >= 2500) return "Goofy Ahh Doofy Ahh numbers, formally entered into the relevant schema.";
+    if (total >= 900) return "Goofy, doofy, and statistically relevant.";
+    return "Step 43 of 57, somehow still moving.";
+  }
 
   if (total >= 2500) return pickLore(hotTrendLines, seed);
   if (total >= 900) return pickLore(activeTrendLines, seed);
@@ -170,7 +175,7 @@ export function trendLore(person: Pick<Person, "id" | "name" | "relationship">, 
 
 export function profileRoast(person: Pick<Person, "name" | "relationship">, score?: Pick<Score, "total_score">) {
   if (hasName(person, ["zander"])) {
-    return "Zander has to rearrange his sock drawer before this can proceed. Emergency routine operations remain ongoing.";
+    return "Zander has to rearrange his sock drawer before this can proceed. Goofy Doofy operations and all relevant schema remain ongoing.";
   }
   if (hasName(person, ["briana"])) {
     return "Briana once ran up a $90 rotary sushi bill for a tiny gumball-machine toy. Commitment like that deserves documentation.";
@@ -196,7 +201,7 @@ export function profileRoast(person: Pick<Person, "name" | "relationship">, scor
 }
 
 export function badgeHints(person: Pick<Person, "name" | "relationship">) {
-  if (hasName(person, ["zander"])) return ["57-Step Certified", "Sock Drawer Protocol"];
+  if (hasName(person, ["zander"])) return ["57-Step Certified", "Sock Drawer Protocol", "Goofy Doofy Schema"];
   if (hasName(person, ["briana"])) return ["Sweet After Further Review", "$90 Sushi Toy Run"];
   if (hasName(person, ["sebastian"])) return ["Thanksgiving Accelerator", "Aura Theft", "Goofy Ahh Certified"];
   if (hasName(person, ["lucas"])) return ["cool ig?", "Nonchalant Final Boss", "Aura Reserve"];
