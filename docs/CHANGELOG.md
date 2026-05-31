@@ -36,6 +36,8 @@ This log tracks meaningful product and architecture changes in plain English.
 
 - Added local sync script for Messages and CallHistory metadata.
 - Matching uses phone and email from roster rows.
+- Clarified that signup identifies the person; it does not limit imports to activity after signup.
+- Nightly sync/backfill scans from `2026-01-01` so newly added phone numbers can populate historical 2026 activity.
 - Optional Contacts lookup can add more handles.
 - Group chats are skipped.
 - Duplicate import keys prevent inflated scores.
@@ -62,7 +64,8 @@ This log tracks meaningful product and architecture changes in plain English.
 
 - Moved toward a more editorial, SF-tech-style visual system.
 - Added branded `TE`/Call Tio Eric presentation.
-- Split dark admin UI and light family UI.
+- Moved the family-facing UI to the same dark-first system as admin.
+- Replaced beige/light panel defaults with darker surfaces and stronger text contrast.
 - Added `tone` support to shared components:
   - `StatCard`
   - `LeaderboardTable`
