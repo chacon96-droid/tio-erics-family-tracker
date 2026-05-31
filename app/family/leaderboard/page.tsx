@@ -41,9 +41,9 @@ export default async function FamilyLeaderboardPage({ searchParams }: { searchPa
             </Link>
           ))}
         </nav>
-        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Family friends photo race" : "Family photo race"} />
-        <LeaderboardTable rows={rows} linkPeople={false} />
-        <InheritanceSimulator rows={rows} />
+        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Family friends photo race" : "Family photo race"} tone="light" />
+        <LeaderboardTable rows={rows} linkPeople={false} tone="light" />
+        <InheritanceSimulator rows={rows} tone="light" />
       </div>
     </FamilyShell>
   );
