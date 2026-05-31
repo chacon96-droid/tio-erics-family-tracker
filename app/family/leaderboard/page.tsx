@@ -34,16 +34,16 @@ export default async function FamilyLeaderboardPage({ searchParams }: { searchPa
               key={item.value}
               href={`/family/leaderboard?period=${item.value}`}
               className={`rounded-app border px-3 py-2 text-sm font-black ${
-                item.value === period ? "border-ink bg-ink text-white" : "border-line bg-white"
+                item.value === period ? "border-gold bg-gold text-ink" : "border-white/10 bg-white/[0.08] text-ivory hover:border-mint/70"
               }`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Family friends photo race" : "Family photo race"} tone="light" />
-        <LeaderboardTable rows={rows} linkPeople={false} tone="light" />
-        <InheritanceSimulator rows={rows} tone="light" />
+        <LeaderboardRaceGraph rows={rows} title={audience === "friends" ? "Family friends photo race" : "Family photo race"} />
+        <LeaderboardTable rows={rows} linkPeople={false} />
+        <InheritanceSimulator rows={rows} />
       </div>
     </FamilyShell>
   );
