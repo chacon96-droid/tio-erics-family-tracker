@@ -7,6 +7,7 @@ import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { requireAdmin } from "@/lib/auth";
 import { getAppSettings, getLeaderboard, getPerson, getPersonInteractions, getPersonYearlyBreakdowns } from "@/lib/data";
+import { favorScoreForRow, formatRawScore, maxTotalScore } from "@/lib/display-score";
 import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function FamilyPreviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,6 +28,9 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
   const approvedInteractions = interactions.filter((item) => item.status === "approved");
   const limitedLeaderboardEnabled = settings.limited_family_leaderboard_enabled !== false;
   const audience = leaderboardAudienceForRelationship(person.relationship);
+  const audienceRows = leaderboard.filter((row) => leaderboardAudienceForRelationship(row.relationship) === audience);
+  const leaderboardRow = audienceRows.find((row) => row.id === person.id);
+  const leaderboardMax = maxTotalScore(audienceRows);
 
   return (
     <AppShell previewMode>
@@ -51,7 +55,11 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
         ) : null}
 
         <section className="grid gap-3 md:grid-cols-4">
-          <StatCard label={`${currentYear} score`} value={currentYearBreakdown?.totalScore || 0} detail="Current calendar-year damage." />
+          <StatCard
+            label={`${currentYear} Favor Score`}
+            value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+            detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points.`}
+          />
           <StatCard label="Approved activity" value={approvedInteractions.length} detail="Counts after Eric's royal blessing." />
           <StatCard label="Minutes logged" value={Math.round(currentYearBreakdown?.totalMinutes || 0)} detail="Actual talking, allegedly." />
           <StatCard label="Messages counted" value={currentYearBreakdown?.messageCount || 0} detail="No message content stored." />
@@ -73,7 +81,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
                       <p className="text-xs font-black uppercase text-clay">{year.topCategory}</p>
                       <h4 className="text-2xl font-black">{year.year}</h4>
                     </div>
-                    <p className="text-2xl font-black">{year.totalScore}</p>
+                    <p className="text-2xl font-black">{formatRawScore(year.totalScore)}</p>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                     <p><strong>{year.callCount}</strong><br /><span className="font-semibold text-muted">Calls</span></p>
