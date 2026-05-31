@@ -39,7 +39,7 @@ export default async function FamilyMePage({
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {badges.map((badge) => (
-                <span key={badge} className="rounded-full border border-line bg-white px-3 py-1 text-xs font-black text-clay">
+                <span key={badge} className="rounded-full border border-white/10 bg-white/[0.08] px-3 py-1 text-xs font-black text-gold">
                   {badge}
                 </span>
               ))}
@@ -49,10 +49,9 @@ export default async function FamilyMePage({
             <StatCard
               label={`${currentYear} Favor Score`}
               value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
-              tone="light"
             />
-            <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} tone="light" />
-            <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." tone="light" />
+            <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
+            <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
           </div>
           <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
           <div className="grid gap-3">
@@ -61,14 +60,14 @@ export default async function FamilyMePage({
                 <p className="text-xs font-black uppercase text-clay">Recent receipts</p>
                 <h3 className="text-xl font-black">Activity log</h3>
               </div>
-              <Link href="/family/leaderboard" className="text-sm font-black text-ink underline-offset-4 hover:underline">
+              <Link href="/family/leaderboard" className="text-sm font-black text-gold underline-offset-4 hover:underline">
                 View leaderboard
               </Link>
             </div>
             {interactions.length ? (
-              <div className="rounded-app border border-line bg-white">
+              <div className="rounded-app border border-white/10 bg-white/[0.06]">
                 {interactions.slice(0, 12).map((item) => (
-                  <div key={item.id} className="border-b border-line p-4 last:border-b-0">
+                  <div key={item.id} className="border-b border-white/10 p-4 last:border-b-0">
                     <div className="flex justify-between gap-4">
                       <p className="font-black">{item.type.replaceAll("_", " ")}</p>
                       <span className="text-sm font-bold text-muted">{item.status}</span>
@@ -86,13 +85,13 @@ export default async function FamilyMePage({
         </section>
 
         <section className="grid gap-4 self-start">
-          {params?.error ? <p className="rounded-app bg-red-50 p-3 text-sm font-bold text-red-700">{params.error}</p> : null}
+          {params?.error ? <p className="rounded-app border border-red-400/35 bg-red-500/15 p-3 text-sm font-bold text-red-100">{params.error}</p> : null}
           {params?.submitted ? (
-            <p className="rounded-app bg-green-50 p-3 text-sm font-bold text-green-800">
+            <p className="rounded-app border border-mint/35 bg-mint/15 p-3 text-sm font-bold text-mint">
               Submitted for Eric approval. {qualityTimeNudge(person.id)}
             </p>
           ) : null}
-          <form action={submitFamilyActivity} className="grid gap-3 rounded-app border border-line bg-white p-4">
+          <form action={submitFamilyActivity} className="grid gap-3 rounded-app border border-white/10 bg-white/[0.06] p-4">
             <div>
               <p className="text-xs font-black uppercase text-clay">Claim quality time</p>
               <h3 className="text-xl font-black">Submit an activity</h3>
@@ -100,7 +99,7 @@ export default async function FamilyMePage({
             </div>
             <label className="grid gap-1 text-sm font-bold text-muted">
               Type
-              <select className="rounded-app border border-line px-3 py-2 text-ink" name="type">
+              <select className="rounded-app border border-white/15 bg-ink/60 px-3 py-2 text-ivory" name="type">
                 <option value="fortnite">Fortnite/gaming</option>
                 <option value="visit">In-person visit</option>
                 <option value="manual_activity">Manual activity</option>
@@ -110,17 +109,17 @@ export default async function FamilyMePage({
             </label>
             <label className="grid gap-1 text-sm font-bold text-muted">
               When
-              <input className="rounded-app border border-line px-3 py-2 text-ink" name="started_at" type="datetime-local" required />
+              <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-2 text-ivory" name="started_at" type="datetime-local" required />
             </label>
             <label className="grid gap-1 text-sm font-bold text-muted">
               Minutes
-              <input className="rounded-app border border-line px-3 py-2 text-ink" name="duration_minutes" type="number" min="0" defaultValue="0" />
+              <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-2 text-ivory" name="duration_minutes" type="number" min="0" defaultValue="0" />
             </label>
             <label className="grid gap-1 text-sm font-bold text-muted">
               Notes
-              <textarea className="min-h-24 rounded-app border border-line px-3 py-2 text-ink" name="notes" placeholder="State your case. Briefly. This is not a memoir." />
+              <textarea className="min-h-24 rounded-app border border-white/15 bg-ink/60 px-3 py-2 text-ivory placeholder:text-champagne/35" name="notes" placeholder="State your case. Briefly. This is not a memoir." />
             </label>
-            <button className="focus-ring rounded-app bg-ink px-4 py-3 font-black text-white">Submit for approval</button>
+            <button className="focus-ring rounded-app border border-gold bg-gold px-4 py-3 font-black text-ink">Submit for approval</button>
           </form>
         </section>
       </div>
