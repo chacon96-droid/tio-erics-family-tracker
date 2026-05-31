@@ -16,6 +16,16 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
+[class~="bg-white"],
+[class~="bg-white/70"],
+[class~="bg-white/80"],
+[class~="bg-ivory"],
+[class~="bg-ivory/95"],
+[class~="bg-paper/60"],
+[class~="bg-paper"] {
+  color: #101413;
+}
+
 button,
 input,
 select,
