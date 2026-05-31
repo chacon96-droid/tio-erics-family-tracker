@@ -62,7 +62,7 @@ export default async function FamilyPreviewPage({ params }: { params: Promise<{ 
             value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
             detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points.`}
           />
-          <StatCard label="Approved activity" value={approvedInteractions.length} detail="Counts after Eric's royal blessing." />
+          <StatCard label="Interactions tracked" value={approvedInteractions.length} detail="Counts after Eric's royal blessing." />
           <StatCard label="Minutes logged" value={Math.round(currentYearBreakdown?.totalMinutes || 0)} detail="Actual talking, allegedly." />
           <StatCard label="Messages counted" value={currentYearBreakdown?.messageCount || 0} detail="No message content stored." />
         </section>
