@@ -60,10 +60,10 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
     <section className="rounded-app border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-black uppercase text-clay">Turtle race analytics</p>
-          <h3 className="text-xl font-black">{breakdown.year} performance crawl</h3>
+          <p className="text-xs font-black uppercase text-clay">Favorability lanes</p>
+          <h3 className="text-xl font-black">{breakdown.year} aura report</h3>
         </div>
-        <p className="text-sm font-semibold text-muted">Fastest lane wins absolutely nothing. Which feels correct.</p>
+        <p className="text-sm font-semibold text-muted">A scientific look at who is aura maxxing and who needs to pick up the phone.</p>
       </div>
       <div className="mt-5 grid gap-4">
         {lanes.map((lane) => {
