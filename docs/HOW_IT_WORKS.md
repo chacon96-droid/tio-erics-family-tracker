@@ -53,6 +53,8 @@ RLS policies ensure family users can only read their own person/profile rows and
 - `/admin/approvals`: Approve or deny pending submissions
 - `/admin/settings`: Toggle leaderboard and joke simulator settings
 - `/export/leaderboard.csv`: Admin-only CSV export
+- `/family/me`: Family-facing personal profile
+- `/family/leaderboard`: Family-facing leaderboard, split by family vs family friends
 
 ## Database Model
 
@@ -97,6 +99,8 @@ Scoring is separated from the UI. The UI never hard-codes point values.
 
 The scoring engine reads `scoring_weights`, then calculates `scores`.
 
+The database stores raw score totals. The visible website usually displays a normalized `0-100` Favor Score from `lib/display-score.ts` so the leaderboard feels understandable instead of showing giant raw point totals.
+
 Important rules:
 
 - Group chats score `0`
@@ -140,19 +144,77 @@ Admin can approve or deny them from `/admin/approvals`.
 
 ## Phone And Text Import
 
-Phone/text import is intentionally a later integration.
-
 A hosted website cannot directly read iPhone calls, iMessages, FaceTime history, or Apple Contacts. Apple does not expose that data to ordinary websites.
 
-The safe future path is:
+The app uses a private local importer instead:
 
-1. Family members provide phone/email in the app
-2. Eric approves the person
-3. A private local importer on Eric's Mac reads Apple metadata if macOS permissions allow it
-4. The importer creates metadata-only `interactions`
-5. Scores are recalculated
+```bash
+python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01 --dry-run
+python3 scripts/sync_apple_history_to_supabase.py --since 2026-01-01
+```
 
-Group chats should be marked `is_group_chat = true`, which makes them score zero.
+The importer:
+
+- Reads family profile phone/email values from Supabase
+- Optionally asks macOS Contacts for extra matching phone/email handles
+- Reads local Messages and CallHistory metadata from Eric's Mac
+- Skips group chats
+- Uploads only metadata: dates, duration, message count, direction, and type
+- Stores duplicate import keys so rerunning it does not inflate the leaderboard
+- Recalculates scores after approved imports
+
+The importer needs either `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_ADMIN_EMAIL` plus `SUPABASE_ADMIN_PASSWORD` in `.env.local` on Eric's Mac. Those values must stay private and must never be exposed to browser code.
+
+To install the nightly Mac sync:
+
+```bash
+scripts/install_apple_sync_launch_agent.sh
+```
+
+That creates a LaunchAgent that runs the importer every night at 8 PM and writes logs to `outputs/apple-sync.log` and `outputs/apple-sync.err.log`.
+
+## App Structure
+
+The main structure is documented in:
+
+```text
+docs/ARCHITECTURE.md
+```
+
+Short version:
+
+- `app/`: Next.js pages and route handlers
+- `components/`: shared UI
+- `lib/`: auth, actions, Supabase access, scoring, display helpers, emails, and family lore
+- `scripts/`: local Mac Apple metadata sync
+- `supabase/migrations/`: database schema and RLS
+- `docs/`: human documentation
+
+## Humor And Inside Jokes
+
+Reusable joke copy lives mostly in:
+
+```text
+lib/family-lore.ts
+```
+
+Email variants live in:
+
+```text
+lib/email.ts
+```
+
+This keeps inside jokes, roasts, approval lines, trend labels, and email copy easy to review without digging through UI components.
+
+## Family Vs Family Friends
+
+The app separates actual family from family friends with relationship logic in:
+
+```text
+lib/relationships.ts
+```
+
+Family members see the family leaderboard. Family friends see the friends leaderboard. Admin can still see and manage everything.
 
 ## Environment Variables
 
