@@ -129,6 +129,14 @@ function chooseVariant(variants: EmailVariant[]) {
   return variants[Math.floor(Math.random() * variants.length)];
 }
 
+export function getApprovalEmailPreviewSamples() {
+  return approvalVariants.map((variant, index) => ({
+    id: String(index),
+    subject: variant.subject,
+    preview: variant.preview
+  }));
+}
+
 function relationshipCopy(relationship: string) {
   const normalized = relationship.toLowerCase();
   if (["dad", "mom", "grandparent"].includes(normalized)) {
@@ -286,6 +294,17 @@ function approvalShellHtml(name: string, relationship: string, variant: EmailVar
   `;
 }
 
+export function renderApprovalEmailPreview({ name, relationship, variantId = "0" }: { name: string; relationship: string; variantId?: string }) {
+  const index = Number(variantId);
+  const variant = approvalVariants[Number.isInteger(index) && approvalVariants[index] ? index : 0];
+  return {
+    subject: contextualText(variant.subject, relationship),
+    preview: variant.preview,
+    html: approvalShellHtml(name, relationship, variant),
+    text: textBody(name, relationship, variant)
+  };
+}
+
 function textBody(name: string, relationship: string, variant: EmailVariant) {
   const copy = relationshipCopy(relationship);
   const intro = contextualText(variant.intro, relationship);
@@ -372,6 +391,16 @@ export async function sendSignupWelcomeEmail({ to, name, relationship }: SignupE
 export async function sendApprovalEmail({ to, name, relationship }: ApprovalEmailInput) {
   const variant = chooseVariant(approvalVariants);
   await sendEmail(to, contextualText(variant.subject, relationship), approvalShellHtml(name, relationship, variant), textBody(name, relationship, variant));
+}
+
+export async function sendApprovalEmailPreview({
+  to,
+  name,
+  relationship,
+  variantId
+}: ApprovalEmailInput & { variantId?: string }) {
+  const email = renderApprovalEmailPreview({ name, relationship, variantId });
+  await sendEmail(to, email.subject, email.html, email.text, { requireConfigured: true });
 }
 
 export async function sendTemporaryPasswordEmail({ to, loginEmail, temporaryPassword }: TemporaryPasswordInput) {
