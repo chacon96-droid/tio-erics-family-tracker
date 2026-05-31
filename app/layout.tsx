@@ -2,8 +2,41 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Eric Family Tracker",
-  description: "A private family relationship tracker with a premium leaderboard, sharper stats, and suspiciously specific family lore."
+  metadataBase: new URL("https://calltioeric.com"),
+  title: {
+    default: "Tio Eric Family Tracker",
+    template: "%s | Tio Eric Family Tracker"
+  },
+  description:
+    "The private leaderboard where calls, texts, and emotional receipts become a Tio Eric Aura Index.",
+  applicationName: "Tio Eric Family Tracker",
+  appleWebApp: {
+    title: "Tio Eric"
+  },
+  openGraph: {
+    title: "Tio Eric Family Tracker",
+    description:
+      "A private family leaderboard. Love is real, math is weaponized, silence has consequences.",
+    url: "https://calltioeric.com",
+    siteName: "Tio Eric Family Tracker",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Tio Eric Family Tracker leaderboard preview"
+      }
+    ],
+    locale: "en_US",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tio Eric Family Tracker",
+    description:
+      "The private leaderboard where the Tio Eric Aura Index keeps score.",
+    images: ["/opengraph-image"]
+  }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
