@@ -16,12 +16,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tio Eric Family Tracker",
     description:
-      "A private family leaderboard. Love is real, math is weaponized, silence has consequences.",
+      "A private dashboard showing who really cares about me and who does not. Love is real, math is weaponized.",
     url: "https://calltioeric.com",
     siteName: "Tio Eric Family Tracker",
     images: [
       {
-        url: "/opengraph-image?v=sleek-1",
+        url: "/opengraph-image?v=cares-1",
         width: 1200,
         height: 630,
         alt: "Tio Eric Family Tracker leaderboard preview"
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Tio Eric Family Tracker",
     description:
-      "The private leaderboard where the Tio Eric Aura Index keeps score.",
-    images: ["/opengraph-image?v=sleek-1"]
+      "A private dashboard showing who really cares about me and who does not.",
+    images: ["/opengraph-image?v=cares-1"]
   }
 };
 
