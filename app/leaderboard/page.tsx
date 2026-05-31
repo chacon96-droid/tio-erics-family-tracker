@@ -22,47 +22,54 @@ export default async function LeaderboardPage({ searchParams }: { searchParams?:
 
   return (
     <AppShell>
-      <div className="grid gap-6">
-        <section>
-          <p className="text-xs font-black uppercase text-clay">Evidence-based favoritism</p>
-          <h2 className="text-3xl font-black">Leaderboard</h2>
+      <div className="grid gap-7">
+        <section className="relative overflow-hidden rounded-app border border-white/10 bg-white/[0.07] p-6 shadow-[0_35px_100px_rgba(0,0,0,0.34)]">
+          <div className="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-blue/20 blur-3xl" />
+          <div className="absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
+          <div className="relative max-w-4xl">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-gold">Evidence-based favoritism</p>
+            <h2 className="mt-3 font-serif text-5xl font-black tracking-tight text-ivory md:text-7xl">Leaderboard</h2>
+            <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-champagne/75">
+              The official market index of who remembered Eric exists. Updated with Apple metadata, manual claims, and a dangerous amount of confidence.
+            </p>
+          </div>
           {params?.removed ? (
-            <div className="mt-4 rounded-app border border-green-200 bg-green-50 p-3 text-sm font-black text-green-800">
+            <div className="relative mt-5 rounded-app border border-mint/35 bg-mint/15 p-3 text-sm font-black text-mint">
               Removed {params.removed}. The leaderboard has agreed to move on, after making it weird for a second.
             </div>
           ) : null}
           {params?.error ? (
-            <div className="mt-4 rounded-app border border-red-200 bg-red-50 p-3 text-sm font-black text-red-800">
+            <div className="relative mt-5 rounded-app border border-red-400/35 bg-red-500/15 p-3 text-sm font-black text-red-100">
               Could not remove that profile: {params.error}
             </div>
           ) : null}
         </section>
-        <nav className="flex flex-wrap gap-2">
+        <nav className="flex flex-wrap gap-2 rounded-app border border-white/10 bg-white/[0.05] p-2">
           {periods.map((item) => (
             <Link
               key={item.value}
               href={`/leaderboard?period=${item.value}`}
-              className={`rounded-app border px-3 py-2 text-sm font-black ${
-                item.value === period ? "border-ink bg-ink text-white" : "border-line bg-white"
+              className={`rounded-app border px-3 py-2 text-sm font-black transition ${
+                item.value === period ? "border-gold/70 bg-gold text-ink" : "border-white/10 bg-white/[0.04] text-champagne/75 hover:border-white/25 hover:text-ivory"
               }`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <section>
-          <div className="mb-3">
-            <p className="text-xs font-black uppercase text-clay">Bloodline division</p>
-            <h3 className="text-xl font-black">Family leaderboard</h3>
+        <section className="grid gap-4 rounded-app border border-white/10 bg-white/[0.06] p-5">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-mint">Bloodline division</p>
+            <h3 className="font-serif text-3xl font-black text-ivory">Family leaderboard</h3>
           </div>
           <LeaderboardRaceGraph rows={familyRows} title="Family photo race" />
           <LeaderboardTable rows={familyRows} canRemovePeople={isAdmin} />
           {settings.inheritance_simulator_enabled !== false ? <InheritanceSimulator rows={familyRows} /> : null}
         </section>
-        <section>
-          <div className="mb-3">
-            <p className="text-xs font-black uppercase text-clay">Chosen chaos division</p>
-            <h3 className="text-xl font-black">Family friends leaderboard</h3>
+        <section className="grid gap-4 rounded-app border border-white/10 bg-white/[0.06] p-5">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-gold">Chosen chaos division</p>
+            <h3 className="font-serif text-3xl font-black text-ivory">Family friends leaderboard</h3>
           </div>
           <LeaderboardRaceGraph rows={friendRows} title="Family friends photo race" />
           <LeaderboardTable rows={friendRows} canRemovePeople={isAdmin} />
