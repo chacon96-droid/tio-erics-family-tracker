@@ -21,10 +21,11 @@ export const metadata: Metadata = {
     siteName: "Tio Eric Family Tracker",
     images: [
       {
-        url: "https://calltioeric.com/share-card.png",
-        width: 1200,
-        height: 630,
-        alt: "Tio Eric Family Tracker leaderboard preview"
+        url: "https://calltioeric.com/share-card.jpg",
+        width: 600,
+        height: 315,
+        alt: "Tio Eric Family Tracker leaderboard preview",
+        type: "image/jpeg"
       }
     ],
     locale: "en_US",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     title: "Tio Eric Family Tracker",
     description:
       "A private dashboard showing who really cares about me and who does not.",
-    images: ["https://calltioeric.com/share-card.png"]
+    images: ["https://calltioeric.com/share-card.jpg"]
   }
 };
 
