@@ -4,8 +4,10 @@ import { FamilyShell } from "@/components/FamilyShell";
 import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
 import { submitFamilyActivity } from "@/lib/family-actions";
-import { getFamilyPersonInteractions, getFamilyYearlyBreakdowns, requireFamilyAccessPerson } from "@/lib/family-access";
+import { getFamilyLeaderboard, getFamilyPersonInteractions, getFamilyYearlyBreakdowns, requireFamilyAccessPerson } from "@/lib/family-access";
+import { favorScoreForRow, maxTotalScore } from "@/lib/display-score";
 import { badgeHints, profileRoast, qualityTimeNudge } from "@/lib/family-lore";
+import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 
 export default async function FamilyMePage({
   searchParams
@@ -13,12 +15,16 @@ export default async function FamilyMePage({
   searchParams?: Promise<{ error?: string; submitted?: string }>;
 }) {
   const [person, params] = await Promise.all([requireFamilyAccessPerson(), searchParams]);
-  const [interactions, yearlyBreakdowns] = await Promise.all([
+  const audience = leaderboardAudienceForRelationship(person.relationship);
+  const [interactions, yearlyBreakdowns, leaderboard] = await Promise.all([
     getFamilyPersonInteractions(person.id),
-    getFamilyYearlyBreakdowns(person.id)
+    getFamilyYearlyBreakdowns(person.id),
+    getFamilyLeaderboard("year", audience)
   ]);
   const currentYear = new Date().getFullYear();
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
+  const leaderboardRow = leaderboard.find((row) => row.id === person.id);
+  const leaderboardMax = maxTotalScore(leaderboard);
   const badges = badgeHints(person);
 
   return (
@@ -40,7 +46,10 @@ export default async function FamilyMePage({
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-3">
-            <StatCard label={`${currentYear} score`} value={currentYearBreakdown?.totalScore || 0} />
+            <StatCard
+              label={`${currentYear} Favor Score`}
+              value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+            />
             <StatCard label={`Approved in ${currentYear}`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
           </div>
