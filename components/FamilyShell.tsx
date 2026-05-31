@@ -27,7 +27,7 @@ export function FamilyShell({ person, children }: { person: Person; children: Re
             Leaderboard
           </Link>
           <Link href="/signup" className="rounded-app border border-white/10 bg-white/[0.08] px-3 py-2 text-sm font-black text-ivory shadow-sm hover:border-mint/70 hover:bg-white/[0.14]">
-            Roster
+            Join roster
           </Link>
         </nav>
       </header>
