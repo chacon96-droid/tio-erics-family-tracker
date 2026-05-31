@@ -13,11 +13,11 @@ function Racer({ person, left }: { person: Person; left: number }) {
   return (
     <div className="absolute top-1/2 flex -translate-y-1/2 items-center" style={{ left: `${left}%` }}>
       <div className="h-3 w-4 rounded-l-full bg-mint" />
-      <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-full border-2 border-ink bg-paper shadow-sm">
+      <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-full border-2 border-gold bg-ink shadow-sm">
         {person.avatar_url ? (
           <img src={person.avatar_url} alt="" className="h-full w-full object-cover" />
         ) : (
-          <span className="text-sm font-black text-clay">{person.name.slice(0, 1)}</span>
+          <span className="text-sm font-black text-gold">{person.name.slice(0, 1)}</span>
         )}
       </div>
       <div className="h-2 w-3 rounded-r-full bg-mint" />
@@ -33,7 +33,7 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
       label: "Overall",
       score: breakdown.totalScore,
       detail: "Full emotional damage index",
-      color: "bg-ink"
+      color: "bg-mint"
     },
     {
       label: "Calls",
@@ -45,7 +45,7 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
       label: "Texts",
       score: breakdown.textScore,
       detail: `${breakdown.messageCount} messages counted`,
-      color: "bg-clay"
+      color: "bg-blue"
     },
     {
       label: "Quality time",
@@ -57,7 +57,7 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
   const maxScore = Math.max(...lanes.map((lane) => lane.score), 1);
 
   return (
-    <section className="rounded-app border border-line bg-white p-4">
+    <section className="rounded-app border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase text-clay">Turtle race analytics</p>
@@ -80,8 +80,8 @@ export function TurtleRaceBreakdown({ person, breakdown }: { person: Person; bre
                 </div>
                 <p className="font-black">{normalizedScore}/100</p>
               </div>
-              <div className="relative h-14 rounded-app border border-line bg-paper">
-                <div className="absolute left-3 right-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white" />
+              <div className="relative h-14 rounded-app border border-white/10 bg-ink/60">
+                <div className="absolute left-3 right-3 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white/10" />
                 <div className={`absolute left-3 top-1/2 h-2 -translate-y-1/2 rounded-full ${lane.color}`} style={{ width: `calc(${progress}% - 24px)` }} />
                 <Racer person={person} left={racerLeft} />
               </div>
