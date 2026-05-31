@@ -50,14 +50,14 @@ This log tracks meaningful product and architecture changes in plain English.
 - Scores are calculated by week, month, year, and all-time.
 - Raw score totals remain stored in the database.
 - UI now displays normalized Favor Scores near `0-100`.
-- Leaderboard photo race graph uses Favor Score on the y-axis.
+- Leaderboard graph is now framed as the Tio Eric Favorability Index / Family Totem Pole, with Favor Score on the y-axis.
 
 ### Leaderboard And Analytics
 
 - Added dashboard analytics.
 - Added leaderboard intelligence sections.
-- Added photo race graph with each person's avatar or initial.
-- Added person-level turtle race breakdown by communication type.
+- Added favorability graph with each person's avatar or initial.
+- Added person-level favorability lanes by communication type.
 - Added projected inheritance simulator as a joke mode.
 
 ### Design
