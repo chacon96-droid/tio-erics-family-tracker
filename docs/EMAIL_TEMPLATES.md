@@ -11,6 +11,14 @@ EMAIL_FROM
 
 If `RESEND_API_KEY` is missing, signup and approval still work; the app just skips the extra email.
 
+The live randomized email copy is implemented in:
+
+```text
+lib/email.ts
+```
+
+This file includes signup, approval, sign-in link, and admin recovery emails. The examples below are reference copy, not the only variants.
+
 ## Signup Confirmation
 
 Subject:
@@ -96,8 +104,9 @@ Your leaderboard era begins now
 You could buy everybody here gelato
 approved. cool ig.
 Roster approved. Shit maaaaannn.
+Approved. Whitey psychos caucus notified.
 ```
 
 All approval emails still explain the important rules: direct calls, texts, FaceTimes, and approved quality time count; group chats do not count; message contents are not stored; the inheritance percentage is a non-binding joke.
 
-Zander's 57-step routine and sock drawer jokes are intentionally site-only for now, not approval email copy.
+The actual approval email implementation lives in `lib/email.ts`. Update that file when adding or removing randomized approval copy.
