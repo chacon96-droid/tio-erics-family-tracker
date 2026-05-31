@@ -38,7 +38,7 @@ export default async function DashboardPage() {
         </section>
         <section className="grid gap-3 md:grid-cols-4">
           <StatCard label="Active people" value={people.filter((person) => person.active).length} detail="Roster, not evidence." />
-          <StatCard label="Approved in 2026" value={approvedCount} detail="Documented affection, calendar-year edition." />
+          <StatCard label="2026 interactions tracked" value={approvedCount} detail="Documented affection, calendar-year edition." />
           <StatCard label="Pending approvals" value={pendingInteractions.length + pendingPeople.length} detail={qualityTimeNudge("dashboard-pending")} />
           <StatCard
             label="Top Aura Index"
