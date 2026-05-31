@@ -88,6 +88,7 @@ This log tracks meaningful product and architecture changes in plain English.
 - Added Luigi shirtless joyride jokes.
 - Added Sebastian Thanksgiving fence, Drake glazing, and Aura Theft jokes.
 - Added Sebastian/Luigi "wit yo bitch-ass" phrasing for their person-specific copy.
+- Added Jessica "what up biiiitch" call-greeting lore.
 - Added Lucas/Sebastian nonchalant "cool ig" jokes.
 - Added Sebastian-flavored "Goofy Ahh" language plus Aura/Rizz trend and badge copy.
 - Added car singing / Olivia Rodrigo / Gracie Abrams references.
