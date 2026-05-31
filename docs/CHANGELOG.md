@@ -29,7 +29,8 @@ This log tracks meaningful product and architecture changes in plain English.
 - Eric can remove people from the roster.
 - Pending members can be previewed by admin.
 - Approval emails are randomized.
-- Approval emails now use a cleaner mobile-safe layout with a fixed headline, compact joke line, boxed rules, and consistent spacing.
+- Approval emails can be previewed and test-sent from `/admin/email-previews`.
+- Signup, roster approval, admin-created interactions, and activity approval now force a leaderboard data refresh.
 
 ### Apple Metadata Sync
 
@@ -92,6 +93,7 @@ This log tracks meaningful product and architecture changes in plain English.
 
 - Site joke copy: `lib/family-lore.ts`
 - Email variants: `lib/email.ts`
+- Approval email previews/test sends: `app/admin/email-previews/page.tsx`
 - Score math: `lib/scoring.ts`
 - Score display normalization: `lib/display-score.ts`
 - Family/friend audience split: `lib/relationships.ts`
