@@ -12,7 +12,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
       <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-gold/20 blur-3xl" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
       <div className="relative w-full max-w-md rounded-app border border-white/10 bg-white/[0.08] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.38)] backdrop-blur-xl">
-        <BrandMark />
+        <BrandMark tone="light" />
         <p className="mt-6 text-xs font-black uppercase tracking-[0.22em] text-gold">Private access, light interrogation</p>
         <h1 className="mt-2 font-serif text-5xl font-black tracking-tight">Enter the ledger</h1>
         {params?.error ? <p className="mt-4 rounded-app border border-red-400/35 bg-red-500/15 p-3 text-sm font-bold text-red-100">{params.error}</p> : null}
