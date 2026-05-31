@@ -42,7 +42,7 @@ export function LeaderboardTable({
           <tr>
             <th className="p-3">Rank</th>
             <th className="p-3">Name</th>
-            <th className="p-3">Verifiably Eric's Favorites</th>
+            <th className="p-3">Tio Eric Aura Index</th>
             <th className="p-3">Trend</th>
             <th className="p-3">Top category</th>
             {canRemovePeople ? <th className="p-3 text-right">Admin</th> : null}
