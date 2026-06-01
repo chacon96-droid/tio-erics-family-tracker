@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { FamilyShell } from "@/components/FamilyShell";
 import { StatCard } from "@/components/StatCard";
 import { TurtleRaceBreakdown } from "@/components/TurtleRaceBreakdown";
+import { updateMyProfilePhoto } from "@/lib/actions";
 import { submitFamilyActivity } from "@/lib/family-actions";
 import { getFamilyLeaderboard, getFamilyPersonInteractions, getFamilyYearlyBreakdowns, requireFamilyAccessPerson } from "@/lib/family-access";
 import { favorScoreForRow, maxTotalScore } from "@/lib/display-score";
@@ -12,7 +13,7 @@ import { leaderboardAudienceForRelationship } from "@/lib/relationships";
 export default async function FamilyMePage({
   searchParams
 }: {
-  searchParams?: Promise<{ error?: string; submitted?: string }>;
+  searchParams?: Promise<{ error?: string; submitted?: string; photo?: string }>;
 }) {
   const [person, params] = await Promise.all([requireFamilyAccessPerson(), searchParams]);
   const audience = leaderboardAudienceForRelationship(person.relationship);
@@ -107,6 +108,27 @@ export default async function FamilyMePage({
               Submitted for Eric approval. {qualityTimeNudge(person.id)}
             </p>
           ) : null}
+          {params?.photo ? (
+            <p className="rounded-app border border-mint/35 bg-mint/15 p-3 text-sm font-bold text-mint">
+              Photo saved. The leaderboard now has a face to judge.
+            </p>
+          ) : null}
+          <form action={updateMyProfilePhoto} encType="multipart/form-data" className="grid gap-3 rounded-app border border-white/10 bg-white/[0.06] p-4">
+            <input type="hidden" name="person_id" value={person.id} />
+            <div>
+              <p className="text-xs font-black uppercase text-clay">Profile photo</p>
+              <h3 className="text-xl font-black">Update your leaderboard mugshot</h3>
+              <p className="mt-1 text-sm font-semibold text-muted">
+                Add the face that will drift up or down the Tio Eric totem pole. No pressure, except all of it.
+              </p>
+            </div>
+            <label className="grid gap-2 text-sm font-bold text-muted">
+              Take or upload a photo
+              <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-2 text-ivory file:mr-3 file:rounded-app file:border-0 file:bg-gold file:px-3 file:py-2 file:font-black file:text-ink" name="avatar_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required />
+              <span className="text-xs font-semibold text-muted">JPG, PNG, WebP, or GIF under 5MB. iPhone HEIC photos need to be saved as JPG first.</span>
+            </label>
+            <button className="focus-ring rounded-app border border-gold bg-gold px-4 py-3 font-black text-ink">Save photo</button>
+          </form>
           <form action={submitFamilyActivity} className="grid gap-3 rounded-app border border-white/10 bg-white/[0.06] p-4">
             <div>
               <p className="text-xs font-black uppercase text-clay">Claim quality time</p>
