@@ -25,6 +25,7 @@ export default async function FamilyMePage({
   const currentYearBreakdown = yearlyBreakdowns.find((item) => item.year === currentYear) || yearlyBreakdowns[0];
   const leaderboardRow = leaderboard.find((row) => row.id === person.id);
   const leaderboardMax = maxTotalScore(leaderboard);
+  const auraIndex = leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0;
   const badges = badgeHints(person);
   const suggestions = scoreImprovementSuggestions(person, currentYearBreakdown);
 
@@ -49,12 +50,12 @@ export default async function FamilyMePage({
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
               label={`${currentYear} Tio Eric Aura Index`}
-              value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+              value={auraIndex}
             />
             <StatCard label={`${currentYear} interactions tracked`} value={currentYearBreakdown?.interactionCount || 0} />
             <StatCard label="Awaiting Eric" value={currentYearBreakdown?.pendingInteractionCount || 0} detail="Pending, like a tiny courtroom." />
           </div>
-          <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
+          <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} auraIndex={auraIndex} />
           <section className="rounded-app border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
             <p className="text-xs font-black uppercase text-clay">Score improvement plan</p>
             <h3 className="mt-1 text-xl font-black">How to climb, allegedly</h3>
