@@ -21,8 +21,8 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
         {params?.error ? <p className="mt-4 rounded-app border border-red-400/35 bg-red-500/15 p-3 text-sm font-bold text-red-100">{params.error}</p> : null}
         <label className="mt-6 grid gap-2 text-sm font-bold text-champagne/75">
           Profile photo
-          <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-3 text-ivory file:mr-3 file:rounded-app file:border-0 file:bg-gold file:px-3 file:py-2 file:font-black file:text-ink" name="avatar_file" type="file" />
-          <span className="text-xs font-semibold text-champagne/55">Photo library or files. The leaderboard deserves a face for the evidence board.</span>
+          <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-3 text-ivory file:mr-3 file:rounded-app file:border-0 file:bg-gold file:px-3 file:py-2 file:font-black file:text-ink" name="avatar_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+          <span className="text-xs font-semibold text-champagne/55">JPG, PNG, WebP, or GIF under 5MB. iPhone HEIC photos need to be saved as JPG first.</span>
         </label>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-bold text-champagne/75">
