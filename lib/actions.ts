@@ -490,6 +490,8 @@ export async function updateMyProfilePhoto(formData: FormData) {
 
   revalidatePath(`/people/${person.id}`);
   revalidatePath("/people");
+  revalidatePath("/family/me");
+  redirect("/family/me?photo=1");
 }
 
 export async function deletePerson(formData: FormData) {
