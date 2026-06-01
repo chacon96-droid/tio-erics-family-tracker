@@ -333,8 +333,6 @@ export async function signUp(formData: FormData) {
         }
       } catch (photoError) {
         console.error("Signup profile photo upload failed", photoError);
-        const message = photoError instanceof Error ? photoError.message : "Profile photo did not upload.";
-        redirect(`/signup?error=${encodeURIComponent(message)}&photo=1`);
       }
     }
   } else {
