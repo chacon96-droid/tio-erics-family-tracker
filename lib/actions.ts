@@ -54,7 +54,10 @@ async function getAuthRedirectOrigin() {
 async function uploadProfilePhoto(formData: FormData, personId: string) {
   const file = formData.get("avatar_file");
   if (!(file instanceof File) || file.size === 0) return null;
-  if (!file.type.startsWith("image/")) throw new Error("Profile photo must be an image.");
+  const allowedPhotoTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+  if (!allowedPhotoTypes.has(file.type)) {
+    throw new Error("Use a JPG, PNG, WebP, or GIF under 5MB. iPhone HEIC photos need to be saved as JPG first.");
+  }
   if (file.size > 5 * 1024 * 1024) throw new Error("Profile photo must be under 5MB.");
 
   const supabase = createAdminClient();
@@ -330,6 +333,8 @@ export async function signUp(formData: FormData) {
         }
       } catch (photoError) {
         console.error("Signup profile photo upload failed", photoError);
+        const message = photoError instanceof Error ? photoError.message : "Profile photo did not upload.";
+        redirect(`/signup?error=${encodeURIComponent(message)}&photo=1`);
       }
     }
   } else {
@@ -422,7 +427,12 @@ export async function savePerson(formData: FormData) {
   const supabase = await createClient();
   let avatarUrl = parsed.avatar_url || null;
   if (parsed.id) {
-    avatarUrl = (await uploadProfilePhoto(formData, parsed.id)) || avatarUrl;
+    try {
+      avatarUrl = (await uploadProfilePhoto(formData, parsed.id)) || avatarUrl;
+    } catch (photoError) {
+      const message = photoError instanceof Error ? photoError.message : "Profile photo did not upload.";
+      redirect(`/people/${parsed.id}?error=${encodeURIComponent(message)}`);
+    }
   }
 
   const payload = {
@@ -436,14 +446,19 @@ export async function savePerson(formData: FormData) {
 
   if (parsed.id) {
     const { error } = await supabase.from("people").update(payload).eq("id", parsed.id);
-    if (error) throw error;
+    if (error) redirect(`/people/${parsed.id}?error=${encodeURIComponent(error.message)}`);
   } else {
     const { data, error } = await supabase.from("people").insert(payload).select("id").single();
     if (error) throw error;
-    const avatarUrl = await uploadProfilePhoto(formData, data.id);
-    if (avatarUrl) {
-      const { error: photoError } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", data.id);
-      if (photoError) throw photoError;
+    try {
+      const avatarUrl = await uploadProfilePhoto(formData, data.id);
+      if (avatarUrl) {
+        const { error: photoError } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", data.id);
+        if (photoError) throw photoError;
+      }
+    } catch (photoError) {
+      const message = photoError instanceof Error ? photoError.message : "Profile photo did not upload.";
+      redirect(`/people/${data.id}?error=${encodeURIComponent(message)}`);
     }
   }
   revalidatePath("/people");
@@ -463,11 +478,17 @@ export async function updateMyProfilePhoto(formData: FormData) {
   if (personError) throw personError;
   if (!person) throw new Error("You can only update your own leaderboard mugshot.");
 
-  const avatarUrl = await uploadProfilePhoto(formData, person.id);
-  if (!avatarUrl) throw new Error("Choose a photo first.");
+  let avatarUrl: string | null = null;
+  try {
+    avatarUrl = await uploadProfilePhoto(formData, person.id);
+  } catch (photoError) {
+    const message = photoError instanceof Error ? photoError.message : "Profile photo did not upload.";
+    redirect(`/family/me?error=${encodeURIComponent(message)}`);
+  }
+  if (!avatarUrl) redirect("/family/me?error=Choose%20a%20photo%20first.");
 
   const { error } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
-  if (error) throw error;
+  if (error) redirect(`/family/me?error=${encodeURIComponent(error.message)}`);
 
   revalidatePath(`/people/${person.id}`);
   revalidatePath("/people");
