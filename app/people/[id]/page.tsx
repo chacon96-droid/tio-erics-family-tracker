@@ -36,6 +36,7 @@ export default async function PersonPage({
   const audienceRows = leaderboard.filter((row) => leaderboardAudienceForRelationship(row.relationship) === audience);
   const leaderboardRow = audienceRows.find((row) => row.id === person.id);
   const leaderboardMax = maxTotalScore(audienceRows);
+  const auraIndex = leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0;
   const badges = badgeHints(person);
 
   return (
@@ -74,13 +75,13 @@ export default async function PersonPage({
           <div className="grid gap-3 md:grid-cols-3">
             <StatCard
               label={`${currentYear} Tio Eric Aura Index`}
-              value={leaderboardRow ? favorScoreForRow(leaderboardRow, leaderboardMax) : 0}
+              value={auraIndex}
               detail={`${formatRawScore(currentYearBreakdown?.totalScore)} raw points`}
             />
             <StatCard label={`${currentYear} interactions tracked`} value={currentYearBreakdown?.approvedInteractionCount || 0} />
             <StatCard label={`Pending in ${currentYear}`} value={currentYearBreakdown?.pendingInteractionCount || 0} />
           </div>
-          <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} />
+          <TurtleRaceBreakdown person={person} breakdown={currentYearBreakdown} auraIndex={auraIndex} />
           {yearlyBreakdowns.length ? (
             <div className="grid gap-3">
               <div>
