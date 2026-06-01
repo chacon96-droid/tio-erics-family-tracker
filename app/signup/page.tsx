@@ -11,7 +11,7 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
       <div className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-blue/[0.18] blur-3xl" />
       <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-gold/20 blur-3xl" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
-      <form action={signUp} encType="multipart/form-data" className="relative w-full max-w-2xl rounded-app border border-white/10 bg-white/[0.08] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.38)] backdrop-blur-xl">
+      <form action={signUp} className="relative w-full max-w-2xl rounded-app border border-white/10 bg-white/[0.08] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.38)] backdrop-blur-xl">
         <BrandMark tone="light" />
         <p className="mt-6 text-xs font-black uppercase tracking-[0.22em] text-gold">Join the roster</p>
         <h1 className="mt-2 font-serif text-5xl font-black tracking-tight">State your case</h1>
@@ -19,11 +19,9 @@ export default async function SignupPage({ searchParams }: { searchParams?: Prom
           Contact info, relationship, and zero passwords. Civilization advances one tiny form at a time.
         </p>
         {params?.error ? <p className="mt-4 rounded-app border border-red-400/35 bg-red-500/15 p-3 text-sm font-bold text-red-100">{params.error}</p> : null}
-        <label className="mt-6 grid gap-2 text-sm font-bold text-champagne/75">
-          Profile photo
-          <input className="rounded-app border border-white/15 bg-ink/60 px-3 py-3 text-ivory file:mr-3 file:rounded-app file:border-0 file:bg-gold file:px-3 file:py-2 file:font-black file:text-ink" name="avatar_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
-          <span className="text-xs font-semibold text-champagne/55">JPG, PNG, WebP, or GIF under 5MB. iPhone HEIC photos need to be saved as JPG first.</span>
-        </label>
+        <p className="mt-5 rounded-app border border-gold/25 bg-gold/10 p-3 text-xs font-bold leading-5 text-champagne/75">
+          Photo comes after Eric approves you. First we get you into the lobby; then we worry about your leaderboard mugshot.
+        </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-bold text-champagne/75">
             Name
