@@ -485,7 +485,8 @@ export async function updateMyProfilePhoto(formData: FormData) {
   }
   if (!avatarUrl) redirect("/family/me?error=Choose%20a%20photo%20first.");
 
-  const { error } = await supabase.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
+  const db = createAdminClient() || supabase;
+  const { error } = await db.from("people").update({ avatar_url: avatarUrl }).eq("id", person.id);
   if (error) redirect(`/family/me?error=${encodeURIComponent(error.message)}`);
 
   revalidatePath(`/people/${person.id}`);
