@@ -8,6 +8,9 @@ import { periods } from "@/lib/periods";
 import { leaderboardAudienceForRelationship, type LeaderboardAudience } from "@/lib/relationships";
 import type { ScorePeriod } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function FamilyLeaderboardPage({ searchParams }: { searchParams?: Promise<{ period?: ScorePeriod; audience?: LeaderboardAudience }> }) {
   const [person, params] = await Promise.all([requireFamilyAccessPerson(), searchParams]);
   const period = periods.some((item) => item.value === params?.period) ? params!.period! : "year";
