@@ -8,6 +8,9 @@ import { getAppSettings, getLeaderboard } from "@/lib/data";
 import { periods } from "@/lib/periods";
 import type { ScorePeriod } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function LeaderboardPage({ searchParams }: { searchParams?: Promise<{ period?: ScorePeriod; removed?: string; error?: string }> }) {
   await requireApprovedUser();
   const params = await searchParams;
