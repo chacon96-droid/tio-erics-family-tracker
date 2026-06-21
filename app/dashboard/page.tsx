@@ -7,6 +7,9 @@ import { getApprovedInteractionCount, getInteractions, getLeaderboard, getPendin
 import { favorScoreForRow, maxTotalScore } from "@/lib/display-score";
 import { dashboardReaction, qualityTimeNudge } from "@/lib/family-lore";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   await requireApprovedUser();
   const [people, approvedCount, pendingInteractions, pendingPeople, familyLeaderboard, friendLeaderboard, yearInteractions] = await Promise.all([
